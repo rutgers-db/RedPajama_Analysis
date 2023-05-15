@@ -105,7 +105,7 @@ int main(int argc, char *argv[]){
 
     double docLen_sum = 0;
     int min_bottomK_len = 0x7ffffff;
-
+    int min_id = -1;
     for (long long i = 0; i < N; i++) {
         int len;
         idxFile.read((char*)&len, 4);
@@ -115,16 +115,21 @@ int main(int argc, char *argv[]){
         vector<unsigned short> entity(len);
         binFile.read((char*)&entity[0], sizeof(unsigned short) * len);
         
-        // Write the bottomk
+        // Find the minmum length
         auto bottomK = kSmallest(entity, k);
-        min_bottomK_len = min(min_bottomK_len, (int)bottomK.size());
+        int bottomK_len = bottomK.size();
+        if(min_bottomK_len >bottomK_len ){
+            min_bottomK_len = bottomK_len;
+            min_id = i;
+        }
 
-        bottomKFile.write((char*)&len, sizeof(int));
-        bottomKFile.write((char*)&bottomKFile, sizeof(unsigned short)*k);
+        // Write the bottomk
+        bottomKFile.write((char*)&bottomK_len, sizeof(int));
+        bottomKFile.write((char*)&bottomK[0], sizeof(unsigned short)*bottomK_len);
     }
 
     printf("The average size of the document is %f\n", docLen_sum/N);
-    printf("The minimum length of those bottom %d is %d (In case there are some short documents)\n", k, min_bottomK_len);
+    printf("The minimum length of those bottom %d is %d, its id is %d (In case there are some short documents)\n", k, min_bottomK_len,min_id);
     idxFile.close();
     binFile.close();
     bottomKFile.close();
