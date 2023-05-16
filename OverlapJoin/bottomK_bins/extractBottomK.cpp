@@ -115,7 +115,11 @@ int main(int argc, char *argv[]){
         vector<unsigned short> entity(len);
         binFile.read((char*)&entity[0], sizeof(unsigned short) * len);
         
-        // Find the minmum length
+        // Unique the document
+        auto uniq_it = unique(entity.begin(), entity.end()); 
+        entity.resize(distance(entity.begin(), uniq_it)); // 10 20 30 20 10
+
+        // Find the minmum length Just for debug
         auto bottomK = kSmallest(entity, k);
         int bottomK_len = bottomK.size();
         if(min_bottomK_len >bottomK_len ){

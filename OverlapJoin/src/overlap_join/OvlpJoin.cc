@@ -60,7 +60,7 @@ double similarityy(vector<int> &v1, vector<int> &v2, double w1, double w2, const
 }
 
 int c;
-vector<vector<int>> dataset;
+vector<vector<unsigned short>> dataset;
 vector<combination> combs;
 
 int64_t nchoosek(int64_t n, int64_t k) {
@@ -85,6 +85,7 @@ void OvlpJoin::small_case(int L, int R) {
   gettimeofday(&mid, NULL);
 
   for (auto idx = total_eles - 1; idx >= 0; idx--) {
+    // cout<<"Current idx: "<<idx<<endl;
     if (ele_lists[idx].size() < 2) continue;
     vector<pair<int,int>> & vec = ele_lists[idx];
     int size = distance(vec.begin(), lower_bound(vec.begin(), vec.end(), L, comp_pair));
@@ -168,15 +169,15 @@ void OvlpJoin::small_case(int L, int R) {
           results[res_lists[id_lists[i][j]][k]] = i;
           int idd1 = idmap[i].first; 
           int idd2 = idmap[res_lists[id_lists[i][j]][k]].first;
-            if (has_limit)
-                        {
-                            double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
-                            if (result_pairs_.size() > maxlimit)
-                                result_pairs_.pop();
-                            result_pairs_.emplace(idd1, idd2, sim);
-                        } else {
+            // if (has_limit)
+            //             {
+            //                 double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
+            //                 if (result_pairs_.size() > maxlimit)
+            //                     result_pairs_.pop();
+            //                 result_pairs_.emplace(idd1, idd2, sim);
+            //             } else {
                             result_pairs.emplace_back(idd1, idd2);
-                        }
+                        // }
 
           ++result_num;
         }
@@ -221,15 +222,15 @@ void OvlpJoin::large_case(int L, int R) {
               int idd2= idmap[id].first;
 
 
-                        if (has_limit)
-                        {
-                            double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
-                            if (result_pairs_.size() > maxlimit)
-                                result_pairs_.pop();
-                            result_pairs_.emplace(idd1, idd2, sim);
-                        } else {
+                        // if (has_limit)
+                        // {
+                        //     double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
+                        //     if (result_pairs_.size() > maxlimit)
+                        //         result_pairs_.pop();
+                        //     result_pairs_.emplace(idd1, idd2, sim);
+                        // } else {
                             result_pairs.emplace_back(idd1, idd2);
-                        }
+                        // }
 
 
             ++result_num;
@@ -251,15 +252,15 @@ void OvlpJoin::large_case(int L, int R) {
               int idd2 = idmap[id].first;
 
 
-                        if (has_limit)
-                        {
-                            double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
-                            if (result_pairs_.size() > maxlimit)
-                                result_pairs_.pop();
-                            result_pairs_.emplace(idd1, idd2, sim);
-                        } else {
+                        // if (has_limit)
+                        // {
+                        //     double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
+                        //     if (result_pairs_.size() > maxlimit)
+                        //         result_pairs_.pop();
+                        //     result_pairs_.emplace(idd1, idd2, sim);
+                        // } else {
                             result_pairs.emplace_back(idd1, idd2);
-                        }
+                        // }
               ++result_num;
             }
           }
@@ -376,7 +377,7 @@ void OvlpJoin::overlapjoin(int overlap_threshold)
   sort(idmap.begin(), idmap.end(), [] (const pair<int, int> & a, const pair<int, int> & b) {
       return a.second > b.second;
   });
-  sort(dataset.begin(), dataset.end(), [] (const vector<int>& a, const vector<int>& b) {
+  sort(dataset.begin(), dataset.end(), [] (const vector<unsigned short>& a, const vector<unsigned short>& b) {
       return a.size() > b.size();
   });
   cout << " largest set: " << dataset.front().size() << " smallest set: " << dataset.back().size() << endl;
@@ -428,17 +429,20 @@ int64_t OvlpJoin::small_estimate(int L, int R) {
   int total_num = R - L;
   int sample_time = (R - L);
   double ratio =  (total_num - 1) * 1.0 / sample_time * total_num / 2;
-  // cout << "sample ratio: " << ratio << endl;
+  cout << "sample ratio: " << ratio << endl;
   int r1, r2;
   int64_t pair_num = 0;
+  cout<<"Sample time: "<<sample_time<<endl;
+  
   for (auto i = 0; i < sample_time; i++) {
     do {
       r1 = rand() % (R - L) + L;
       r2 = rand() % (R - L) + L;
-    } while (r1 == r2);
+    } while (r1 == r2);  // Deleted
     int start1 = 0;
     int start2 = 0;
     int overlap = 0;
+    // cout<<"Entering Second Loop\n";
     while (start1 < dataset[r1].size() && start2 < dataset[r2].size()) {
       if (dataset[r1][start1] == dataset[r2][start2]) {
         ++start1, ++start2;

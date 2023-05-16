@@ -46,7 +46,7 @@ public:
 struct combination;
 
 extern int c;
-extern vector<vector<int>> dataset;
+extern vector<vector<unsigned short>> dataset;
 extern vector<combination> combs;
 extern bool comp_int(const int a, const int b);
 extern bool comp_comb(const int a, const int b);
@@ -157,7 +157,7 @@ public:
   int64_t large_est_cost = 0;
   vector<int> heap;
   vector<pair<int, int>> buck;
-  vector<vector<int>> records;
+  vector<vector<unsigned short>> records;
   vector<pair<int, int>> idmap;
   unordered_set<int> random_ids;
   vector<vector<pair<int, int>>> ele_lists;
@@ -201,7 +201,7 @@ public:
   uint64_t getListCost();
   int divide(int nL);
 
-  OvlpJoin(vector<vector<int>> &sorted_records, vector<double> &ww, vector<double> &rw, int ml, bool islimit)
+  OvlpJoin(vector<vector<unsigned short>> &sorted_records, vector<double> &ww, vector<double> &rw, int ml, bool islimit)
         : wordwt(ww), recordwt(rw)
     {
         maxlimit = ml;
