@@ -8,7 +8,7 @@ TEST_DIR = test
 UTIL_DIR = $(SRCDIR)/util
 
 # Compiler flags
-CXXFLAGS = -std=c++17 -O3 -g -fopenmp -I $(UTIL_DIR)
+CXXFLAGS = -std=c++17 -O3 -g -fopenmp -I $(UTIL_DIR) -pg
 
 # Files and folders
 SRCS = $(wildcard $(SRCDIR)/*.cc) $(wildcard $(SRCDIR)/overlap_join/*.cc)

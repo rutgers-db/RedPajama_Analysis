@@ -117,7 +117,7 @@ int main(int argc, char *argv[]){
         
         // Unique the document
         auto uniq_it = unique(entity.begin(), entity.end()); 
-        entity.resize(distance(entity.begin(), uniq_it)); // 10 20 30 20 10
+        entity.resize(distance(entity.begin(), uniq_it));
 
         // Find the minmum length Just for debug
         auto bottomK = kSmallest(entity, k);

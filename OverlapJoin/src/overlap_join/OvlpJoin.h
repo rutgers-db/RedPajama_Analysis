@@ -20,28 +20,25 @@ using namespace std;
 #define RATIO 0.005
 #define TIMES 200
 
-
-
 class SimPairy
 {
 public:
-    int id1;
-    int id2;
-    double sim;
-    SimPairy() {}
-    SimPairy(int i1, int i2, double s)
-    {
-        id1 = i1;
-        id2 = i2;
-        sim = s;
-    }
-    
-    bool operator<(const SimPairy& rhs) const
-    {
-        return this->sim > rhs.sim;
-    }
-};
+  int id1;
+  int id2;
+  double sim;
+  SimPairy() {}
+  SimPairy(int i1, int i2, double s)
+  {
+    id1 = i1;
+    id2 = i2;
+    sim = s;
+  }
 
+  bool operator<(const SimPairy &rhs) const
+  {
+    return this->sim > rhs.sim;
+  }
+};
 
 struct combination;
 
@@ -143,12 +140,10 @@ struct combination
   }
 };
 
-class OvlpJoin 
+class OvlpJoin
 {
-  
 
 public:
-
   int n;
   int total_eles;
   int alive_id = 0;
@@ -162,24 +157,19 @@ public:
   unordered_set<int> random_ids;
   vector<vector<pair<int, int>>> ele_lists;
   vector<pair<int, int>> result_pairs;
-    priority_queue<SimPairy> result_pairs_;
-    vector<double> &wordwt;
-    vector<double> &recordwt;
-    int maxlimit;
-    bool has_limit;
+  priority_queue<SimPairy> result_pairs_;
+  bool has_limit;
 
+  void get_results()
+  {
 
-
-    void get_results()
+    while (!result_pairs_.empty())
     {
-
-                while(!result_pairs_.empty())
-                {
-                    result_pairs.emplace_back(result_pairs_.top().id1, result_pairs_.top().id2);
-                    result_pairs_.pop();
-                }
+      result_pairs.emplace_back(result_pairs_.top().id1, result_pairs_.top().id2);
+      result_pairs_.pop();
     }
-    
+  }
+
   double heap_cost;
   double binary_cost;
   int list_max;
@@ -191,7 +181,7 @@ public:
   int64_t candidate_num;
 
   void overlapjoin(int overlap_threshold);
-  bool is_equal(const combination & c1, const combination & c2);
+  bool is_equal(const combination &c1, const combination &c2);
   int estimate();
   int64_t small_estimate(int L, int R);
   int64_t large_estimate(int L, int R);
@@ -201,21 +191,19 @@ public:
   uint64_t getListCost();
   int divide(int nL);
 
-  OvlpJoin(vector<vector<unsigned short>> &sorted_records, vector<double> &ww, vector<double> &rw, int ml, bool islimit)
-        : wordwt(ww), recordwt(rw)
-    {
-        maxlimit = ml;
-        has_limit = islimit;
+  OvlpJoin(vector<vector<unsigned short>> &sorted_records, bool islimit)
+  {
+    has_limit = islimit;
 
     // reset everything
     c = 0;
     n = 0;
-    total_eles =0;
+    total_eles = 0;
     alive_id = 0;
     heap_op = 0;
     large_cost = 0;
     large_est_cost = 0;
-    
+
     heap.clear();
     buck.clear();
     dataset.clear();
@@ -236,7 +224,7 @@ public:
     list_sample_num = 0;
     result_num = 0;
     candidate_num = 0;
-    
+
     records = sorted_records;
   }
 };
