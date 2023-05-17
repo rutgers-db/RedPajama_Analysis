@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
     // global variables
-    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/arxiv_bottomK_1024.bin";
+    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/book_bottomK_1024.bin";
     const int max_k = 1024;
     int K = 64;
     srand(0); // set seed for random generator
