@@ -116,6 +116,7 @@ int main(int argc, char *argv[]){
         binFile.read((char*)&entity[0], sizeof(unsigned short) * len);
         
         // Unique the document
+        sort(entity.begin(), entity.end());
         auto uniq_it = unique(entity.begin(), entity.end()); 
         entity.resize(distance(entity.begin(), uniq_it));
 
