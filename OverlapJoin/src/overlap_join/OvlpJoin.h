@@ -146,7 +146,7 @@ class OvlpJoin
 public:
   int n;
   int total_eles;
-  int alive_id = 0;
+  int alive_id = 0; 
   uint64_t heap_op = 0;
   int64_t large_cost = 0;
   int64_t large_est_cost = 0;

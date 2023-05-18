@@ -4,6 +4,7 @@ using namespace std;
 
 // load the vector<int> of a bin file and push back to docs
 void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &docs) {
+    cout <<"Reading "<< binFileName<<endl;
     ifstream ifs(binFileName, ios::binary);
     if (!ifs) {
         cout << "error open bin file" << endl;

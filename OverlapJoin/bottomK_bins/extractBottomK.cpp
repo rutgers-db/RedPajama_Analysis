@@ -13,18 +13,18 @@ vector<bool> if_filtered_hashvalues; // Vector to store if a token is filtered (
 
 // Generate random hash functions based on given seed
 // ab: the output argument
-void generateHashFunc(unsigned int seed, pair<int, int> &hf) {
+void generateHashFunc(unsigned int seed, pair<unsigned short, unsigned short> &hf) {
     srand(seed);
-    int a = 0;
+    unsigned short a = 0;
     while (a == 0)
         a = rand();
-    int b = rand();
+    unsigned short b = rand();
     hf.first = a;
     hf.second = b;
 }
 
 // The hash value function
-inline int hval(const pair<int, int> &hf, int &word) {
+inline unsigned short hval(const pair<unsigned short, unsigned short> &hf, unsigned short &word) {
     return hf.first * word + hf.second;
 }
 
@@ -54,27 +54,33 @@ void loadFilteredTokens(const string &filtered_tokens_file, int tokenNum) {
 }
 
 // extract the bottom k
-vector<unsigned short> kSmallest(const vector<unsigned short>& numbers, int k) {
-    priority_queue<unsigned short> maxHeap;
-    for (unsigned short num : numbers) {
-        if (maxHeap.size() < k) {
-            maxHeap.push(num);
-        } else if (num < maxHeap.top()) {
-            maxHeap.pop();
-            maxHeap.push(num);
+// In this function, we'll use a combination of a std::unordered_map to count the frequency of each number, 
+// and a std::priority_queue (acting as a min heap) to keep track of the k smallest unique numbers.
+std::vector<unsigned short> kMostMinUnique(const std::vector<unsigned short>& nums, int k) {
+    std::unordered_map<unsigned short, int> counts;
+    for (unsigned short num : nums) {
+        counts[num]++;
+    }
+
+    std::priority_queue<unsigned short> minHeap;
+
+    for (auto& pair : counts) {
+        if (minHeap.size() < k) {
+            minHeap.push(pair.first);
+        } else if (pair.first < minHeap.top()) {
+            minHeap.pop();
+            minHeap.push(pair.first);
         }
     }
 
-    vector<unsigned short> kSmallestNumbers;
-    while (!maxHeap.empty()) {
-        kSmallestNumbers.push_back(maxHeap.top());
-        maxHeap.pop();
+    std::vector<unsigned short> result;
+    while (!minHeap.empty()) {
+        result.push_back(minHeap.top());
+        minHeap.pop();
     }
 
-    // reverse the vector to return the numbers in increasing order
-    reverse(kSmallestNumbers.begin(), kSmallestNumbers.end());
-    
-    return kSmallestNumbers;
+    std::reverse(result.begin(), result.end());
+    return result;
 }
 
 int main(int argc, char *argv[]){
@@ -114,14 +120,12 @@ int main(int argc, char *argv[]){
         // Read the file
         vector<unsigned short> entity(len);
         binFile.read((char*)&entity[0], sizeof(unsigned short) * len);
-        
-        // Unique the document
-        sort(entity.begin(), entity.end());
-        auto uniq_it = unique(entity.begin(), entity.end()); 
-        entity.resize(distance(entity.begin(), uniq_it));
 
+        for(auto& ele: entity){
+            ele = hval(hf,ele);
+        }
         // Find the minmum length Just for debug
-        auto bottomK = kSmallest(entity, k);
+        auto bottomK = kMostMinUnique(entity, k);
         int bottomK_len = bottomK.size();
         if(min_bottomK_len >bottomK_len ){
             min_bottomK_len = bottomK_len;

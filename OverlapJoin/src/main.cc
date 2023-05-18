@@ -6,28 +6,43 @@ using namespace std;
 int main()
 {
     // global variables
-    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/arxiv_bottomK_1024.bin";
+    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/book_bottomK_1024.bin";
     const int max_k = 1024;
-    int K = 64;
+    int K = 1024;
     srand(0); // set seed for random generator
     // OverlapJoin Parameters
-    int c = 58;
+    int c = 1023;
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;
     loadShortBin(bottomK_path, bottomks);
+
+    // // choose only 100 elements delete later
+    // bottomks.resize(1000);
+
+    // int cnt = 0;
     for (auto &bottom_k : bottomks)
     {
 
         // // If should be deleted later just for debug. Unique Operation
+        // sort(bottom_k.begin(), bottom_k.end());
         // auto uniq_it = unique(bottom_k.begin(), bottom_k.end());
         // bottom_k.resize(distance(bottom_k.begin(), uniq_it)); // 10 20 30 20 10
         if (bottom_k.size() > K)
             bottom_k.resize(K);
+
+        assert(bottom_k.size() > 0);
+
+        // if(cnt == 353 || cnt ==352|| cnt ==351|| cnt ==354){
+        //     for(auto ele:bottom_k)
+        //         cout<<ele<<",";
+        //     cout<<endl;
+        // }
+        
+        // cnt++;
     }
 
-    // // choose only 100 elements delete later
-    bottomks.resize(100);
+    
     // Sort bottomks based on their length, elements
     vector<int> idmap;
     idmap.clear();
@@ -68,4 +83,8 @@ int main()
     // Investigate the result
     joiner.get_results();
     printf("joiner.result_pairs have %lu pairs\n", joiner.result_pairs.size());
+    // Print the result pairs
+    for(auto& pair : joiner.result_pairs){
+        printf("%d %d\n",idmap[pair.first],idmap[pair.second]);
+    }
 }

@@ -5,6 +5,22 @@ int c;
 vector<vector<unsigned short>> dataset;
 vector<combination> combs;
 
+/*
+ * Recursive function to calculate binomial coefficient.
+ *
+ * The binomial coefficient, often referred to as "n choose k" or "n over k",
+ * is the number of ways to choose k elements from a set of n elements 
+ * without considering the order. The formula to calculate binomial coefficients is 
+ * n! / (k!(n-k)!), where ! represents factorial.
+ *
+ * This function uses a recursive approach to calculate the binomial coefficient,
+ * which simplifies the computation by avoiding the calculation of the full factorials.
+ * This approach is based on the identity C(n, k) = n*C(n-1, k-1)/k.
+ *
+ * @param n The total number of elements in the set.
+ * @param k The number of elements to choose from the set.
+ * @return The binomial coefficient of n and k.
+ */
 int64_t nchoosek(int64_t n, int64_t k)
 {
   if (k == 0)
@@ -12,8 +28,12 @@ int64_t nchoosek(int64_t n, int64_t k)
   return (n * nchoosek(n - 1, k - 1)) / k;
 }
 
+
+// Function to handle the small sets
 void OvlpJoin::small_case(int L, int R)
 {
+
+  // If the left boundary is greater or equal to the right boundary, return immediately
   if (L >= R)
     return;
   --c;
@@ -30,6 +50,7 @@ void OvlpJoin::small_case(int L, int R)
 
   gettimeofday(&mid, NULL);
 
+  // Loop over all elements in reverse order
   for (auto idx = total_eles - 1; idx >= 0; idx--)
   {
     // cout<<"Current idx: "<<idx<<endl;
@@ -134,15 +155,7 @@ void OvlpJoin::small_case(int L, int R)
           results[res_lists[id_lists[i][j]][k]] = i;
           int idd1 = idmap[i].first;
           int idd2 = idmap[res_lists[id_lists[i][j]][k]].first;
-          // if (has_limit)
-          //             {
-          //                 double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
-          //                 if (result_pairs_.size() > maxlimit)
-          //                     result_pairs_.pop();
-          //                 result_pairs_.emplace(idd1, idd2, sim);
-          //             } else {
           result_pairs.emplace_back(idd1, idd2);
-          // }
 
           ++result_num;
         }
@@ -192,16 +205,7 @@ void OvlpJoin::large_case(int L, int R)
             // cout << idmap[i].first << " " << idmap[id].first << endl;
             int idd1 = idmap[i].first;
             int idd2 = idmap[id].first;
-
-            // if (has_limit)
-            // {
-            //     double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
-            //     if (result_pairs_.size() > maxlimit)
-            //         result_pairs_.pop();
-            //     result_pairs_.emplace(idd1, idd2, sim);
-            // } else {
             result_pairs.emplace_back(idd1, idd2);
-            // }
 
             ++result_num;
           }
@@ -228,16 +232,7 @@ void OvlpJoin::large_case(int L, int R)
               // cout << idmap[i].first << " " << idmap[id].first << endl;
               int idd1 = idmap[i].first;
               int idd2 = idmap[id].first;
-
-              // if (has_limit)
-              // {
-              //     double sim = similarityx(dataset[idd1], dataset[idd2], recordwt[idd1], recordwt[idd2], wordwt);
-              //     if (result_pairs_.size() > maxlimit)
-              //         result_pairs_.pop();
-              //     result_pairs_.emplace(idd1, idd2, sim);
-              // } else {
               result_pairs.emplace_back(idd1, idd2);
-              // }
               ++result_num;
             }
           }
@@ -328,6 +323,7 @@ void OvlpJoin::overlapjoin(int overlap_threshold)
     eles.push_back(make_pair(it->first, it->second.size())); // build element frequency table
 
   // get global order: frequency increasing order
+  // sort the elements
   sort(eles.begin(), eles.end(), [](const pair<int, int> &p1, const pair<int, int> &p2)
        { return p1.second < p2.second; });
 
@@ -337,6 +333,8 @@ void OvlpJoin::overlapjoin(int overlap_threshold)
   // sort elements by its global order: frequence increasing order
   // remove widow word
   // encode elements in decreasing order
+  // so the dataset is the same as the record, only the element is encoded to 0~ total_eles-1. 
+  // The encoding way is the less frequency of the element is, the large number it gets
   total_eles = eles.size();
   for (auto i = 0; i < int(eles.size()); ++i)
   {
@@ -364,7 +362,7 @@ void OvlpJoin::overlapjoin(int overlap_threshold)
        { return a.second > b.second; });
   sort(dataset.begin(), dataset.end(), [](const vector<unsigned short> &a, const vector<unsigned short> &b)
        { return a.size() > b.size(); });
-  cout << " largest set: " << dataset.front().size() << " smallest set: " << dataset.back().size() << endl;
+  cout << " largest set: " << dataset.front().size() << " smallest set: " << dataset.back().size() << "It might be 0 cause some row in dataset, its length is smaller than c"<< endl;
 
   // build real inverted index
   ele_lists.resize(total_eles);
@@ -376,7 +374,7 @@ void OvlpJoin::overlapjoin(int overlap_threshold)
   cout << "Transform Time: " << time3.tv_sec - time1.tv_sec + (time3.tv_usec - time1.tv_usec) / 1e6 << endl;
 
   // ****** cost model for boundary selection ******
-  int nL = estimate();
+  int nL = 0; //estimate();
   int nP = nL;
   cout << " large sets: " << nP << " small sets: " << n - nP << endl;
 
@@ -535,19 +533,6 @@ int64_t OvlpJoin::small_estimate(int L, int R)
   return binary_cost * TIMES + heap_cost * TIMES + list_cost;
 }
 
-/*
-int64_t large_estimate(int L, int R) {
-  int64_t ret = 0;
-  for (int x = 0; x < ele_lists.size(); x++) {
-    int large_num = distance(ele_lists[x].begin(), lower_bound(ele_lists[x].begin(), ele_lists[x].end(), R, comp_pair));
-    int all_num = ele_lists[x].size();
-    ret += (large_num * all_num - large_num * (large_num - 1) / 2);
-  }
-  large_est_cost = ret;
-  return ret;
-}
-*/
-
 int64_t OvlpJoin::large_estimate(int L, int R)
 {
   timeval beg, end;
@@ -575,8 +560,6 @@ int64_t OvlpJoin::large_estimate(int L, int R)
 uint64_t OvlpJoin::getListCost()
 {
   return (list_cost - list_sum) / 2 * TIMES;
-  // return (list_cost - (list_sum * 1.0 / list_sample_num) * (list_sum * 1.0 / list_sample_num) - list_sum) / 2 * TIMES;
-  // return (list_cost * list_sample_num * 1.0 / (list_sample_num - 1) - list_sum * 1.0 / list_sample_num * list_sum / (list_sample_num - 1) - list_sum) / 2 * TIMES;
 }
 
 // find first set with size smaller or equal to nL
