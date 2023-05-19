@@ -92,7 +92,7 @@ struct combination
     cout << endl;
   }
 
-  bool stepback(int i)
+  bool stepback(const int i)
   {
     if (i == 0)
       return true;
@@ -148,8 +148,6 @@ public:
   int total_eles;
   int alive_id = 0; 
   uint64_t heap_op = 0;
-  int64_t large_cost = 0;
-  int64_t large_est_cost = 0;
   vector<int> heap;
   vector<pair<int, int>> buck;
   vector<vector<unsigned short>> records;
@@ -158,7 +156,6 @@ public:
   vector<vector<pair<int, int>>> ele_lists;
   vector<pair<int, int>> result_pairs;
   priority_queue<SimPairy> result_pairs_;
-  bool has_limit;
 
   void get_results()
   {
@@ -170,11 +167,8 @@ public:
     }
   }
 
-  double heap_cost;
-  double binary_cost;
   int list_max;
   int list_min;
-  int64_t list_cost;
   int64_t list_sum;
   int64_t list_sample_num;
   int64_t result_num;
@@ -182,18 +176,12 @@ public:
 
   void overlapjoin(int overlap_threshold);
   bool is_equal(const combination &c1, const combination &c2);
-  int estimate();
-  int64_t small_estimate(int L, int R);
-  int64_t large_estimate(int L, int R);
   void small_case(int L, int R);
-  void large_case(int L, int R);
 
-  uint64_t getListCost();
   int divide(int nL);
 
-  OvlpJoin(vector<vector<unsigned short>> &sorted_records, bool islimit)
+  OvlpJoin(vector<vector<unsigned short>> &sorted_records)
   {
-    has_limit = islimit;
 
     // reset everything
     c = 0;
@@ -201,8 +189,6 @@ public:
     total_eles = 0;
     alive_id = 0;
     heap_op = 0;
-    large_cost = 0;
-    large_est_cost = 0;
 
     heap.clear();
     buck.clear();
@@ -215,11 +201,8 @@ public:
 
     combs.clear();
 
-    heap_cost = 0;
-    binary_cost = 0;
     list_max = 0;
     list_min = 0;
-    list_cost = 0;
     list_sum = 0;
     list_sample_num = 0;
     result_num = 0;

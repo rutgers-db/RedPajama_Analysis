@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+ #include <sys/sysinfo.h>
 using namespace std;
 void print_memory() {
 #ifdef __linux__
@@ -49,4 +50,18 @@ void print_memory() {
     printf("free memory: %lld\nused memory: %lld\n", free_memory, used_memory);
   }
 #endif
+}
+
+//retrieves all unique integers from a vector of pairs and sorts them in ascending order
+std::vector<int> getUniqueInts(const std::vector<std::pair<int, int>>& pairs) {
+    std::set<int> uniqueInts;
+    for (const auto& p : pairs) {
+        uniqueInts.insert(p.first);
+        uniqueInts.insert(p.second);
+    }
+
+    // Convert set to vector
+    std::vector<int> result(uniqueInts.begin(), uniqueInts.end());
+
+    return result;
 }

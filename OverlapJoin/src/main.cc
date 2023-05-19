@@ -1,48 +1,36 @@
 #include <bits/stdc++.h>
 #include "../src/util/io.h"
+#include "../src/util/util.h"
 #include "../src/overlap_join/OvlpJoin.h"
 using namespace std;
 
 int main()
 {
     // global variables
-    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/book_bottomK_1024.bin";
+    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/arxiv_bottomK_1024.bin";
     const int max_k = 1024;
-    int K = 1024;
+    int K = 64;
     srand(0); // set seed for random generator
+
     // OverlapJoin Parameters
-    int c = 1023;
+    int c = 58;
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;
     loadShortBin(bottomK_path, bottomks);
 
-    // // choose only 100 elements delete later
-    // bottomks.resize(1000);
-
-    // int cnt = 0;
+    // just for debug
+    // bottomks.resize(1000000);
+    print_memory();
     for (auto &bottom_k : bottomks)
     {
-
-        // // If should be deleted later just for debug. Unique Operation
-        // sort(bottom_k.begin(), bottom_k.end());
-        // auto uniq_it = unique(bottom_k.begin(), bottom_k.end());
-        // bottom_k.resize(distance(bottom_k.begin(), uniq_it)); // 10 20 30 20 10
         if (bottom_k.size() > K)
             bottom_k.resize(K);
 
         assert(bottom_k.size() > 0);
-
-        // if(cnt == 353 || cnt ==352|| cnt ==351|| cnt ==354){
-        //     for(auto ele:bottom_k)
-        //         cout<<ele<<",";
-        //     cout<<endl;
-        // }
-        
-        // cnt++;
     }
 
-    
+    print_memory();
     // Sort bottomks based on their length, elements
     vector<int> idmap;
     idmap.clear();
@@ -75,16 +63,19 @@ int main()
     vector<vector<unsigned short>> sorted_bottomKs;
     for (int i = 0; i < idmap.size(); i++)
         sorted_bottomKs.emplace_back(bottomks[idmap[i]]);
+    bottomks.clear();
+    print_memory();
 
     // Use overlapJoin
-    OvlpJoin joiner(sorted_bottomKs, false);
-    joiner.overlapjoin(c);
+    // OvlpJoin joiner(sorted_bottomKs);
+    // joiner.overlapjoin(c);
 
-    // Investigate the result
-    joiner.get_results();
-    printf("joiner.result_pairs have %lu pairs\n", joiner.result_pairs.size());
+    // // Investigate the result
+    // joiner.get_results();
+    // printf("joiner.result_pairs have %lu pairs\n", joiner.result_pairs.size());
+    // printf("The amount of document that occur in the pairs is %lu\n", getUniqueInts(joiner.result_pairs).size());
     // Print the result pairs
-    for(auto& pair : joiner.result_pairs){
-        printf("%d %d\n",idmap[pair.first],idmap[pair.second]);
-    }
+    // for(auto& pair : joiner.result_pairs){
+    //     printf("%d %d\n",idmap[pair.first],idmap[pair.second]);
+    // }
 }

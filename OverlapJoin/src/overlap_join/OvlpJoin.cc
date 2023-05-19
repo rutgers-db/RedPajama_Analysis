@@ -38,17 +38,9 @@ void OvlpJoin::small_case(int L, int R)
     return;
   --c;
 
-  timeval beg, mid, mid1, end;
-  gettimeofday(&beg, NULL);
-
   cout << " number of small sets: " << R - L << endl;
 
-  list_cost = 0;
-  heap_cost = 0;
-  binary_cost = 0;
   vector<vector<int>> res_lists;
-
-  gettimeofday(&mid, NULL);
 
   // Loop over all elements in reverse order
   for (auto idx = total_eles - 1; idx >= 0; idx--)
@@ -76,8 +68,7 @@ void OvlpJoin::small_case(int L, int R)
     if (heap_size < 2)
       continue;
     make_heap(heap.begin(), heap.end(), comp_comb);
-    heap_cost += (3 * c * heap_size);
-    // cout << heap_size << " initial: " << heap_cost << endl;
+    // cout << heap_size << endl;
 
     // pop heaps
     vector<int> inv_list;
@@ -86,7 +77,6 @@ void OvlpJoin::small_case(int L, int R)
       inv_list.clear();
       do
       {
-        heap_cost += (c * log2(heap_size) + c);
         // cout << heap_size << " " << heap_cost << endl;
         pop_heap(heap.begin(), heap.begin() + heap_size, comp_comb);
         --heap_size;
@@ -95,7 +85,6 @@ void OvlpJoin::small_case(int L, int R)
 
       if (inv_list.size() > 1)
       {
-        list_cost += ((inv_list.size() - 1) * (int64_t)inv_list.size() / 2);
         res_lists.push_back(std::move(inv_list));
       }
 
@@ -105,7 +94,6 @@ void OvlpJoin::small_case(int L, int R)
       for (auto i = heap_size; i < heap.size(); ++i)
       {
         combs[heap[i]].binary(combs[heap.front()]);
-        binary_cost += (c * log2(dataset[combs[heap[i]].id].size()));
       }
 
       int comp_num = 0;
@@ -120,7 +108,6 @@ void OvlpJoin::small_case(int L, int R)
       for (auto i = heap_size; i < (int)heap.size() - comp_num; i++)
       {
         push_heap(heap.begin(), heap.begin() + i + 1, comp_comb);
-        heap_cost += (c * log2(i));
       }
       while (comp_num-- > 0)
         heap.pop_back();
@@ -129,8 +116,6 @@ void OvlpJoin::small_case(int L, int R)
   }
 
   cout << "Res lists num: " << res_lists.size() << endl;
-
-  gettimeofday(&mid1, NULL);
 
   vector<vector<int>> id_lists(n);
   for (auto i = 0; i < res_lists.size(); i++)
@@ -163,136 +148,6 @@ void OvlpJoin::small_case(int L, int R)
     }
   }
   ++c;
-  gettimeofday(&end, NULL);
-  cout << " small p1 : " << mid.tv_sec - beg.tv_sec + (mid.tv_usec - beg.tv_usec) / 1e6 << endl;
-  cout << " small p2 : " << mid1.tv_sec - mid.tv_sec + (mid1.tv_usec - mid.tv_usec) / 1e6 << endl;
-  cout << " small p3 : " << end.tv_sec - mid1.tv_sec + (end.tv_usec - mid1.tv_usec) / 1e6 << endl;
-  cout << " heap, binary, list costs : " << heap_cost << " " << binary_cost << " " << list_cost << endl;
-}
-
-void OvlpJoin::large_case(int L, int R)
-{
-  timeval beg, mid, end;
-  gettimeofday(&beg, NULL);
-
-  vector<vector<int>> ele(total_eles);
-
-  for (int i = n - 1; i >= R; --i)
-    for (auto x : dataset[i])
-      ele[x].push_back(i);
-
-  gettimeofday(&mid, NULL);
-  vector<int> bucket;
-
-  for (int i = R - 1; i >= L; --i)
-  {
-
-    int count = 0;
-    for (auto x : dataset[i])
-      count += ele[x].size();
-    large_cost += count;
-
-    if (count > 0.2 * n)
-    {
-      // n + count * value + count * if
-      bucket.assign(n, 0);
-      for (auto x : dataset[i])
-      {
-        for (auto id : ele[x])
-        {
-          if (++bucket[id] == c)
-          {
-            // cout << idmap[i].first << " " << idmap[id].first << endl;
-            int idd1 = idmap[i].first;
-            int idd2 = idmap[id].first;
-            result_pairs.emplace_back(idd1, idd2);
-
-            ++result_num;
-          }
-        }
-      }
-    }
-    else
-    {
-      // count * if + count * value + count * if or value
-      alive_id++;
-      for (auto x : dataset[i])
-      {
-        for (auto id : ele[x])
-        {
-          if (buck[id].first != alive_id)
-          {
-            buck[id].first = alive_id;
-            buck[id].second = 1;
-          }
-          else
-          {
-            if (++buck[id].second == c)
-            {
-              // cout << idmap[i].first << " " << idmap[id].first << endl;
-              int idd1 = idmap[i].first;
-              int idd2 = idmap[id].first;
-              result_pairs.emplace_back(idd1, idd2);
-              ++result_num;
-            }
-          }
-        }
-      }
-    }
-    for (auto x : dataset[i])
-      ele[x].push_back(i);
-  }
-  gettimeofday(&end, NULL);
-  cout << " large p1 : " << mid.tv_sec - beg.tv_sec + (mid.tv_usec - beg.tv_usec) / 1e6 << endl;
-  cout << " large p2 : " << end.tv_sec - mid.tv_sec + (end.tv_usec - mid.tv_usec) / 1e6 << endl;
-}
-
-// return the bound position
-int OvlpJoin::estimate()
-{
-
-  // get random elements for sampling
-  while (random_ids.size() < total_eles * RATIO)
-    random_ids.insert(rand() % total_eles);
-
-  int64_t small, large;
-  int min_size = dataset.back().size();
-  int max_size = dataset.front().size();
-  auto bound = (min_size <= c ? c : min_size);
-  int pos = divide(bound);
-  int prev_pos = pos;
-  int64_t prev_large = large_estimate(0, pos);
-  int64_t prev_small = small_estimate(pos, n);
-  ++bound;
-
-  for (; bound <= max_size; bound++)
-  {
-
-    pos = divide(bound);
-    if (pos == prev_pos)
-      continue;
-    cout << endl
-         << "size boud: " << bound << endl;
-    cout << "larg numb: " << pos << endl;
-    cout << "smal numb: " << n - pos << endl;
-
-    large = large_estimate(0, pos);
-    small = small_estimate(pos, n);
-
-    cout << "heap cost: " << heap_cost * TIMES << endl;
-    cout << "biny cost: " << binary_cost * TIMES << endl;
-    cout << "list cost: " << list_cost << endl;
-    cout << "smal cost: " << small << endl;
-    cout << "larg cost: " << large << endl;
-
-    if (small - prev_small > 1.2 * (prev_large - large))
-      return prev_pos;
-
-    prev_pos = pos;
-    prev_large = large;
-    prev_small = small;
-  }
-  return prev_pos;
 }
 
 void OvlpJoin::overlapjoin(int overlap_threshold)
@@ -376,17 +231,14 @@ void OvlpJoin::overlapjoin(int overlap_threshold)
   // ****** cost model for boundary selection ******
   int nL = 0; //estimate();
   int nP = nL;
-  cout << " large sets: " << nP << " small sets: " << n - nP << endl;
+  cout << " All are treated as small sets: " << n - nP << endl;
 
   gettimeofday(&time4, NULL);
-  cout << "Estimation Time: " << time4.tv_sec - time3.tv_sec + (time4.tv_usec - time3.tv_usec) / 1e6 << endl;
-
   // ****** conduct joining ******
   result_num = 0;
   candidate_num = 0;
 
   gettimeofday(&s1, NULL);
-  large_case(0, nP);
   gettimeofday(&t1, NULL);
 
   gettimeofday(&s2, NULL);
@@ -395,172 +247,11 @@ void OvlpJoin::overlapjoin(int overlap_threshold)
 
   gettimeofday(&ending, NULL);
   cout << "Join Time: " << ending.tv_sec - time4.tv_sec + (ending.tv_usec - time4.tv_usec) / 1e6 << endl;
-  cout << "  large Time: " << t1.tv_sec - s1.tv_sec + (t1.tv_usec - s1.tv_usec) / 1e6 << endl;
   cout << "  small Time: " << t2.tv_sec - s2.tv_sec + (t2.tv_usec - s2.tv_usec) / 1e6 << endl;
   cout << "All Time: " << ending.tv_sec - starting.tv_sec + (ending.tv_usec - starting.tv_usec) / 1e6 << endl;
   cout << "Result Num: " << result_num << endl;
-  cout << "  large cost: " << large_cost << " small cost: " << heap_cost + list_cost + binary_cost << endl;
 }
 
-int64_t OvlpJoin::small_estimate(int L, int R)
-{
-  if (L >= R)
-    return 0;
-
-  timeval beg, mid, mid1, end;
-  gettimeofday(&beg, NULL);
-
-  int total_num = R - L;
-  int sample_time = (R - L);
-  double ratio = (total_num - 1) * 1.0 / sample_time * total_num / 2;
-  cout << "sample ratio: " << ratio << endl;
-  int r1, r2;
-  int64_t pair_num = 0;
-  cout << "Sample time: " << sample_time << endl;
-
-  for (auto i = 0; i < sample_time; i++)
-  {
-    do
-    {
-      r1 = rand() % (R - L) + L;
-      r2 = rand() % (R - L) + L;
-    } while (r1 == r2);
-    int start1 = 0;
-    int start2 = 0;
-    int overlap = 0;
-
-    while (start1 < dataset[r1].size() && start2 < dataset[r2].size())
-    {
-      if (dataset[r1][start1] == dataset[r2][start2])
-      {
-        ++start1, ++start2;
-        overlap++;
-      }
-      else
-      {
-        if (dataset[r1][start1] > dataset[r2][start2])
-          ++start1;
-        else
-          ++start2;
-      }
-    }
-    if (overlap >= c)
-    {
-      // cout << overlap << " " << c << endl;
-      pair_num += nchoosek(overlap, c);
-      // cout << pair_num << endl;
-    }
-  }
-  list_cost = pair_num * ratio;
-
-  --c;
-
-  heap_cost = 0;
-  binary_cost = 0;
-
-  gettimeofday(&mid, NULL);
-
-  for (auto sit = random_ids.begin(); sit != random_ids.end(); ++sit)
-  {
-    auto idx = *sit;
-
-    vector<pair<int, int>> &vec = ele_lists[idx];
-    int size = distance(vec.begin(), lower_bound(vec.begin(), vec.end(), L, comp_pair));
-    if (vec.size() <= size + 1)
-      continue;
-
-    heap.clear();
-    combs.clear();
-    int heap_size = 0;
-    for (auto i = size; i < vec.size(); i++)
-    {
-      if ((int)(dataset[vec[i].first].size()) - 1 - vec[i].second < c)
-        continue;
-      heap.push_back(heap_size++);
-      combs.push_back(combination(vec[i].first, vec[i].second));
-    }
-
-    if (heap_size < 2)
-      continue;
-
-    make_heap(heap.begin(), heap.end(), comp_comb);
-    heap_cost += (3 * c * heap_size);
-
-    while (heap_size > 1)
-    {
-      do
-      {
-        ++heap_op;
-        heap_cost += (c * log2(heap_size) + c);
-        pop_heap(heap.begin(), heap.begin() + heap_size, comp_comb);
-        --heap_size;
-      } while (heap_size > 0 && is_equal(combs[heap[heap_size]], combs[heap.front()]));
-
-      if (heap_size == 0)
-        break;
-
-      for (auto i = heap_size; i < heap.size(); ++i)
-      {
-        combs[heap[i]].binary(combs[heap.front()]);
-        binary_cost += (c * log2(dataset[combs[heap[i]].id].size()));
-      }
-
-      int comp_num = 0;
-      for (auto i = heap_size; i < heap.size(); ++i)
-      {
-        if (combs[heap[i]].completed)
-          ++comp_num;
-        else if (comp_num > 0)
-          heap[i - comp_num] = heap[i];
-      }
-
-      for (auto i = heap_size; i < (int)heap.size() - comp_num; i++)
-      {
-        push_heap(heap.begin(), heap.begin() + i + 1, comp_comb);
-        heap_cost += (c * log2(i));
-      }
-      while (comp_num-- > 0)
-        heap.pop_back();
-      heap_size = heap.size();
-    }
-  }
-
-  ++c;
-
-  gettimeofday(&end, NULL);
-  cout << " small est time p1 : " << mid.tv_sec - beg.tv_sec + (mid.tv_usec - beg.tv_usec) / 1e6 << endl;
-  cout << " small est time p2 : " << end.tv_sec - mid.tv_sec + (end.tv_usec - mid.tv_usec) / 1e6 << endl;
-  return binary_cost * TIMES + heap_cost * TIMES + list_cost;
-}
-
-int64_t OvlpJoin::large_estimate(int L, int R)
-{
-  timeval beg, end;
-  gettimeofday(&beg, NULL);
-  vector<int> count(total_eles);
-  for (int i = n - 1; i >= R; --i)
-    for (auto x : dataset[i])
-      ++count[x];
-
-  int64_t ret = 0;
-  for (int i = R - 1; i >= L; --i)
-  {
-    for (auto x : dataset[i])
-    {
-      ++count[x];
-      ret += count[x];
-    }
-  }
-  large_est_cost = ret;
-  gettimeofday(&end, NULL);
-  cout << " large est time : " << end.tv_sec - beg.tv_sec + (end.tv_usec - beg.tv_usec) / 1e6 << endl;
-  return ret;
-}
-
-uint64_t OvlpJoin::getListCost()
-{
-  return (list_cost - list_sum) / 2 * TIMES;
-}
 
 // find first set with size smaller or equal to nL
 int OvlpJoin::divide(int nL)

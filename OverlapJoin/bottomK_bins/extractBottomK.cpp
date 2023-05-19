@@ -8,7 +8,7 @@
 
 using namespace std;
 
-pair<int, int> hf; // hash functions
+pair<unsigned short, unsigned short> hf; // hash functions
 vector<bool> if_filtered_hashvalues; // Vector to store if a token is filtered (stopword or punctuation)
 
 // Generate random hash functions based on given seed
