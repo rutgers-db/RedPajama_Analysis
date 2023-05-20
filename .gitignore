@@ -2,4 +2,5 @@
 *.exe
 /OverlapJoin/bin
 .nfs*
-.out
+*.out
+*.o

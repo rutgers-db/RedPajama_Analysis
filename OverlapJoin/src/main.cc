@@ -1,26 +1,26 @@
 #include <bits/stdc++.h>
 #include "../src/util/io.h"
 #include "../src/util/util.h"
-#include "../src/overlap_join/OvlpJoin.h"
+#include "../src/overlap_join/OvlpJoinParelled.h"
 using namespace std;
 
 int main()
 {
     // global variables
-    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/arxiv_bottomK_1024.bin";
-    const int max_k = 1024;
-    int K = 64;
+    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/c4_bottomK_32.bin";
+    // const int max_k = 1024;
+    int K = 32;
     srand(0); // set seed for random generator
 
     // OverlapJoin Parameters
-    int c = 58;
+    int c = 3;
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;
     loadShortBin(bottomK_path, bottomks);
 
     // just for debug
-    // bottomks.resize(1000000);
+    bottomks.resize(int(1e7));
     print_memory();
     for (auto &bottom_k : bottomks)
     {
@@ -67,13 +67,13 @@ int main()
     print_memory();
 
     // Use overlapJoin
-    // OvlpJoin joiner(sorted_bottomKs);
-    // joiner.overlapjoin(c);
+    OvlpJoinParelled joiner(sorted_bottomKs);
+    joiner.overlapjoin(c);
 
-    // // Investigate the result
-    // joiner.get_results();
-    // printf("joiner.result_pairs have %lu pairs\n", joiner.result_pairs.size());
-    // printf("The amount of document that occur in the pairs is %lu\n", getUniqueInts(joiner.result_pairs).size());
+    // Investigate the result
+    joiner.get_results();
+    printf("joiner.result_pairs have %lu pairs\n", joiner.result_pairs.size());
+    printf("The amount of document that occur in the pairs is %lu\n", getUniqueInts(joiner.result_pairs).size());
     // Print the result pairs
     // for(auto& pair : joiner.result_pairs){
     //     printf("%d %d\n",idmap[pair.first],idmap[pair.second]);
