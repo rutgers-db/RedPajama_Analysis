@@ -4,26 +4,24 @@
 #include "../src/overlap_join/OvlpJoinParelled.h"
 using namespace std;
 
-int main()
-{
+int main() {
     // global variables
-    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/c4_bottomK_32.bin";
+    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/wikipedia_bottomK_1024.bin";
     // const int max_k = 1024;
-    int K = 32;
+    int K = 64;
     srand(0); // set seed for random generator
 
     // OverlapJoin Parameters
-    int c = 3;
+    int c = 58;
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;
     loadShortBin(bottomK_path, bottomks);
 
     // just for debug
-    bottomks.resize(int(1e7));
+    // bottomks.resize(int(5e6));
     print_memory();
-    for (auto &bottom_k : bottomks)
-    {
+    for (auto &bottom_k : bottomks) {
         if (bottom_k.size() > K)
             bottom_k.resize(K);
 
@@ -38,8 +36,7 @@ int main()
         idmap.emplace_back(i);
 
     // sort dataset by size first, element second, id third
-    sort(idmap.begin(), idmap.end(), [&bottomks](const unsigned short &id1, const unsigned short &id2)
-         {
+    sort(idmap.begin(), idmap.end(), [&bottomks](const unsigned short &id1, const unsigned short &id2) {
         int dsize1 = bottomks[id1].size();
         int dsize2 = bottomks[id2].size();
         if (dsize1 < dsize2)

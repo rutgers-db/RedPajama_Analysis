@@ -39,6 +39,7 @@ $(TEST_DIR)/%: $(TEST_DIR)/%.cc
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@
 
 clean:
+	@rm ./bin/.nfs*
 	$(RM) -r $(OBJDIR) $(TARGET)
 
 clean_test:
@@ -46,5 +47,8 @@ clean_test:
 		rm -f ./$$test; \
 		echo $$test "removed";\
 	done
+
+	
+	
 
 .PHONY: clean clean_test
