@@ -4,10 +4,12 @@
 #include "../src/overlap_join/OvlpJoinParelled.h"
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
+    
     // global variables
-    const string bottomK_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/arxiv_bottom_64.bin";
-    const string simP_file_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/arxiv_simPair_K64_C58.bin";print_memory
+    const string root_dir =  "/research/projects/zp128/RedPajama_Analysis/OverlapJoin";
+    const string bottomK_fileName = string(argv[1]);
+    const string bottomK_path = root_dir + "/bottomK_bins/" + bottomK_fileName; //arxiv_bottom_64.bin;
     // const int max_k = 1024;
     int K = 64;
     srand(0); // set seed for random generator
@@ -74,5 +76,7 @@ int main() {
     // }
 
     // Write the similar Pair
+    const string dataset = extract_prefix(bottomK_path);
+    const string simP_file_path = root_dir + "/similar_pairs/" + dataset + "_simPair_K" + to_string(K) + "_C" + to_string(c) + ".bin";
     writeSimilarPair(simP_file_path, joiner.result_pairs);
 }

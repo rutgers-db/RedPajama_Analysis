@@ -174,7 +174,7 @@ void OvlpJoinParelled::small_case(int L, int R) {
         }
     }
     ++c;
-
+    
     cout << "candidate number: "<< candidate_num<<endl;
     gettimeofday(&end, NULL);
     cout << " small p2 : " << mid1.tv_sec - mid.tv_sec + (mid1.tv_usec - mid.tv_usec) / 1e6 << endl;
