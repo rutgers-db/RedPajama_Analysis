@@ -14,8 +14,8 @@
 #include <time.h>
 #include <unordered_map>
 #include <unordered_set>
+#include <cassert>
 
-#include "../util/util.h"
 
 const int MAX_THREAD = 128;
 
@@ -65,6 +65,10 @@ struct combination {
             curr.push_back(beg + 1 + i);
     }
 
+    inline int getlastcurr(){
+        assert(curr[c-1]<N);
+        return curr[c-1];
+    }
     // compute next combination
     void next() {
         int i = c - 1;
@@ -132,48 +136,31 @@ class OvlpJoinParelled {
 public:
     int n;
     int total_eles;
-    int alive_id = 0;
-    uint64_t heap_op = 0;
     vector<vector<int>> heap;
-    vector<pair<int, int>> buck;
     vector<vector<unsigned short>> records;
     vector<pair<int, int>> idmap;
     unordered_set<int> random_ids;
     vector<vector<pair<int, int>>> ele_lists;
     vector<pair<int, int>> result_pairs;
-    priority_queue<SimPairy> result_pairs_;
 
-    void get_results() {
-        while (!result_pairs_.empty()) {
-            result_pairs.emplace_back(result_pairs_.top().id1, result_pairs_.top().id2);
-            result_pairs_.pop();
-        }
-    }
-
-    int list_max;
-    int list_min;
-    int64_t list_sum;
-    int64_t list_sample_num;
-    int64_t result_num;
     int64_t candidate_num;
+    int64_t result_num;
 
-    void overlapjoin(int overlap_threshold);
+    void overlapjoin(int overlap_threshold, int _k);
     bool is_equal(const combination &c1, const combination &c2);
     void small_case(int L, int R);
 
-    int divide(int nL);
+    bool if_external_IO = false;
+    string resultPair_storePath;
 
     OvlpJoinParelled(vector<vector<unsigned short>> &sorted_records) {
         // reset everything
         c = 0;
         n = 0;
         total_eles = 0;
-        alive_id = 0;
-        heap_op = 0;
 
         heap.clear();
         heap.resize(MAX_THREAD);
-        buck.clear();
         dataset.clear();
         records.clear();
         idmap.clear();
@@ -184,14 +171,15 @@ public:
         combs.clear();
         combs.resize(MAX_THREAD);
 
-        list_max = 0;
-        list_min = 0;
-        list_sum = 0;
-        list_sample_num = 0;
-        result_num = 0;
         candidate_num = 0;
+        result_num = 0;
 
         records = sorted_records;
+    }
+
+    void set_external_store(string _resPair_path){
+        if_external_IO = true;
+        resultPair_storePath = _resPair_path;
     }
 };
 #endif

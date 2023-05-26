@@ -64,12 +64,13 @@ std::vector<int> getUniqueInts(const std::vector<std::pair<int, int>>& pairs) {
     return result;
 }
 
- // takes as input a vector<vector<vector<int>>>. 
- // It iterates over all the outer vector<vector<int>> elements in the array, and then for each of these, 
- // it iterates over the vector<int> elements, adding each to the result vector<vector<int>>
-void mergeArrays(std::vector<std::vector<int>> input[], int arr_len, vector<std::vector<int>> & result)
+// takes as input a vector<vector<vector<int>>>. 
+// It iterates over all the outer vector<vector<int>> elements in the array, and then for each of these, 
+// it iterates over the vector<int> elements, adding each to the result vector<vector<int>>
+
+void mergeArrays(std::vector<std::vector<pair<int,int>>>* input, int arr_len, std::vector<std::vector<pair<int,int>>> & result)
 {
-    for(int i=0;i<arr_len;i++){
-      result.insert( result.end(), input[i].begin(), input[i].end() );
+    for(int i = 0; i < arr_len; i++){
+        result.insert(result.end(), input[i].begin(), input[i].end());
     }
 }

@@ -1,10 +1,11 @@
 
 
 #include "OvlpJoinParelled.h"
-
+#include "../util/util.h"
 #include "omp.h"
 
 int c;
+int K;
 vector<vector<unsigned short>> dataset;
 vector<vector<combination>> combs;
 
@@ -29,6 +30,13 @@ public:
     }
 };
 
+inline bool judgeMinHashJaccard(const int & pos_1, const int & pos_2)
+{
+    if(pos_1 - c + 1 + pos_2 - c + 1<= K-c){
+        return true;
+    }
+    return false;
+}
 // Function to handle the small sets
 void OvlpJoinParelled::small_case(int L, int R) {
     // If the left boundary is greater or equal to the right boundary, return immediately
@@ -36,10 +44,22 @@ void OvlpJoinParelled::small_case(int L, int R) {
         return;
     --c;
 
+    // "Global" variables in this function
     timeval mid, mid1, end;
-    vector<vector<int>> *res_lists;
-    res_lists = new vector<vector<int>>[MAX_THREAD];
+    vector<vector<pair<int, int>>> *res_lists;
+    ofstream *pairs_ofs;
 
+    // Based on whether we need to write the disk or running on the memory all the time
+    if(if_external_IO == false)
+        res_lists = new vector<vector<pair<int, int>>>[MAX_THREAD];
+    else{
+        pairs_ofs = new ofstream[MAX_THREAD];
+        for(int i = 0 ;i<MAX_THREAD;i++){
+            const string divided_pairs_path = resultPair_storePath + "/" + to_string(i)+".bin";
+            pairs_ofs[i].open(divided_pairs_path.c_str(), ios::binary);
+        }
+    }
+    
     // Loop over all elements in reverse order
     cout << "Now we are using multithread and the thread amount is " << omp_get_num_threads() << endl;
 
@@ -74,14 +94,14 @@ void OvlpJoinParelled::small_case(int L, int R) {
         // cout << heap_size << endl;
 
         // pop heaps
-        vector<int> inv_list;
+        vector<pair<int,int>> inv_list;
         while (heap_size > 1) {
             inv_list.clear();
             do {
                 // cout << heap_size << " " << heap_cost << endl;
                 pop_heap(heap[thread_id].begin(), heap[thread_id].begin() + heap_size, comp_comb);
                 --heap_size;
-                inv_list.push_back(combs[thread_id][heap[thread_id][heap_size]].id);
+                inv_list.emplace_back(combs[thread_id][heap[thread_id][heap_size]].id,combs[thread_id][heap[thread_id][heap_size]].getlastcurr());
             } while (heap_size > 0 && is_equal(combs[thread_id][heap[thread_id][heap_size]], combs[thread_id][heap[thread_id].front()]));
 
             if (inv_list.size() > 1) {
@@ -115,15 +135,15 @@ void OvlpJoinParelled::small_case(int L, int R) {
     gettimeofday(&mid1, NULL);
 
     // Merge res_lists
-    vector<vector<int>> merged_res_list;
-    mergeArrays(res_lists, MAX_THREAD, merged_res_list);
+    vector<vector<pair<int, int>>> merged_res_list;
+    mergeArrays(res_lists, int(MAX_THREAD), merged_res_list);
 
     cout << "Res lists num: " << merged_res_list.size() << endl;
 
     vector<vector<int>> id_lists(n);
     for (auto i = 0; i < merged_res_list.size(); i++) {
         for (auto j = 0; j < merged_res_list[i].size(); j++)
-            id_lists[merged_res_list[i][j]].push_back(i);
+            id_lists[merged_res_list[i][j].first].push_back(i);
     }
 
     vector<int> results(n, -1);
@@ -131,28 +151,37 @@ void OvlpJoinParelled::small_case(int L, int R) {
         if (id_lists[i].empty())
             continue;
         for (auto j = 0; j < id_lists[i].size(); j++) {
+            auto last_cur_1 = merged_res_list[id_lists[i][j]].back().second;
             merged_res_list[id_lists[i][j]].pop_back();
             for (auto k = 0; k < merged_res_list[id_lists[i][j]].size(); k++) {
-                if (results[merged_res_list[id_lists[i][j]][k]] != i) {
+                if (results[merged_res_list[id_lists[i][j]][k].first] != i) {
                     // cout << idmap[i].first << " " << idmap[merged_res_list[id_lists[i][j]][k]].first << endl;
-                    results[merged_res_list[id_lists[i][j]][k]] = i;
-                    int idd1 = idmap[i].first;
-                    int idd2 = idmap[merged_res_list[id_lists[i][j]][k]].first;
-                    result_pairs.emplace_back(idd1, idd2);
 
-                    ++result_num;
+                    candidate_num++;
+                    results[merged_res_list[id_lists[i][j]][k].first] = i;
+
+                    auto last_cur_2 = merged_res_list[id_lists[i][j]][k].second;
+
+                    if(judgeMinHashJaccard(last_cur_1, last_cur_2)){
+                        int idd1 = idmap[i].first;
+                        int idd2 = idmap[merged_res_list[id_lists[i][j]][k].first].first;
+                        result_pairs.emplace_back(idd1, idd2);
+
+                        ++result_num;
+                    }
                 }
             }
         }
     }
     ++c;
 
+    cout << "candidate number: "<< candidate_num<<endl;
     gettimeofday(&end, NULL);
     cout << " small p2 : " << mid1.tv_sec - mid.tv_sec + (mid1.tv_usec - mid.tv_usec) / 1e6 << endl;
     cout << " small p3 : " << end.tv_sec - mid1.tv_sec + (end.tv_usec - mid1.tv_usec) / 1e6 << endl;
 }
 
-void OvlpJoinParelled::overlapjoin(int overlap_threshold) {
+void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
     srand(time(NULL));
 
     timeval starting, ending, s1, t1, s2, t2;
@@ -161,8 +190,8 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold) {
     gettimeofday(&starting, NULL);
 
     c = overlap_threshold;           // get threshold
+    K = _k;                          // the k of bottom_k
     n = records.size();              // get number of records
-    buck.assign(n, make_pair(0, 0)); // for counting
 
     vector<pair<int, int>> eles;
     unordered_map<int, vector<int>> ele;
@@ -232,7 +261,6 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold) {
     gettimeofday(&time4, NULL);
     // ****** conduct joining ******
     result_num = 0;
-    candidate_num = 0;
 
     gettimeofday(&s1, NULL);
     gettimeofday(&t1, NULL);
