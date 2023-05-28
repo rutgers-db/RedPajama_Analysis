@@ -26,10 +26,7 @@ void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &r
 
     int size = result_pairs.size();
     ofs.write((char*)&size, sizeof(int));
-    for(const auto & p : result_pairs){
-        ofs.write((char*)&p.first, sizeof(int));
-        ofs.write((char*)&p.second, sizeof(int));
-    }
+    ofs.write(reinterpret_cast<const char*>(result_pairs.data()), size * sizeof(pair<int, int>));
     ofs.close();
 }
 

@@ -4,7 +4,8 @@
 #include "../src/overlap_join/OvlpJoinParelled.h"
 using namespace std;
 
-vector<int> idmap;
+// It is the id map of sorted bottom_k to original_bottomk
+vector<int> idmap_bottomk;
 
 int main(int argc, char *argv[]) {
 
@@ -14,11 +15,11 @@ int main(int argc, char *argv[]) {
     const string bottomK_path = root_dir + "/bottomK_bins/" + bottomK_fileName; //arxiv_bottom_64.bin;
     const string dataset = extract_prefix(bottomK_path);
     // const int max_k = 1024;
-    int K = 32;
+    int K = 64;
     srand(0); // set seed for random generator
 
     // OverlapJoin Parameters
-    int c = 29;
+    int c = 58;
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;
@@ -34,12 +35,12 @@ int main(int argc, char *argv[]) {
     }
 
     // Sort bottomks based on their length, elements
-    idmap.clear();
+    idmap_bottomk.clear();
     for (auto i = 0; i < bottomks.size(); i++)
-        idmap.emplace_back(i);
+        idmap_bottomk.emplace_back(i);
 
     // sort dataset by size first, element second, id third
-    sort(idmap.begin(), idmap.end(), [&bottomks](const unsigned short &id1, const unsigned short &id2) {
+    sort(idmap_bottomk.begin(), idmap_bottomk.end(), [&bottomks](const unsigned short &id1, const unsigned short &id2) {
         int dsize1 = bottomks[id1].size();
         int dsize2 = bottomks[id2].size();
         if (dsize1 < dsize2)
@@ -61,15 +62,15 @@ int main(int argc, char *argv[]) {
         } });
 
     vector<vector<unsigned short>> sorted_bottomKs;
-    for (int i = 0; i < idmap.size(); i++)
-        sorted_bottomKs.emplace_back(bottomks[idmap[i]]);
+    for (int i = 0; i < idmap_bottomk.size(); i++)
+        sorted_bottomKs.emplace_back(bottomks[idmap_bottomk[i]]);
     bottomks.clear();
 
     // Use overlapJoin
     OvlpJoinParelled joiner(sorted_bottomKs);
-    const string divided_simP_dirpath = root_dir + "/similar_pairs/"+dataset+"_simPair_K" + to_string(K) + "_C" + to_string(c) + "/";
-    system(("mkdir " + divided_simP_dirpath).c_str());
-    joiner.set_external_store(divided_simP_dirpath);
+    const string simP_dirpath = root_dir + "/similar_pairs/"+dataset+"_simPair_K" + to_string(K) + "_C" + to_string(c) + "/";
+    system(("mkdir " + simP_dirpath).c_str());
+    joiner.set_external_store(simP_dirpath);
     joiner.overlapjoin(c, K);
 
     // Investigate the result
@@ -77,13 +78,12 @@ int main(int argc, char *argv[]) {
     printf("The amount of document that occur in the pairs is %lu\n", getUniqueInts(joiner.result_pairs).size());
     // Print the result pairs
     // for(auto& pair : joiner.result_pairs){
-    //     printf("%d %d\n",idmap[pair.first],idmap[pair.second]);
+    //     printf("%d %d\n",idmap_bottomk[pair.first],idmap_bottomk[pair.second]);
     // }
 
     // Write the similar Pair
     if(joiner.if_external_IO == false){
-        
-        const string simP_file_path = root_dir + "/similar_pairs/" + dataset + "_simPair_K" + to_string(K) + "_C" + to_string(c) + ".bin";
+        const string simP_file_path = simP_dirpath + "sim_pairs.bin";
         writeSimilarPair(simP_file_path, joiner.result_pairs);
     }
     

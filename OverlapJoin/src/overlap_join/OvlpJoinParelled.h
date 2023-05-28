@@ -138,8 +138,7 @@ public:
     int total_eles;
     vector<vector<int>> heap;
     vector<vector<unsigned short>> records;
-    vector<pair<int, int>> idmap;
-    unordered_set<int> random_ids;
+    vector<pair<int, int>> idmap_records;
     vector<vector<pair<int, int>>> ele_lists;
     vector<pair<int, int>> result_pairs;
 
@@ -163,8 +162,7 @@ public:
         heap.resize(MAX_THREAD);
         dataset.clear();
         records.clear();
-        idmap.clear();
-        random_ids.clear();
+        idmap_records.clear();
         ele_lists.clear();
         result_pairs.clear();
 
@@ -181,5 +179,7 @@ public:
         if_external_IO = true;
         resultPair_storePath = _resPair_path;
     }
+
+    void save_idmap(string _resPair_path);
 };
 #endif

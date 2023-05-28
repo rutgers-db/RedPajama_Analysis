@@ -4,7 +4,8 @@
 #include "../util/util.h"
 #include "omp.h"
 
-extern 
+// It is the id map of sorted bottom_k to original_bottomk
+extern vector<int> idmap_bottomk;
 int c;
 int K;
 vector<vector<unsigned short>> dataset;
@@ -38,6 +39,26 @@ inline bool judgeMinHashJaccard(const int & pos_1, const int & pos_2)
     }
     return false;
 }
+
+void OvlpJoinParelled::save_idmap(string _resPair_path){
+    assert(idmap_records.size() == records.size() && idmap_records.size()== idmap_bottomk.size());
+
+    //Combine the idmap_records and idmap_bottomk into one idmap
+    vector<int> idmap(idmap_records.size());
+    for(int i = 0;i<idmap.size();i++){
+        idmap[i]=idmap_bottomk[idmap_records[i].first];
+    }
+
+    // Write the idmap
+    const string idmap_file_path = _resPair_path + "idmap.bin";
+    ofstream idmap_ofs;
+    idmap_ofs.open(idmap_file_path.c_str(), ios::binary);
+    int size = idmap.size();
+    idmap_ofs.write((char*)&size, sizeof(int));
+    idmap_ofs.write(reinterpret_cast<const char*>(idmap.data()), size * sizeof(int));
+    idmap_ofs.close();
+}
+
 // Function to handle the small sets
 void OvlpJoinParelled::small_case(int L, int R) {
     // If the left boundary is greater or equal to the right boundary, return immediately
@@ -174,7 +195,7 @@ void OvlpJoinParelled::small_case(int L, int R) {
                 merged_res_list[id_lists[i][j]].pop_back();
                 for (auto k = 0; k < merged_res_list[id_lists[i][j]].size(); k++) {
                     if (results[merged_res_list[id_lists[i][j]][k].first] != i) {
-                        // cout << idmap[i].first << " " << idmap[merged_res_list[id_lists[i][j]][k]].first << endl;
+                        // cout << idmap_records[i].first << " " << idmap_records[merged_res_list[id_lists[i][j]][k]].first << endl;
 
                         candidate_num++;
                         results[merged_res_list[id_lists[i][j]][k].first] = i;
@@ -182,8 +203,8 @@ void OvlpJoinParelled::small_case(int L, int R) {
                         auto last_cur_2 = merged_res_list[id_lists[i][j]][k].second;
 
                         if(judgeMinHashJaccard(last_cur_1, last_cur_2)){
-                            int idd1 = idmap[i].first;
-                            int idd2 = idmap[merged_res_list[id_lists[i][j]][k].first].first;
+                            int idd1 = idmap_records[i].first;
+                            int idd2 = idmap_records[merged_res_list[id_lists[i][j]][k].first].first;
                             result_pairs.emplace_back(idd1, idd2);
 
                             ++result_num;
@@ -264,13 +285,17 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
 
     // create id mappings: from sorted to origin
     for (auto i = 0; i < n; i++)
-        idmap.push_back(make_pair(i, dataset[i].size()));
+        idmap_records.push_back(make_pair(i, dataset[i].size()));
 
     // sort records by length in decreasing order
-    sort(idmap.begin(), idmap.end(), [](const pair<int, int> &a, const pair<int, int> &b) { return a.second > b.second; });
-    // todo Writing idmap[idmap]
+    sort(idmap_records.begin(), idmap_records.end(), [](const pair<int, int> &a, const pair<int, int> &b) { return a.second > b.second; });
+    // todo Writing idmap_records[idmap_records]
     sort(dataset.begin(), dataset.end(), [](const vector<unsigned short> &a, const vector<unsigned short> &b) { return a.size() > b.size(); });
     cout << " largest set: " << dataset.front().size() << " smallest set: " << dataset.back().size() << "It might be 0 cause some row in dataset, its length is smaller than c" << endl;
+
+    if(if_external_IO == true){
+        save_idmap(resultPair_storePath);
+    }
 
     // build real inverted index
     ele_lists.resize(total_eles);
