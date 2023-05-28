@@ -4,6 +4,7 @@
 #include "../util/util.h"
 #include "omp.h"
 
+extern 
 int c;
 int K;
 vector<vector<unsigned short>> dataset;
@@ -47,12 +48,12 @@ void OvlpJoinParelled::small_case(int L, int R) {
     // "Global" variables in this function
     timeval mid, mid1, end;
     vector<vector<pair<int, int>>> *res_lists;
+    res_lists = new vector<vector<pair<int, int>>>[MAX_THREAD];
+    auto lists_num = vector<unsigned long long>(MAX_THREAD, 0);
     ofstream *pairs_ofs;
 
     // Based on whether we need to write the disk or running on the memory all the time
-    if(if_external_IO == false)
-        res_lists = new vector<vector<pair<int, int>>>[MAX_THREAD];
-    else{
+    if(if_external_IO == true){
         pairs_ofs = new ofstream[MAX_THREAD];
         for(int i = 0 ;i<MAX_THREAD;i++){
             const string divided_pairs_path = resultPair_storePath + "/" + to_string(i)+".bin";
@@ -130,51 +131,77 @@ void OvlpJoinParelled::small_case(int L, int R) {
                 heap[thread_id].pop_back();
             heap_size = heap[thread_id].size();
         }
+
+        if(if_external_IO == true && res_lists[thread_id].size() !=0){
+            for(auto const & inv_l : res_lists[thread_id]){
+                int size = inv_l.size();
+                pairs_ofs[thread_id].write((char*)&size, sizeof(int));
+                pairs_ofs[thread_id].write(reinterpret_cast<const char*>(inv_l.data()), inv_l.size() * sizeof(pair<int, int>));
+            }
+            
+            // cout<< res_lists[thread_id].size()<<endl;
+            lists_num[thread_id] += (unsigned long long)res_lists[thread_id].size();
+            // clear this temporray res_list
+            res_lists[thread_id].clear();
+        }
+
+        if(idx%MAX_THREAD == 0){
+            printf("▉");
+        }
     }
 
     gettimeofday(&mid1, NULL);
 
-    // Merge res_lists
-    vector<vector<pair<int, int>>> merged_res_list;
-    mergeArrays(res_lists, int(MAX_THREAD), merged_res_list);
+    if(if_external_IO == false){
+        // Merge res_lists
+        vector<vector<pair<int, int>>> merged_res_list;
+        mergeArrays(res_lists, int(MAX_THREAD), merged_res_list);
 
-    cout << "Res lists num: " << merged_res_list.size() << endl;
+        cout << "\nRes lists num: " << merged_res_list.size() << endl;
 
-    vector<vector<int>> id_lists(n);
-    for (auto i = 0; i < merged_res_list.size(); i++) {
-        for (auto j = 0; j < merged_res_list[i].size(); j++)
-            id_lists[merged_res_list[i][j].first].push_back(i);
-    }
+        vector<vector<int>> id_lists(n);
+        for (auto i = 0; i < merged_res_list.size(); i++) {
+            for (auto j = 0; j < merged_res_list[i].size(); j++)
+                id_lists[merged_res_list[i][j].first].push_back(i);
+        }
 
-    vector<int> results(n, -1);
-    for (auto i = n - 1; i >= 0; i--) {
-        if (id_lists[i].empty())
-            continue;
-        for (auto j = 0; j < id_lists[i].size(); j++) {
-            auto last_cur_1 = merged_res_list[id_lists[i][j]].back().second;
-            merged_res_list[id_lists[i][j]].pop_back();
-            for (auto k = 0; k < merged_res_list[id_lists[i][j]].size(); k++) {
-                if (results[merged_res_list[id_lists[i][j]][k].first] != i) {
-                    // cout << idmap[i].first << " " << idmap[merged_res_list[id_lists[i][j]][k]].first << endl;
+        vector<int> results(n, -1);
+        for (auto i = n - 1; i >= 0; i--) {
+            if (id_lists[i].empty())
+                continue;
+            for (auto j = 0; j < id_lists[i].size(); j++) {
+                auto last_cur_1 = merged_res_list[id_lists[i][j]].back().second;
+                merged_res_list[id_lists[i][j]].pop_back();
+                for (auto k = 0; k < merged_res_list[id_lists[i][j]].size(); k++) {
+                    if (results[merged_res_list[id_lists[i][j]][k].first] != i) {
+                        // cout << idmap[i].first << " " << idmap[merged_res_list[id_lists[i][j]][k]].first << endl;
 
-                    candidate_num++;
-                    results[merged_res_list[id_lists[i][j]][k].first] = i;
+                        candidate_num++;
+                        results[merged_res_list[id_lists[i][j]][k].first] = i;
 
-                    auto last_cur_2 = merged_res_list[id_lists[i][j]][k].second;
+                        auto last_cur_2 = merged_res_list[id_lists[i][j]][k].second;
 
-                    if(judgeMinHashJaccard(last_cur_1, last_cur_2)){
-                        int idd1 = idmap[i].first;
-                        int idd2 = idmap[merged_res_list[id_lists[i][j]][k].first].first;
-                        result_pairs.emplace_back(idd1, idd2);
+                        if(judgeMinHashJaccard(last_cur_1, last_cur_2)){
+                            int idd1 = idmap[i].first;
+                            int idd2 = idmap[merged_res_list[id_lists[i][j]][k].first].first;
+                            result_pairs.emplace_back(idd1, idd2);
 
-                        ++result_num;
+                            ++result_num;
+                        }
                     }
                 }
             }
         }
     }
-    ++c;
+    else{
+        cout << "\nRes lists num: " << accumulate(lists_num.begin(), lists_num.end(), 0LL) << endl;
+        for(int i = 0 ;i<MAX_THREAD;i++){
+            pairs_ofs[i].close();
+        }
+    }
     
+    ++c;
+
     cout << "candidate number: "<< candidate_num<<endl;
     gettimeofday(&end, NULL);
     cout << " small p2 : " << mid1.tv_sec - mid.tv_sec + (mid1.tv_usec - mid.tv_usec) / 1e6 << endl;
@@ -241,6 +268,7 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
 
     // sort records by length in decreasing order
     sort(idmap.begin(), idmap.end(), [](const pair<int, int> &a, const pair<int, int> &b) { return a.second > b.second; });
+    // todo Writing idmap[idmap]
     sort(dataset.begin(), dataset.end(), [](const vector<unsigned short> &a, const vector<unsigned short> &b) { return a.size() > b.size(); });
     cout << " largest set: " << dataset.front().size() << " smallest set: " << dataset.back().size() << "It might be 0 cause some row in dataset, its length is smaller than c" << endl;
 

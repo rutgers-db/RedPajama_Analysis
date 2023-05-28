@@ -1,0 +1,49 @@
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins//usr/bin/time
+error open bin file
+Initial Time: 0
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins//usr/bin/time
+error open bin file
+Initial Time: 0
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins//usr/bin/time
+error open bin file
+Initial Time: 1e-06
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/book_bottomK_1024.bin
+Initial Time: 0.563749
+ largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
+Transform Time: 0.230269
+ All are treated as small sets: 205743
+Now we are using multithread and the thread amount is 1
+Res lists num: 678101
+candidate number: 964
+ small p2 : 36.6539
+ small p3 : 0.105722
+Join Time: 36.7692
+  small Time: 36.7692
+All Time: 37.5633
+Result Num: 261
+joiner.result_pairs have 261 pairs
+The amount of document that occur in the pairs is 205
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/book_simPair_K64_C58.bin
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/wikipedia_bottomK_1024.bin
+Initial Time: 292.55
+ largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
+Transform Time: 54.1397
+ All are treated as small sets: 29834171
+Now we are using multithread and the thread amount is 1
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/stackexchange_bottomK_1024.bin
+Initial Time: 284.064
+ largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
+Transform Time: 53.2282
+ All are treated as small sets: 29825086
+Now we are using multithread and the thread amount is 1
+Res lists num: 9156581
+candidate number: 19504
+ small p2 : 857.611
+ small p3 : 4.22908
+Join Time: 862.979
+  small Time: 862.979
+All Time: 1200.27
+Result Num: 6814
+joiner.result_pairs have 6814 pairs
+The amount of document that occur in the pairs is 13224
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/stackexchange_simPair_K64_C58.bin

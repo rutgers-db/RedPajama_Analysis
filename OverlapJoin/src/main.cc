@@ -4,18 +4,21 @@
 #include "../src/overlap_join/OvlpJoinParelled.h"
 using namespace std;
 
+vector<int> idmap;
+
 int main(int argc, char *argv[]) {
-    
+
     // global variables
     const string root_dir =  "/research/projects/zp128/RedPajama_Analysis/OverlapJoin";
     const string bottomK_fileName = string(argv[1]);
     const string bottomK_path = root_dir + "/bottomK_bins/" + bottomK_fileName; //arxiv_bottom_64.bin;
+    const string dataset = extract_prefix(bottomK_path);
     // const int max_k = 1024;
-    int K = 64;
+    int K = 32;
     srand(0); // set seed for random generator
 
     // OverlapJoin Parameters
-    int c = 58;
+    int c = 29;
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;
@@ -31,7 +34,6 @@ int main(int argc, char *argv[]) {
     }
 
     // Sort bottomks based on their length, elements
-    vector<int> idmap;
     idmap.clear();
     for (auto i = 0; i < bottomks.size(); i++)
         idmap.emplace_back(i);
@@ -65,6 +67,9 @@ int main(int argc, char *argv[]) {
 
     // Use overlapJoin
     OvlpJoinParelled joiner(sorted_bottomKs);
+    const string divided_simP_dirpath = root_dir + "/similar_pairs/"+dataset+"_simPair_K" + to_string(K) + "_C" + to_string(c) + "/";
+    system(("mkdir " + divided_simP_dirpath).c_str());
+    joiner.set_external_store(divided_simP_dirpath);
     joiner.overlapjoin(c, K);
 
     // Investigate the result
@@ -76,7 +81,10 @@ int main(int argc, char *argv[]) {
     // }
 
     // Write the similar Pair
-    const string dataset = extract_prefix(bottomK_path);
-    const string simP_file_path = root_dir + "/similar_pairs/" + dataset + "_simPair_K" + to_string(K) + "_C" + to_string(c) + ".bin";
-    writeSimilarPair(simP_file_path, joiner.result_pairs);
+    if(joiner.if_external_IO == false){
+        
+        const string simP_file_path = root_dir + "/similar_pairs/" + dataset + "_simPair_K" + to_string(K) + "_C" + to_string(c) + ".bin";
+        writeSimilarPair(simP_file_path, joiner.result_pairs);
+    }
+    
 }

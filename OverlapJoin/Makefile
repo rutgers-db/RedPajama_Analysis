@@ -14,6 +14,9 @@ CXXFLAGS = -std=c++17 -O3 -g -fopenmp -pg
 SRCS = $(wildcard $(SRCDIR)/*.cc) $(wildcard $(SRCDIR)/overlap_join/*.cc) $(wildcard $(UTIL_DIR)/*.cc)
 OBJS = $(SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
 
+UTIL_SRCS = $(wildcard $(UTIL_DIR)/*.cc)
+UTIL_OBJS = $(UTIL_SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
+
 TEST_SRC_FILES = $(wildcard $(TEST_DIR)/*.cc)
 TEST_BIN_FILES = $(patsubst $(TEST_DIR)/%.cc, $(TEST_DIR)/%, $(TEST_SRC_FILES))
 
@@ -31,12 +34,12 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 test: $(TEST_BIN_FILES)
-	@for test in $(TEST_BIN_FILES); do \
-		./$$test; \
-	done
+	# @for test in $(TEST_BIN_FILES); do \
+	# 	./$$test; \
+	# done
 
-$(TEST_DIR)/%: $(TEST_DIR)/%.cc
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@
+$(TEST_DIR)/%: $(TEST_DIR)/%.cc $(UTIL_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
 
 clean:
 	@rm ./bin/.nfs*

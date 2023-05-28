@@ -1,5 +1,8 @@
 #include "io.h"
 #include <filesystem>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &docs) {
     cout <<"Reading "<< binFileName<<endl;
@@ -30,8 +33,8 @@ void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &r
     ofs.close();
 }
 
-
-
+// Get the filename from a given path. 
+// Then use the std::string::find and std::string::substr functions to extract the substring before the first underscore in the filename.
 std::string extract_prefix(const std::string& filepath) {
     // Extract the filename from the path
     std::filesystem::path path(filepath);
@@ -47,4 +50,26 @@ std::string extract_prefix(const std::string& filepath) {
 
     // If no underscore was found, return the whole filename
     return filename;
+}
+
+// get all the file names in path and put them in a vector
+void getFiles(string path, vector<string> &files) {
+    DIR *dr;
+    struct dirent *en;
+    string file_path;
+    dr = opendir(path.c_str()); // open all directory
+    if (dr) {
+        while ((en = readdir(dr)) != NULL) {
+            // ignore hidden files and folders
+            if (en->d_name[0] != '.') {
+                const char end = path.back();
+                if (end == '/')
+                    file_path = path + en->d_name;
+                else
+                    file_path = path + '/' + en->d_name;
+                files.push_back(file_path);
+            }
+        }
+        closedir(dr); // close all directory
+    }
 }
