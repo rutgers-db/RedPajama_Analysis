@@ -64,7 +64,7 @@ $(OBJDIR)/read_simPair.o: $(UTIL_OBJS)
 
 merge: $(OBJDIR)/cal_simPair.o
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
-$(OBJDIR)/cal_simPair.o: $(UTIL_OBJS)
+$(OBJDIR)/cal_simPair.o: $(UTIL_OBJS) src/cal_simPair.cc
 	$(CXX) $(CXXFLAGS) -c src/cal_simPair.cc -o $@
 	
 

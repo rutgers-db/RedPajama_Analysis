@@ -46,8 +46,16 @@ int main() {
         for (auto j = 0; j < res_lists[i].size(); j++)
             id_lists[res_lists[i][j].first].push_back(i);
     }
+
+    // for(auto const group : res_lists){
+    //     for(auto id:group ){
+    //         cout<<id.first<<" ";
+    //     }
+        
+    //     cout<<endl;
+    // }
     
-    auto n = idmap.size();
+    int n = idmap.size();
     auto candidate_num = 0LL;
     long long result_num  = 0;
     vector<pair<int,int> > sim_pairs;
@@ -70,8 +78,6 @@ int main() {
                         ++result_num;
                     }
                     // cout << idmap[i].first << " " << idmap[res_lists[id_lists[i][j]][k]].first << endl;
-                    
-                    
                 }
             }
         }
