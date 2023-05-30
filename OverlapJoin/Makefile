@@ -1,11 +1,14 @@
 CXX = g++
 
-# Directories
+# Main Directories
 SRCDIR = src
 OBJDIR = obj
 BINDIR = bin
 TEST_DIR = test
+
+# Sub Directories
 UTIL_DIR = $(SRCDIR)/util
+OVLPJOIN_DIR = $(SRCDIR)/overlap_join
 
 # Compiler flags
 CXXFLAGS = -std=c++17 -O3 -g -fopenmp -pg
@@ -16,6 +19,8 @@ OBJS = $(SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
 
 UTIL_SRCS = $(wildcard $(UTIL_DIR)/*.cc)
 UTIL_OBJS = $(UTIL_SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
+OVLPJOIN_SRCS = $(wildcard $(OVLPJOIN_DIR)/*.cc)
+OVLPJOIN_OBJS = $(OVLPJOIN_SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
 
 TEST_SRC_FILES = $(wildcard $(TEST_DIR)/*.cc)
 TEST_BIN_FILES = $(patsubst $(TEST_DIR)/%.cc, $(TEST_DIR)/%, $(TEST_SRC_FILES))
@@ -26,7 +31,7 @@ TARGET = $(BINDIR)/main.exe
 # Build rules
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
+$(TARGET): $(OBJDIR)/main.o $(UTIL_OBJS) $(OVLPJOIN_OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cc
@@ -51,7 +56,16 @@ clean_test:
 		echo $$test "removed";\
 	done
 
-	
+# build Rule for read_simPair
+read: $(OBJDIR)/read_simPair.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
+$(OBJDIR)/read_simPair.o: $(UTIL_OBJS)
+	$(CXX) $(CXXFLAGS) -c src/read_simPair.cc -o $@
+
+merge: $(OBJDIR)/cal_simPair.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
+$(OBJDIR)/cal_simPair.o: $(UTIL_OBJS)
+	$(CXX) $(CXXFLAGS) -c src/cal_simPair.cc -o $@
 	
 
 .PHONY: clean clean_test

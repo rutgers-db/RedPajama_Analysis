@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     OvlpJoinParelled joiner(sorted_bottomKs);
     const string simP_dirpath = root_dir + "/similar_pairs/"+dataset+"_simPair_K" + to_string(K) + "_C" + to_string(c) + "/";
     system(("mkdir " + simP_dirpath).c_str());
-    joiner.set_external_store(simP_dirpath);
+    // joiner.set_external_store(simP_dirpath);
     joiner.overlapjoin(c, K);
 
     // Investigate the result
@@ -85,6 +85,8 @@ int main(int argc, char *argv[]) {
     if(joiner.if_external_IO == false){
         const string simP_file_path = simP_dirpath + "sim_pairs.bin";
         writeSimilarPair(simP_file_path, joiner.result_pairs);
+        const string idmap_file_path = simP_dirpath + "idmap.bin";
+        writeVec2Bin(idmap_file_path, idmap_bottomk);
     }
     
 }

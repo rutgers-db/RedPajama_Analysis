@@ -1,49 +1,111 @@
-Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins//usr/bin/time
-error open bin file
-Initial Time: 0
-Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins//usr/bin/time
-error open bin file
-Initial Time: 0
-Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins//usr/bin/time
-error open bin file
-Initial Time: 1e-06
-Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/book_bottomK_1024.bin
-Initial Time: 0.563749
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/arxiv_bottom_64.bin
+Initial Time: 15.5904
  largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
-Transform Time: 0.230269
+Transform Time: 3.69509
+ All are treated as small sets: 1558306
+Now we are using multithread and the thread amount is 1
+▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉
+Res lists num: 4697426
+candidate number: 5027
+ small p2 : 46.6206
+ small p3 : 1.71508
+Join Time: 48.3357
+  small Time: 48.3357
+All Time: 67.6212
+Result Num: 3539
+joiner.result_pairs have 3539 pairs
+The amount of document that occur in the pairs is 1285
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/arxiv_simPair_K64_C58/sim_pairs.bin
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/book_bottomK_1024.bin
+Initial Time: 1.05646
+ largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
+Transform Time: 0.540791
  All are treated as small sets: 205743
 Now we are using multithread and the thread amount is 1
+▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉
 Res lists num: 678101
 candidate number: 964
- small p2 : 36.6539
- small p3 : 0.105722
-Join Time: 36.7692
-  small Time: 36.7692
-All Time: 37.5633
+ small p2 : 23.2952
+ small p3 : 0.186664
+Join Time: 23.4819
+  small Time: 23.4819
+All Time: 25.0792
 Result Num: 261
 joiner.result_pairs have 261 pairs
 The amount of document that occur in the pairs is 205
-Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/book_simPair_K64_C58.bin
-Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/wikipedia_bottomK_1024.bin
-Initial Time: 292.55
- largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
-Transform Time: 54.1397
- All are treated as small sets: 29834171
-Now we are using multithread and the thread amount is 1
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/book_simPair_K64_C58/sim_pairs.bin
 Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/stackexchange_bottomK_1024.bin
-Initial Time: 284.064
+Initial Time: 414.957
  largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
-Transform Time: 53.2282
+Transform Time: 89.3136
  All are treated as small sets: 29825086
 Now we are using multithread and the thread amount is 1
+▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉
 Res lists num: 9156581
 candidate number: 19504
- small p2 : 857.611
- small p3 : 4.22908
-Join Time: 862.979
-  small Time: 862.979
-All Time: 1200.27
+ small p2 : 878.079
+ small p3 : 7.53676
+Join Time: 885.616
+  small Time: 885.616
+All Time: 1389.89
 Result Num: 6814
 joiner.result_pairs have 6814 pairs
 The amount of document that occur in the pairs is 13224
-Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/stackexchange_simPair_K64_C58.bin
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/stackexchange_simPair_K64_C58/sim_pairs.bin
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/arxiv_bottom_64.bin
+Initial Time: 15.1807
+ largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
+Transform Time: 3.85084
+ All are treated as small sets: 1558306
+Now we are using multithread and the thread amount is 1
+▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉
+Res lists num: 4697426
+candidate number: 5027
+ small p2 : 41.4037
+ small p3 : 1.62126
+Join Time: 43.025
+  small Time: 43.025
+All Time: 62.0566
+Result Num: 3539
+joiner.result_pairs have 3539 pairs
+The amount of document that occur in the pairs is 1285
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/arxiv_simPair_K64_C58/sim_pairs.bin
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/arxiv_simPair_K64_C58/idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/book_bottomK_1024.bin
+Initial Time: 3.01362
+ largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
+Transform Time: 1.21159
+ All are treated as small sets: 205743
+Now we are using multithread and the thread amount is 1
+▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉
+Res lists num: 678101
+candidate number: 964
+ small p2 : 25.9988
+ small p3 : 0.151611
+Join Time: 26.1505
+  small Time: 26.1505
+All Time: 30.3757
+Result Num: 261
+joiner.result_pairs have 261 pairs
+The amount of document that occur in the pairs is 205
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/book_simPair_K64_C58/sim_pairs.bin
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/book_simPair_K64_C58/idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/stackexchange_bottomK_1024.bin
+Initial Time: 423.576
+ largest set: 64 smallest set: 0It might be 0 cause some row in dataset, its length is smaller than c
+Transform Time: 85.0007
+ All are treated as small sets: 29825086
+Now we are using multithread and the thread amount is 1
+▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉
+Res lists num: 9156581
+candidate number: 19504
+ small p2 : 897.316
+ small p3 : 7.34792
+Join Time: 904.664
+  small Time: 904.664
+All Time: 1413.24
+Result Num: 6814
+joiner.result_pairs have 6814 pairs
+The amount of document that occur in the pairs is 13224
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/stackexchange_simPair_K64_C58/sim_pairs.bin
+Writing /research/projects/zp128/RedPajama_Analysis/OverlapJoin/similar_pairs/stackexchange_simPair_K64_C58/idmap.bin

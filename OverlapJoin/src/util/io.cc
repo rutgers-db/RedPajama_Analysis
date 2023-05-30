@@ -1,63 +1,119 @@
-#include "io.h"
-#include <filesystem>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <unistd.h>
+// Include necessary headers
+#include "io.h" // The custom I/O functions defined in io.h
+#include <filesystem> // Filesystem library for performing operations on files and directories
+#include <dirent.h> // For directory management (such as open directory, close directory)
+#include <sys/stat.h> // For stat function which returns information about a file
+#include <unistd.h> // For POSIX operating system API
 
+// Function to load binary file into a 2D vector (documents)
 void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &docs) {
-    cout <<"Reading "<< binFileName<<endl;
+    cout << "Reading " << binFileName << endl; // Print the name of the file being read
+    ifstream ifs(binFileName, ios::binary); // Open the binary file for reading
+    if (!ifs) { // If the file cannot be opened or does not exist, print an error message
+        cout << "error open bin file" << endl;
+        return; // Exit the function
+    }
+    int size; // Initialize a variable to store the size of each vector
+    while (ifs.read((char *)&size, sizeof(int))) { // Read the size of the vector
+        vector<unsigned short> vec(size); // Create a vector of the read size
+        ifs.read((char *)&vec[0], sizeof(unsigned short) * size); // Read the data into the vector
+        docs.emplace_back(vec); // Add the vector to the documents
+    }
+    ifs.close(); // Close the file stream after reading
+}
+
+// Function to load binary file into a vector
+void loadBin2vec(const string &binFileName, vector<int> &vec) {
+    // Similar to loadShortBin, but for a single-dimension vector
+    cout << "Reading " << binFileName << endl;
     ifstream ifs(binFileName, ios::binary);
     if (!ifs) {
-        cout << "error open bin file" << endl;
+        cout << "error open bin file " << binFileName << endl;
         return;
     }
     int size;
-    while (ifs.read((char *)&size, sizeof(int))) {
-        vector<unsigned short> vec(size);
-        ifs.read((char *)&vec[0], sizeof(unsigned short) * size);
-        docs.emplace_back(vec);
-    }
+    ifs.read((char *)&size, sizeof(int));
+    vec.resize(size);
+    ifs.read((char *)&vec[0], sizeof(int) * size);
     ifs.close();
 }
 
-void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &result_pairs){
-    cout <<"Writing "<< binFileName<<endl;
-    ofstream ofs(binFileName, ios::binary);
-
-    int size = result_pairs.size();
-    ofs.write((char*)&size, sizeof(int));
-    ofs.write(reinterpret_cast<const char*>(result_pairs.data()), size * sizeof(pair<int, int>));
+// Function to write a vector into a binary file
+void writeVec2Bin(const string &binFileName, vector<int> &vec) {
+    cout << "Writing " << binFileName << endl;
+    ofstream ofs;
+    ofs.open(binFileName.c_str(), ios::binary);
+    int size = vec.size();
+    ofs.write((char *)&size, sizeof(int)); // Write the size of the vector
+    ofs.write(reinterpret_cast<const char *>(vec.data()), size * sizeof(int)); // Write the vector data
     ofs.close();
 }
 
-// Get the filename from a given path. 
-// Then use the std::string::find and std::string::substr functions to extract the substring before the first underscore in the filename.
-std::string extract_prefix(const std::string& filepath) {
-    // Extract the filename from the path
+// Function to read similar pairs from a binary file into a vector of pairs
+void readSimilarPair(const string &binFileName, vector<pair<int, int>> &sim_pairs) {
+    // Similar to loadBin2vec, but for a vector of pairs
+    cout << "Reading " << binFileName << endl;
+    ifstream ifs(binFileName, ios::binary);
+    if (!ifs) {
+        cout << "error open bin file" << binFileName << endl;
+        return;
+    }
+    int size;
+    ifs.read((char *)&size, sizeof(int));
+    sim_pairs.resize(size);
+    ifs.read((char *)&sim_pairs[0], size * sizeof(pair<int, int>));
+    ifs.close();
+}
+
+void readDividedList(const string &binFileName, vector<vector<pair<int,int>>> &res_lists) {
+    cout << "Reading " << binFileName << endl; // Print the name of the file being read
+    ifstream ifs(binFileName, ios::binary); // Open the binary file for reading
+    if (!ifs) { // If the file cannot be opened or does not exist, print an error message
+        cout << "error open bin file" << endl;
+        return; // Exit the function
+    }
+    int size; // Initialize a variable to store the size of each vector
+    while (ifs.read((char *)&size, sizeof(int))) { // Read the size of the vector
+        vector<pair<int,int>> vec(size); // Create a vector of the read size
+        ifs.read((char *)&vec[0], sizeof(pair<int,int>) * size); // Read the data into the vector
+        res_lists.emplace_back(vec); // Add the vector to the documents
+    }
+    ifs.close(); // Close the file stream after reading
+}
+
+
+// Function to write similar pairs into a binary file from a vector of pairs
+void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &result_pairs) {
+    // Similar to writeVec2Bin, but for a vector of pairs
+    cout << "Writing " << binFileName << endl;
+    ofstream ofs(binFileName, ios::binary);
+    int size = result_pairs.size();
+    ofs.write((char *)&size, sizeof(int));
+    ofs.write(reinterpret_cast<const char *>(result_pairs.data()), size * sizeof(pair<int, int>));
+    ofs.close();
+}
+
+// Function to extract the prefix of a filename from a filepath
+std::string extract_prefix(const std::string &filepath) {
+    // Similar to get_filename, but this function additionally finds the prefix before the first underscore ('_') in the filename
     std::filesystem::path path(filepath);
     std::string filename = path.filename().string();
-
-    // Find the position of the first underscore
     std::size_t pos = filename.find('_');
-
-    // If an underscore was found, extract the prefix
     if (pos != std::string::npos) {
         return filename.substr(0, pos);
     }
-
-    // If no underscore was found, return the whole filename
     return filename;
 }
 
-// get all the file names in path and put them in a vector
+// Function to get all file names in a given directory and store them in a vector
 void getFiles(string path, vector<string> &files) {
     DIR *dr;
     struct dirent *en;
     string file_path;
-    dr = opendir(path.c_str()); // open all directory
+    dr = opendir(path.c_str()); // Open the directory
     if (dr) {
         while ((en = readdir(dr)) != NULL) {
-            // ignore hidden files and folders
+            // Ignore hidden files and folders (those beginning with '.')
             if (en->d_name[0] != '.') {
                 const char end = path.back();
                 if (end == '/')
@@ -67,6 +123,6 @@ void getFiles(string path, vector<string> &files) {
                 files.push_back(file_path);
             }
         }
-        closedir(dr); // close all directory
+        closedir(dr); // Close the directory
     }
 }

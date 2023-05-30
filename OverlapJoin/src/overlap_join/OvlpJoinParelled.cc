@@ -2,6 +2,7 @@
 
 #include "OvlpJoinParelled.h"
 #include "../util/util.h"
+#include "../util/io.h"
 #include "omp.h"
 
 // It is the id map of sorted bottom_k to original_bottomk
@@ -51,12 +52,7 @@ void OvlpJoinParelled::save_idmap(string _resPair_path){
 
     // Write the idmap
     const string idmap_file_path = _resPair_path + "idmap.bin";
-    ofstream idmap_ofs;
-    idmap_ofs.open(idmap_file_path.c_str(), ios::binary);
-    int size = idmap.size();
-    idmap_ofs.write((char*)&size, sizeof(int));
-    idmap_ofs.write(reinterpret_cast<const char*>(idmap.data()), size * sizeof(int));
-    idmap_ofs.close();
+    writeVec2Bin(idmap_file_path, idmap);
 }
 
 // Function to handle the small sets
