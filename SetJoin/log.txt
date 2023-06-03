@@ -1,0 +1,3 @@
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Start Set Join

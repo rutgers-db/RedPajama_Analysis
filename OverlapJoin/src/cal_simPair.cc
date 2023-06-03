@@ -21,7 +21,7 @@ inline bool judgeMinHashJaccard(const int & pos_1, const int & pos_2)
 int main() {
     
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin";
-    const string dataset = "wikipedia";
+    const string dataset = "intergrated";
     const string simP_dirpath = root_dir + "/similar_pairs/" + dataset + "_simPair_K" + to_string(K) + "_C" + to_string(c) + "/";
 
     // Read the idmap and simpair
@@ -42,8 +42,8 @@ int main() {
    
     // Calculate the similar pairs and make sure no duplication
     vector<vector<int>> id_lists(idmap.size());
-    for (auto i = 0; i < res_lists.size(); i++) {
-        for (auto j = 0; j < res_lists[i].size(); j++)
+    for (int i = 0; i < res_lists.size(); i++) {
+        for (int j = 0; j < res_lists[i].size(); j++)
             id_lists[res_lists[i][j].first].push_back(i);
     }
 
@@ -55,18 +55,19 @@ int main() {
     //     cout<<endl;
     // }
     
+    cout << "Starting Calculating " <<endl;
     int n = idmap.size();
-    auto candidate_num = 0LL;
+    unsigned long long candidate_num = 0LL;
     long long result_num  = 0;
     vector<pair<int,int> > sim_pairs;
     vector<int> results(n, -1);
-    for (auto i = n - 1; i >= 0; i--) {
+    for (int i = n - 1; i >= 0; i--) {
         if (id_lists[i].empty())
             continue;
-        for (auto j = 0; j < id_lists[i].size(); j++) {
+        for (int j = 0; j < id_lists[i].size(); j++) {
             auto last_cur_1 = res_lists[id_lists[i][j]].back().second;
             res_lists[id_lists[i][j]].pop_back();
-            for (auto k = 0; k < res_lists[id_lists[i][j]].size(); k++) {
+            for (int k = 0; k < res_lists[id_lists[i][j]].size(); k++) {
                 if (results[res_lists[id_lists[i][j]][k].first] != i) {
                     candidate_num++;
                     results[res_lists[id_lists[i][j]][k].first] = i;

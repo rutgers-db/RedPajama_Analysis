@@ -293,6 +293,8 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
         save_idmap(resultPair_storePath);
     }
 
+    return;
+    
     // build real inverted index
     ele_lists.resize(total_eles);
     for (int i = 0; i < n; i++)

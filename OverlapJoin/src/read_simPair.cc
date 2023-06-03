@@ -20,8 +20,8 @@ int main() {
     vector<int> idmap;
     vector < pair<int, int>> sim_pair;
     loadBin2vec(idmap_file_path, idmap);
-        readSimilarPair(simpair_file_path, sim_pair);
-
+    readSimilarPair(simpair_file_path, sim_pair);
+    
     // Output the similar pairs
     for (int i = 0; i < 5; i++) {
         printf("Similar pairs: %d %d\n", idmap[sim_pair[i].first], idmap[sim_pair[i].second]);
