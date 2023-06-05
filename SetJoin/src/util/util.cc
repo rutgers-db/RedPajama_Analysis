@@ -74,3 +74,15 @@ void mergeArrays(std::vector<std::vector<pair<int,int>>>* input, int arr_len, st
         result.insert(result.end(), input[i].begin(), input[i].end());
     }
 }
+
+// Turn on timer
+std::chrono::_V2::system_clock::time_point LogTime() {
+    return chrono::high_resolution_clock::now();
+}
+
+// Turn off timer
+double RepTime(const std::chrono::_V2::system_clock::time_point &start) {
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+    return duration.count() / 1000000.0;
+}

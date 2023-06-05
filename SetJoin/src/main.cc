@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, char *argv[]) {
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    const string dataset_name = "wikipedia"; 
+    const string dataset_name = "book"; 
     const string sortedsets_file_path = root_dir + "/sorted_sets/" + dataset_name +"_sortedsets.bin";
     const string idmap_file_path = root_dir + "/sorted_sets/" +  dataset_name + "_idmap.bin";
 
@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     //     cout<<sorted_sets[i].size()<<endl;
     // }
     // Use setjoin
+    cout<<sorted_sets.back().size()<<endl;
     cout<<"Start Set Join"<<endl;
     SetJoin joiner(sorted_sets);
     joiner.setjoin(thres);

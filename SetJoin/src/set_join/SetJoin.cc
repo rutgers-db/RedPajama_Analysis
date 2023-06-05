@@ -1,10 +1,12 @@
 
 #include "SetJoin.h"
-
+#include "../util/util.h"
 
 vector<pair<int, int>> cacheVec;
 vector<vector<pair<int, int>>> indexVecs;
-
+double overlap_cost = 0;
+double allocation_cost = 0;
+double index_cost = 0;
 bool SetJoin::overlap(int x, int y, int posx, int posy, int current_overlap) 
 {
     int require_overlap = ceil(det / (1 + det) * (int)(dataset[x].size() + dataset[y].size()) - EPS);
@@ -24,6 +26,7 @@ bool SetJoin::overlap(int x, int y, int posx, int posy, int current_overlap)
         }
     }
     return current_overlap >= require_overlap;
+    
 }
 
 
@@ -154,6 +157,7 @@ void SetJoin::setjoin(double threshold)
                 onePtr[pid].reserve(subquery[pid].size());
             }
 
+            auto alloc_st = LogTime();
             // Iterate each part find each part if there is identical part already exits in inverted list
             // Based on the above result, initialize the value and scores
             for (int pid = 0; pid < indexPartNum; pid++) {
@@ -252,6 +256,7 @@ void SetJoin::setjoin(double threshold)
                     values[heap_cnt - 1].first = v2;
                     push_heap(values.begin(), values.begin() + heap_cnt);
                 } else {
+                    auto ov_st = LogTime();
                     // add candidates
                     if (intPtr[pid] != 0) {
                         auto &vec = indexLists[intPtr[pid]].getVector();
@@ -288,12 +293,12 @@ void SetJoin::setjoin(double threshold)
                             }
                         }
                     }
-
+                    overlap_cost += RepTime(ov_st);
                     // maintain heap
                     --heap_cnt;
                 }
             }
-
+            allocation_cost += RepTime(alloc_st);
             listlens += cost;
 
             // clear candidates
@@ -317,6 +322,7 @@ void SetJoin::setjoin(double threshold)
 
         // indexing
 
+        auto index_st = LogTime();
         // Here is to create a new group 
         if (len > high) {
             low = len;
@@ -374,6 +380,8 @@ void SetJoin::setjoin(double threshold)
 
             pos = pos + subrec.size();
         }
+
+        index_cost += RepTime(index_st);
     }
     gettimeofday(&allend, NULL);
     double all = allend.tv_sec - allstart.tv_sec + (allend.tv_usec - allstart.tv_usec) / 1e6;
@@ -387,4 +395,11 @@ void SetJoin::setjoin(double threshold)
     //for (int i = 1; i < 6; ++i) fprintf(stderr, "(%d: %d) ", i, v[i]);
     fprintf(stderr, "total time: %.3fs\n", allend.tv_sec - allstart.tv_sec + (allend.tv_usec - allstart.tv_usec) / 1e6);
     fprintf(stderr, "%lu %lu %lu %.3f\n", resultNum, candidateNum, listlens, all);
+    fprintf(stderr, "AllocCost %.3f  IndexCost: %.3f OverlapCost : %.3f\n",allocation_cost, index_cost, overlap_cost);
+
+    unsigned long long pairs_amount = 0;
+    for(auto const & vec : indexVecs){
+        pairs_amount+=vec.size();
+    }
+    fprintf(stderr, "The amount of pairs in the indexVecs is: %llu\n", pairs_amount);
 }
