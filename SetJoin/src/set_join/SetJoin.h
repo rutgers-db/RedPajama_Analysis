@@ -25,8 +25,6 @@ using namespace std;
 
 #define PRIME 2017
 #define EPS 1e-5
-#define NEG -1
-#define INF 100000000
 #define MAX_LINE_LENGTH 1000000
 #define CACHE_SIZE 5
 
@@ -34,30 +32,9 @@ extern vector<pair<int, int>> cacheVec;
 extern vector<vector<pair<int, int>>> indexVecs;
 
 
-class SimPairx
-{
-public:
-    int id1;
-    int id2;
-    double sim;
-    SimPairx() {}
-    SimPairx(int i1, int i2, double s)
-    {
-        id1 = i1;
-        id2 = i2;
-        sim = s;
-    }
-    
-    bool operator<(const SimPairx& rhs) const
-    {
-        return this->sim > rhs.sim;
-    }
-};
-
 class SetJoin 
 {
 public:
-    int same, diff;
     double det;
     uint64_t resultNum = 0;
     uint64_t candidateNum = 0;
@@ -65,21 +42,8 @@ public:
     uint64_t listlens = 0;
     int prime_exp[MAX_LINE_LENGTH];
     vector<vector<unsigned short>> dataset;
-    int maxlimit;
-    bool has_limit;
     vector<pair<int, int>> result_pairs;
 
-    priority_queue<SimPairx> result_pairs_;
-
-    void get_results()
-    {
-
-                while(!result_pairs_.empty())
-                {
-                    result_pairs.emplace_back(result_pairs_.top().id1, result_pairs_.top().id2);
-                    result_pairs_.pop();
-                }
-    }
 
     struct invertedList {
         int vec_no, cnt;
@@ -120,7 +84,6 @@ public:
     SetJoin(vector<vector<unsigned short>> &sorted_records)
     {
         dataset = sorted_records;
-        has_limit = false;
         indexVecs.clear();
         cacheVec.clear();
         cacheVec.resize(CACHE_SIZE);

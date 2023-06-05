@@ -55,6 +55,8 @@ void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &doc
         docs.emplace_back(vec);                                   // Add the vector to the documents
     }
     ifs.close(); // Close the file stream after reading
+
+    printf("There are %lu documents in %s\n",docs.size(),  binFileName.c_str());
 }
 
 // Function to load binary file into a vector

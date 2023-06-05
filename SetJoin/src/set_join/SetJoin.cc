@@ -2,62 +2,6 @@
 #include "SetJoin.h"
 
 
-double similaritya(vector<int> &v1, vector<int> &v2, double w1, double w2, const vector<double> &ww)
-{
-  double ovlp = 0.0; 
-  auto it1 = v1.begin();
-  auto it2 = v2.begin();
-
-  while (it1 != v1.end() && it2 != v2.end()) {
-    if (*it1 == *it2) {
-      ovlp += ww[*it1];
-      ++it1, ++it2;
-    } else {
-      if (*it1 < *it2) ++it1;
-      else ++it2;
-    }
-  }
-  // jaccard
-  double jac = ovlp / (w1 + w2 - ovlp);
-  double olp = ovlp / min(w1, w2);
-  
-  // return jac + olp;
-  // rank by L2-norm?
-  return jac;
-}
-
-
-double similarityb(vector<int> &v1, vector<int> &v2, double w1, double w2, const vector<double> &ww, double t1, double t2) 
-{
-  int common = 0;
-  double ovlp = 0.0; 
-  auto it1 = v1.begin();
-  auto it2 = v2.begin();
-
-  while (it1 != v1.end() && it2 != v2.end()) {
-    if (*it1 == *it2) {
-      ovlp += ww[*it1];
-      ++common;
-      ++it1, ++it2;
-    } else {
-      if (*it1 < *it2) ++it1;
-      else ++it2;
-    }   
-  }
-  
-  // rank by MAX
-  double sim = 0;
-  // jaccard
-  if (ovlp / (w1 + w2 - ovlp) >= t1) 
-    sim = sim + ovlp / (w1 + w2 - ovlp);
-
-  // overlap
-  if (common >= t2) 
-    sim = sim + ovlp / min(w1, w2);
-
-  return sim; 
-}
-
 vector<pair<int, int>> cacheVec;
 vector<vector<pair<int, int>>> indexVecs;
 
@@ -94,12 +38,7 @@ void SetJoin::setjoin(double threshold)
 
     string str;
 
-    for (auto &vec : dataset) sort(vec.begin(), vec.end());
-    /*
-    sort(dataset.begin(), dataset.end(), [] (const vector<int>& a, const vector<int>& b) {
-        return a.size() < b.size();
-    });
-    */
+    // for (auto &vec : dataset) sort(vec.begin(), vec.end());
 
     det = threshold;
     double coe = (1 - det) / (1 + det);
@@ -122,7 +61,7 @@ void SetJoin::setjoin(double threshold)
     google_unordered_map<int64_t, int> oneIndex;
     // invIndex.set_empty_key(-1);
     // oneIndex.set_empty_key(-1);
-    int invIndexSize = (1 - det) / det * lengthSum, oneIndexSize = lengthSum;
+    int invIndexSize = (1 - det) / det * lengthSum, oneIndexSize =  lengthSum;
     // invIndex.resize(invIndexSize);
     // oneIndex.resize(oneIndexSize);
     indexLists.resize(1);
@@ -139,7 +78,7 @@ void SetJoin::setjoin(double threshold)
 
     vector<int> candidates;
 
-    int maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1;
+    int maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1; 
     vector<int> hashValues;
     vector<int> positions;
     vector<vector<int>> subquery;  // first part id second tokens
@@ -179,20 +118,27 @@ void SetJoin::setjoin(double threshold)
             int indexLen = range[indexLenGrp].first;
             indexPartNum = floor(2 * coe * indexLen + EPS) + 1;
 
-            // split the query into multiple parts
+            // split the query into multiple parts if prevIndexPartNum != indexPartNum
+            // it means if the indexLenGrp's first range is not change
+            // But does it possible?
             if (prevIndexPartNum != indexPartNum) {
+
+                // clear subquery oneHashValues  hashValues
                 for (int pid = 0; pid < indexPartNum; ++pid) {
                     subquery[pid].clear();
                     oneHashValues[pid].clear();
                     hashValues[pid] = 0;
                 }
-
+                
+                // allocate the tokens into subquery and hash each part
+                // That is the way how the query is splitted into indexPartNum
                 for (auto &token : dataset[rid]) {
                     int pid = token % indexPartNum;
                     subquery[pid].push_back(token);
                     hashValues[pid] = PRIME * hashValues[pid] + token + 1;
                 }
 
+                // Dont know the position meaning?
                 pos = 0;
                 for (int pid = 0; pid < indexPartNum; pid++) {
                     positions[pid] = pos;
@@ -202,13 +148,17 @@ void SetJoin::setjoin(double threshold)
                 prevIndexPartNum = indexPartNum;
             }
 
+            // Initialize onePtr and reserve each space
             for (int pid = 0; pid < indexPartNum; ++pid) {
                 onePtr[pid].clear();
                 onePtr[pid].reserve(subquery[pid].size());
             }
 
+            // Iterate each part find each part if there is identical part already exits in inverted list
+            // Based on the above result, initialize the value and scores
             for (int pid = 0; pid < indexPartNum; pid++) {
-
+                
+                // A hash 
                 int64_t lenPart = indexLen + pid * (maxSize + 1);
 
                 int v1 = 0;
@@ -232,6 +182,8 @@ void SetJoin::setjoin(double threshold)
             int Hb = floor((rLen - det * len) / (1 + det) + EPS);
             int maxH = Ha + Hb;
             maxH = floor(coe * (len + rLen) + EPS);
+
+            // We need use greedy selection in maxH + 1 times
             for (int i = 0; i < maxH + 1; ++i) {
                 auto sel = values.front();
                 pop_heap(values.begin(), values.begin() + heap_cnt);
@@ -247,7 +199,10 @@ void SetJoin::setjoin(double threshold)
                             int rLen = dataset[lit->first].size();
                             int Ha = floor((len - det * rLen) / (1 + det) + EPS);
                             int Hb = floor((rLen - det * len) / (1 + det) + EPS);
-                            int H = Ha + Hb;
+                            int H = Ha + Hb; // maximum allowable difference
+
+                            // If the current iteration index i is greater than this maximum allowable difference H
+                            // current entry in the inverted list is skipped,
                             if (i > H) continue;
                             // position filter
                             if (negRef[lit->first] == false && quickRef[lit->first] == false)
@@ -260,8 +215,11 @@ void SetJoin::setjoin(double threshold)
                     }
 
                     // maintain heap
+                    // Here is to find the next pair that insert to the heap
+                    // Basically it is to consider the situation of the 1-deletion of the current part
                     int v2 = 0;
 
+                    // search if the 1-deletion 
                     auto oneit = oneIndex.find(PACK(lenPart, hashValues[pid]));
                     if (oneit != oneIndex.end()) {
                         intPtr[pid] = oneit->second;
@@ -358,6 +316,8 @@ void SetJoin::setjoin(double threshold)
         }
 
         // indexing
+
+        // Here is to create a new group 
         if (len > high) {
             low = len;
             high = len * ALPHA;
