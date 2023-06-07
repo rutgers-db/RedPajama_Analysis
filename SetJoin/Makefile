@@ -11,7 +11,7 @@ UTIL_DIR = $(SRCDIR)/util
 SETJOIN_DIR = $(SRCDIR)/set_join
 
 # Compiler flags
-CXXFLAGS = -std=c++17 -O3 -g -fopenmp -pg
+CXXFLAGS = -std=c++17 -O3 -g -fopenmp
 
 # Files and folders
 SRCS = $(wildcard $(SRCDIR)/*.cc) $(wildcard $(SRCDIR)/set_join/*.cc) $(wildcard $(UTIL_DIR)/*.cc)
