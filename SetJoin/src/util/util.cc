@@ -1,4 +1,5 @@
 #include "util.h"
+
 void print_memory() {
 #ifdef __linux__
   struct sysinfo memInfo;
@@ -85,4 +86,16 @@ double RepTime(const std::chrono::_V2::system_clock::time_point &start) {
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
     return duration.count() / 1000000.0;
+}
+
+void printHowManyThreads(){
+    int thread_num = 0;
+
+    #pragma omp parallel for
+    for(int i = 0; i<200;i++){
+        #pragma omp critical
+            thread_num = max(omp_get_thread_num(),thread_num);
+    }
+
+    cout<<"max thread amount: "<<thread_num<<endl;
 }
