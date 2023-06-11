@@ -29,6 +29,38 @@ using namespace std;
 
 // extern vector<pair<int, int>> cacheVec;
 // extern vector<vector<pair<int, int>>> indexVecs;
+struct HashOfsCnt {
+    uint64_t hashvalue = 0;
+    uint64_t ofs = 0;;
+    unsigned int cnt = 0;;
+    HashOfsCnt(){}
+    HashOfsCnt(uint64_t _hv, uint64_t _ofs, unsigned int _cnt):hashvalue(_hv), ofs(_ofs), cnt(_cnt){}
+
+    bool operator<(const HashOfsCnt& tmp) const {
+        return hashvalue<tmp.hashvalue;
+    }
+
+};
+
+struct HashRidPos {
+    uint64_t hashvalue;
+    unsigned int rid;
+    unsigned short pos;
+    // vector<int> oneList;
+
+    HashRidPos(){}
+    HashRidPos(uint64_t _hv, unsigned int _rid, unsigned short _pos):hashvalue(_hv), rid(_rid), pos(_pos){}
+
+    bool operator<(const HashRidPos& tmp) const {
+        if(hashvalue == tmp.hashvalue){
+            // if(rid == tmp.rid)
+            //     return pos<tmp.pos;
+            return rid<tmp.rid;
+        }
+        return hashvalue<tmp.hashvalue;
+    }
+
+};
 
 class SetJoinParelled {
 public:
@@ -46,60 +78,21 @@ public:
     unsigned int n;       // the amount of records
     unsigned int maxSize; // the max size of the records
 
-    struct invertedList {
-        int vec_no, cnt;
-        pair<int, int> cache[CACHE_SIZE];
-
-        // vector<pair<int, int>>& getVector() const {
-        //     if (cnt <= CACHE_SIZE) {
-        //         cacheVec.assign(cache, cache + cnt);
-        //         return cacheVec;
-        //     } else
-        //         return indexVecs[vec_no];
-        // }
-
-        // void add(pair<int, int> data) {
-        //     if (cnt < CACHE_SIZE) cache[cnt++] = data;
-        //     else {
-        //         if (CACHE_SIZE == cnt) {
-        //             indexVecs.push_back(vector<pair<int, int>>());
-        //             vec_no = indexVecs.size() - 1;
-        //             indexVecs[vec_no].assign(cache, cache + CACHE_SIZE);
-        //         }
-        //         ++cnt;
-        //         indexVecs[vec_no].push_back(data);
-        //     }
-        // }
-    };
-
-    struct invIndexStruct {
-        int list_no;
-        // vector<int> oneList;
-
-        invIndexStruct() :
-            list_no(0) {
-        }
-    };
-
-    vector<invertedList> indexLists;
 
     SetJoinParelled(vector<vector<unsigned short>> &sorted_records) {
         dataset = sorted_records;
-        // indexVecs.clear();
-        // cacheVec.clear();
-        // cacheVec.resize(CACHE_SIZE);
     }
 
     ~SetJoinParelled() {
-        // cacheVec.clear();
-        // indexVecs.clear();
     }
 
     bool overlap(int x, int y, int posx = 0, int posy = 0, int current_overlap = 0);
     void setjoin(double threshold);
 
     void index(double threshold);
+    void GreedyFindCandidateAndSimPairs(const int indexLenGrp, const unsigned int rid, const vector<HashRidPos> &p_keys, const vector<HashRidPos> &od_keys, const vector<unsigned short> &odk_st);
     void findSimPairs();
+
 };
 
 #endif

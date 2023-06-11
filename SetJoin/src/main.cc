@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    const string dataset_name = string(argv[1]); 
+    const string dataset_name = "book" ; //string(argv[1]); 
     const string sortedsets_file_path = root_dir + "/sorted_sets/" + dataset_name +"_sortedsets.bin";
     const string idmap_file_path = root_dir + "/sorted_sets/" +  dataset_name + "_idmap.bin";
     
@@ -36,14 +36,14 @@ int main(int argc, char *argv[]) {
     }
 
     // Use setjoin
-    cout<<sorted_sets.back().size()<<endl;
+    // cout<<sorted_sets.back().size()<<endl;
     cout<<"Start Set Join"<<endl;
     // SetJoin joiner(sorted_sets, simP_file_path);
     // joiner.setjoin(thres);
 
     SetJoinParelled joiner(sorted_sets);
     joiner.index(thres);
-    
+    joiner.findSimPairs();
 
     // Investigate the result
     printf("joiner.result_pairs have %lu pairs\n", joiner.result_pairs.size());
@@ -58,5 +58,5 @@ int main(int argc, char *argv[]) {
     }
 
     
-    // writeSimilarPair(simP_file_path, joiner.result_pairs);
+    writeSimilarPair(simP_file_path, joiner.result_pairs);
 }
