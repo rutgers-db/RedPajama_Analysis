@@ -18,14 +18,12 @@
 
 using namespace std;
 
-#define google_unordered_map unordered_map
-#define google_unordered_set unordered_set
-
 #define PACK(x, y) ((x << 32) + y) // 32
 
 #define PRIME 2017
 #define EPS 1e-5
-#define CACHE_SIZE 5
+
+#define MAXTHREADNUM 128
 
 // extern vector<pair<int, int>> cacheVec;
 // extern vector<vector<pair<int, int>>> indexVecs;
@@ -70,7 +68,7 @@ public:
     uint64_t listlens = 0;
 
     vector<vector<unsigned short>> dataset;
-    vector<pair<int, int>> result_pairs;
+    vector<pair<int, int>> result_pairs[MAXTHREADNUM];
 
     // parameters about caculation and dataset
     double coe;
@@ -86,11 +84,18 @@ public:
     ~SetJoinParelled() {
     }
 
+    unsigned int getResultPairsAmount(){
+        unsigned int pairs_amount = 0;
+        for(int i = 0;i<MAXTHREADNUM;i++){
+            pairs_amount += result_pairs[i].size();
+        }
+        return pairs_amount;
+    }
     bool overlap(int x, int y, int posx = 0, int posy = 0, int current_overlap = 0);
     void setjoin(double threshold);
 
     void index(double threshold);
-    void GreedyFindCandidateAndSimPairs(const int indexLenGrp, const unsigned int rid, const vector<HashRidPos> &p_keys, const vector<HashRidPos> &od_keys, const vector<unsigned short> &odk_st);
+    void GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<HashRidPos> &p_keys, const vector<HashRidPos> &od_keys, const vector<unsigned short> &odk_st);
     void findSimPairs();
 
 };
