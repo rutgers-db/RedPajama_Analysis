@@ -49,7 +49,7 @@ $(TEST_DIR)/%: $(TEST_DIR)/%.cc $(UTIL_OBJS)
 extract: $(OBJDIR)/extractSet.o
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
 
-$(OBJDIR)/extractSet.o: $(UTIL_OBJS)
+$(OBJDIR)/extractSet.o: $(UTIL_OBJS) src/extractSet.cc
 	$(CXX) $(CXXFLAGS) -c src/extractSet.cc -o $@
 
 clean:

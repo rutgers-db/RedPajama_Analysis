@@ -29,7 +29,7 @@ using namespace std;
 // extern vector<vector<pair<int, int>>> indexVecs;
 struct HashOfsCnt {
     uint64_t hashvalue = 0;
-    uint64_t ofs = 0;;
+    uint64_t ofs = 0;
     unsigned int cnt = 0;;
     HashOfsCnt(){}
     HashOfsCnt(uint64_t _hv, uint64_t _ofs, unsigned int _cnt):hashvalue(_hv), ofs(_ofs), cnt(_cnt){}

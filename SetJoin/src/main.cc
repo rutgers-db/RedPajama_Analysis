@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
     if(argc > 2) {
         const unsigned int shrink_size = stoul(argv[2]);
         sorted_sets.resize(shrink_size);
+        
         printf("For Debug using the dataset amount has been changed into %u \n", shrink_size);
     }
 

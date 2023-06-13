@@ -8,11 +8,8 @@ int main()
   vector<int> normal;
   cout << normal.capacity() << endl;
   
-  for (unsigned int loop = 0; loop != 28; ++loop)
-  {
-      normal.push_back(1);
-      cout << normal.capacity() << endl;
-  }
+  std::cout << "Size of pair: " << sizeof(std::pair<unsigned int, unsigned short>) << " bytes\n";
+
   
   return 0;
 }

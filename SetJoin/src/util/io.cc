@@ -163,3 +163,8 @@ void getFiles(string path, vector<string> &files) {
         closedir(dr); // Close the directory
     }
 }
+
+
+std::string getDirectoryName(const std::string& path) {
+    return std::filesystem::path(path).filename().string();
+}
