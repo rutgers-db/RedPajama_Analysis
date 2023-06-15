@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
     SetJoinParelled joiner(sorted_sets);
     joiner.index(thres);
-    // joiner.findSimPairs();
+    joiner.findSimPairs();
 
     // Investigate the result
     printf("joiner.result_pairs have %u pairs\n", joiner.getResultPairsAmount());

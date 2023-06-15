@@ -25,40 +25,38 @@ using namespace std;
 
 #define MAXTHREADNUM 128
 
-// extern vector<pair<int, int>> cacheVec;
-// extern vector<vector<pair<int, int>>> indexVecs;
-struct HashOfsCnt {
-    uint64_t hashvalue = 0;
-    uint64_t ofs = 0;
-    unsigned int cnt = 0;;
-    HashOfsCnt(){}
-    HashOfsCnt(uint64_t _hv, uint64_t _ofs, unsigned int _cnt):hashvalue(_hv), ofs(_ofs), cnt(_cnt){}
+// struct HashOfsCnt {
+//     uint64_t hashvalue = 0;
+//     uint64_t ofs = 0;
+//     unsigned int cnt = 0;;
+//     HashOfsCnt(){}
+//     HashOfsCnt(uint64_t _hv, uint64_t _ofs, unsigned int _cnt):hashvalue(_hv), ofs(_ofs), cnt(_cnt){}
 
-    bool operator<(const HashOfsCnt& tmp) const {
-        return hashvalue<tmp.hashvalue;
-    }
+//     bool operator<(const HashOfsCnt& tmp) const {
+//         return hashvalue<tmp.hashvalue;
+//     }
 
-};
+// };
 
-struct HashRidPos {
-    uint64_t hashvalue;
-    unsigned int rid;
-    unsigned short pos;
-    // vector<int> oneList;
+// struct HashRidPos {
+//     uint64_t hashvalue;
+//     unsigned int rid;
+//     unsigned short pos;
+//     // vector<int> oneList;
 
-    HashRidPos(){}
-    HashRidPos(uint64_t _hv, unsigned int _rid, unsigned short _pos):hashvalue(_hv), rid(_rid), pos(_pos){}
+//     HashRidPos(){}
+//     HashRidPos(uint64_t _hv, unsigned int _rid, unsigned short _pos):hashvalue(_hv), rid(_rid), pos(_pos){}
 
-    bool operator<(const HashRidPos& tmp) const {
-        if(hashvalue == tmp.hashvalue){
-            // if(rid == tmp.rid)
-            //     return pos<tmp.pos;
-            return rid<tmp.rid;
-        }
-        return hashvalue<tmp.hashvalue;
-    }
+//     bool operator<(const HashRidPos& tmp) const {
+//         if(hashvalue == tmp.hashvalue){
+//             // if(rid == tmp.rid)
+//             //     return pos<tmp.pos;
+//             return rid<tmp.rid;
+//         }
+//         return hashvalue<tmp.hashvalue;
+//     }
 
-};
+// };
 
 class SetJoinParelled {
 public:
@@ -95,7 +93,7 @@ public:
     void setjoin(double threshold);
 
     void index(double threshold);
-    void GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<HashRidPos> &p_keys, const vector<HashRidPos> &od_keys, const vector<unsigned short> &odk_st);
+    void GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys, const vector<unsigned short> &odk_st);
     void findSimPairs();
 
 };

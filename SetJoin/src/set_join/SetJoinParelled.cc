@@ -1,6 +1,7 @@
 
 #include "SetJoinParelled.h"
 #include <omp.h>
+#include <limits.h>
 #include <tbb/parallel_sort.h>
 #include "../util/util.h"
 
@@ -28,6 +29,8 @@ vector<vector<unsigned int>> *parts_rids; // <rid>
 vector<vector<unsigned int>> *ods_rids; // <rid>
 
 // The index pointers
+vector<vector<unsigned int>> *parts_index_hv;
+vector<vector<unsigned int>> *od_index_hv;
 vector<vector<unsigned int>> *parts_index_offset;
 vector<vector<unsigned int>> *od_index_offset;
 // Mention: if the cnt is greater than the limit of unsigned short, we will just treat it as the maximum value of unsigned short
@@ -35,9 +38,9 @@ vector<vector<unsigned short>> *parts_index_cnt;
 vector<vector<unsigned short>> *od_index_cnt;
 
 // vectors needed when allocate by greedy heap method
-vector<HashOfsCnt> invPtrArr[MAXTHREADNUM];
-vector<HashOfsCnt> intPtrArr[MAXTHREADNUM];
-vector<vector<HashOfsCnt>> onePtrArr[MAXTHREADNUM];
+vector<unsigned int> invPtrArr[MAXTHREADNUM];
+vector<unsigned int> intPtrArr[MAXTHREADNUM];
+vector<vector<unsigned int>> onePtrArr[MAXTHREADNUM];
 vector<pair<int, unsigned short>> valuesArr[MAXTHREADNUM]; // <value, loc>
 vector<unsigned short> scoresArr[MAXTHREADNUM];
 
@@ -202,6 +205,8 @@ void SetJoinParelled::index(double threshold) {
     // ods_arr = new vector<HashRidPos>[range.size()];
     parts_rids = new vector<vector<unsigned int>>[range.size()]; 
     ods_rids = new vector<vector<unsigned int>>[range.size()]; 
+    parts_index_hv = new vector<vector<unsigned int>>[range.size()];
+    od_index_hv = new vector<vector<unsigned int>>[range.size()];
     parts_index_offset = new vector<vector<unsigned int>>[range.size()]; 
     od_index_offset = new vector<vector<unsigned int>>[range.size()]; 
     parts_index_cnt = new vector<vector<unsigned short>>[range.size()]; 
@@ -216,6 +221,8 @@ void SetJoinParelled::index(double threshold) {
         // Allocate Memory for index
         parts_rids[i].resize(partNum);
         ods_rids[i].resize(partNum);
+        parts_index_hv[i].resize(partNum);
+        od_index_hv[i].resize(partNum);
         parts_index_offset[i].resize(partNum);
         parts_index_cnt[i].resize(partNum);
         od_index_offset[i].resize(partNum);
@@ -249,6 +256,7 @@ void SetJoinParelled::index(double threshold) {
             for(unsigned int j = 1; j< cur_rids.size();j++){
                 auto &cur_hv = parts_keys[cur_rids[j]][pid];
                 if (cur_hv != prev_hv) {
+                    parts_index_hv[i][pid].emplace_back(prev_hv);
                     parts_index_offset[i][pid].emplace_back(ofs);
                     parts_index_cnt[i][pid].emplace_back(tmp_cnt);
                     prev_hv = cur_hv;
@@ -258,6 +266,7 @@ void SetJoinParelled::index(double threshold) {
                 if(tmp_cnt < 65535) // the maximum of unsigned short
                     tmp_cnt++;
             }
+            parts_index_hv[i][pid].emplace_back(prev_hv);
             parts_index_offset[i][pid].emplace_back(ofs);
             parts_index_cnt[i][pid].emplace_back(tmp_cnt);
 
@@ -302,6 +311,7 @@ void SetJoinParelled::index(double threshold) {
                 auto const & _od_loc = tmp_od_locs[cur_ods_rids[j]];
                 auto const & cur_hv = onedelete_keys[_rid][_od_loc];
                 if (cur_hv != prev_hv) {
+                    od_index_hv[i][pid].emplace_back(prev_hv);
                     od_index_offset[i][pid].emplace_back(ofs);
                     od_index_cnt[i][pid].emplace_back(tmp_cnt);
                     prev_hv = cur_hv;
@@ -311,6 +321,7 @@ void SetJoinParelled::index(double threshold) {
                 if(tmp_cnt < 65535) // the maximum of unsigned short
                     tmp_cnt++;
             }
+            od_index_hv[i][pid].emplace_back(prev_hv);
             od_index_offset[i][pid].emplace_back(ofs);
             od_index_cnt[i][pid].emplace_back(tmp_cnt);
 
@@ -337,340 +348,354 @@ void SetJoinParelled::index(double threshold) {
     print_memory();
 }
 
-// void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<HashRidPos> &p_keys, const vector<HashRidPos> &od_keys, const vector<unsigned short> &odk_st) {
-//     auto const indexPartNum = p_keys.size();
-//     assert(indexPartNum == odk_st.size() - 1);
-//     int const len = dataset[rid].size();
-//     auto const indexLen = range[indexLenGrp].first;
+void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys, const vector<unsigned short> &odk_st) {
+    auto const indexPartNum = p_keys.size();
+    assert(indexPartNum == odk_st.size() - 1);
+    int const len = dataset[rid].size();
+    auto const indexLen = range[indexLenGrp].first;
 
-//     vector<unsigned int> candidates;
-//     auto & invPtr = invPtrArr[tid];
-//     auto & intPtr = intPtrArr[tid];
-//     auto & onePtr = onePtrArr[tid];
-//     auto & values = valuesArr[tid];
-//     auto & scores = scoresArr[tid];
-//     invPtr.resize(indexPartNum);
-//     intPtr.resize(indexPartNum);
-//     onePtr.resize(indexPartNum);
-//     values.resize(indexPartNum);
-//     scores.resize(indexPartNum);
-//     auto negRef = negRef2D[tid];
-//     auto quickRef = quickRef2D[tid];
-//     // Initialize onePtr and reserve each space
-//     for (unsigned int pid = 0; pid < indexPartNum; ++pid) {
-//         onePtr[pid].clear();
-//         // cout<<rid << " "<< odk_st[pid+1]<<" " << odk_st[pid]<<endl;
-//         // if(odk_st[pid+1] < odk_st[pid]){
-//         //     cout<<"Something wrong"<<endl;
-//         //     cout<<indexLenGrp<<" " << rid<<endl;
-//         //     cout<<odk_st[pid+1]<<" " << odk_st[pid]<<endl;
-//         // }
-//         assert(odk_st[pid+1] >= odk_st[pid]);
+    vector<unsigned int> candidates;
+    auto & invPtr = invPtrArr[tid];
+    auto & intPtr = intPtrArr[tid];
+    auto & onePtr = onePtrArr[tid];
+    auto & values = valuesArr[tid];
+    auto & scores = scoresArr[tid];
+    invPtr.resize(indexPartNum);
+    intPtr.resize(indexPartNum);
+    onePtr.resize(indexPartNum);
+    values.resize(indexPartNum);
+    scores.resize(indexPartNum);
+    auto negRef = negRef2D[tid];
+    auto quickRef = quickRef2D[tid];
+    // Initialize onePtr and reserve each space
+    for (unsigned int pid = 0; pid < indexPartNum; ++pid) {
+        onePtr[pid].clear();
+        // cout<<rid << " "<< odk_st[pid+1]<<" " << odk_st[pid]<<endl;
+        // if(odk_st[pid+1] < odk_st[pid]){
+        //     cout<<"Something wrong"<<endl;
+        //     cout<<indexLenGrp<<" " << rid<<endl;
+        //     cout<<odk_st[pid+1]<<" " << odk_st[pid]<<endl;
+        // }
+        assert(odk_st[pid+1] >= odk_st[pid]);
         
-//         onePtr[pid].reserve(odk_st[pid+1] - odk_st[pid]);
-//     }
+        onePtr[pid].reserve(odk_st[pid+1] - odk_st[pid]);
+    }
     
-//     // Iterate each part find each part if there is identical part already exits in inverted list
-//     // Based on the above result, initialize the value and scores
-//     for (unsigned short pid = 0; pid < indexPartNum; pid++) {
-//         // A hash
-//         // int64_t lenPart = indexLen + pid * (maxSize + 1);
-//         int v1 = 0;
-//         const auto &pkey = p_keys[pid].hashvalue;
-//         auto invit = lower_bound(parts_index[indexLenGrp].begin(), parts_index[indexLenGrp].end(), HashOfsCnt(pkey, 0, 0));
-//         // auto invit = invIndex.find(PACK(lenPart, hashValues[pid]));
-//         if (invit != parts_index[indexLenGrp].end() && invit->hashvalue == pkey) {
-//             invPtr[pid] = *invit;
-//             v1 = -invit->cnt;
-//         } else {
-//             invPtr[pid].hashvalue = 0;
-//         }
-//         values[pid] = make_pair(v1, pid);
-//         scores[pid] = 0;
-//     }
+    // Iterate each part find each part if there is identical part already exits in inverted list
+    // Based on the above result, initialize the value and scores
+    for (unsigned short pid = 0; pid < indexPartNum; pid++) {
+        // A hash
+        // int64_t lenPart = indexLen + pid * (maxSize + 1);
+        int v1 = 0;
+        const auto &pkey = p_keys[pid];
+        const auto &cur_hvs = parts_index_hv[indexLenGrp][pid];
+        auto invit = lower_bound(cur_hvs.begin(), cur_hvs.end(), pkey);
+        // auto invit = lower_bound(parts_index[indexLenGrp].begin(), parts_index[indexLenGrp].end(), HashOfsCnt(pkey, 0, 0));
+        if (invit != cur_hvs.end() && *invit == pkey) {
+            auto dis = invit - cur_hvs.begin();
+            invPtr[pid] = dis;
+            v1 = -parts_index_cnt[indexLenGrp][pid][dis];
+        } else {
+            invPtr[pid] = UINT_MAX;
+        }
+        values[pid] = make_pair(v1, pid);
+        scores[pid] = 0;
+    }
 
-//     unsigned int heap_cnt = indexPartNum;
-//     make_heap(values.begin(), values.begin() + heap_cnt);
+    unsigned int heap_cnt = indexPartNum;
+    make_heap(values.begin(), values.begin() + heap_cnt);
 
-//     int cost = 0;
-//     unsigned int rLen = min(range[indexLenGrp].second, len);
-//     unsigned int Ha = floor((len - det * rLen) / (1 + det) + EPS);
-//     unsigned int Hb = floor((rLen - det * len) / (1 + det) + EPS);
-//     unsigned int maxH = Ha + Hb;
-//     maxH = floor(coe * (len + rLen) + EPS);
+    int cost = 0;
+    unsigned int rLen = min(range[indexLenGrp].second, len);
+    unsigned int Ha = floor((len - det * rLen) / (1 + det) + EPS);
+    unsigned int Hb = floor((rLen - det * len) / (1 + det) + EPS);
+    unsigned int maxH = Ha + Hb;
+    maxH = floor(coe * (len + rLen) + EPS);
 
-//     // We need use greedy selection in maxH + 1 times
-//     for (unsigned int i = 0; i < maxH + 1; ++i) {
-//         auto sel = values.front();
-//         pop_heap(values.begin(), values.begin() + heap_cnt);
-//         auto pid = sel.second;
-//         auto const pid_pos = (int)p_keys[pid].pos;
-//         ++scores[pid];
-//         cost -= sel.first;
-//         auto pkey = p_keys[pid].hashvalue;
+    // We need use greedy selection in maxH + 1 times
+    for (unsigned int i = 0; i < maxH + 1; ++i) {
+        auto sel = values.front();
+        pop_heap(values.begin(), values.begin() + heap_cnt);
+        auto pid = sel.second;
+        auto const pid_pos = (int)odk_st[pid];
+        ++scores[pid];
+        cost -= sel.first;
+        auto const & pkey = p_keys[pid];
         
-//         // int64_t lenPart = indexLen + pid * (maxSize + 1);
+        // int64_t lenPart = indexLen + pid * (maxSize + 1);
 
-//         if (scores[sel.second] == 1) {
-//             if (invPtr[pid].hashvalue != 0) {
-//                 // auto &vec = indexLists[invPtr[pid]].getVector();
+        if (scores[sel.second] == 1) {
+            if (invPtr[pid] != UINT_MAX) {
+                // auto &vec = indexLists[invPtr[pid]].getVector();
 
-//                 // Iterate the candidates that shares the same partition
-//                 auto ofs_st = invPtr[pid].ofs;
-//                 auto ofs_ed = invPtr[pid].ofs + invPtr[pid].cnt;
-//                 for (auto ofs = ofs_st; ofs < ofs_ed; ofs++) {
-//                     auto const &hrp = parts_arr[indexLenGrp][ofs];
-//                     if(hrp.rid >= rid) break;
-//                     unsigned int rLen = dataset[hrp.rid].size();
-//                     int Ha = floor((len - det * rLen) / (1 + det) + EPS);
-//                     int Hb = floor((rLen - det * len) / (1 + det) + EPS);
-//                     unsigned int H = Ha + Hb; // maximum allowable difference
-//                     // If the current iteration index i is greater than this maximum allowable difference H
-//                     // current entry in the inverted list is skipped,
-//                     if (i > H) continue;
-//                     // position filter
-//                     if (negRef[hrp.rid] == false && quickRef[hrp.rid] == false)
-//                         candidates.push_back(hrp.rid);
+                // Iterate the candidates that shares the same partition
+                auto ofs_st = parts_index_offset[indexLenGrp][pid][invPtr[pid]];
+                auto ofs_ed = ofs_st + parts_index_cnt[indexLenGrp][pid][invPtr[pid]];
+                for (auto ofs = ofs_st; ofs < ofs_ed; ofs++) {
+                    // auto const &hrp = parts_arr[indexLenGrp][ofs];
+                    auto const tmp_rid = parts_rids[indexLenGrp][pid][ofs];
+                    if(tmp_rid >= rid) break;
+                    int tmp_pos = odkeys_st[tmp_rid][pid];
+                    unsigned int rLen = dataset[tmp_rid].size();
+                    int Ha = floor((len - det * rLen) / (1 + det) + EPS);
+                    int Hb = floor((rLen - det * len) / (1 + det) + EPS);
+                    unsigned int H = Ha + Hb; // maximum allowable difference
+                    // If the current iteration index i is greater than this maximum allowable difference H
+                    // current entry in the inverted list is skipped,
+                    if (i > H) continue;
+                    // position filter
+                    if (negRef[tmp_rid] == false && quickRef[tmp_rid] == false)
+                        candidates.push_back(tmp_rid);
 
-//                     // We need to let them be int in case of negative minus result
-//                     auto const hrp_pos = (int)hrp.pos;
-//                     if (pid_pos - hrp_pos > Ha || hrp_pos - pid_pos > Hb)
-//                         negRef[hrp.rid] = true;
-//                     else
-//                         quickRef[hrp.rid] = true;
-//                 }
-//             }
+                    // We need to let them be int in case of negative minus result
+                    if (pid_pos - tmp_pos > Ha || tmp_pos - pid_pos > Hb)
+                        negRef[tmp_rid] = true;
+                    else
+                        quickRef[tmp_rid] = true;
+                }
+            }
 
-//             // maintain heap
-//             // Here is to find the next pair that insert to the heap
-//             // Basically it is to consider the situation of the 1-deletion of the current part
-//             int v2 = 0;
+            // maintain heap
+            // Here is to find the next pair that insert to the heap
+            // Basically it is to consider the situation of the 1-deletion of the current part
+            int v2 = 0;
 
-//             // search if the 1-deletion
-//             auto oneit = lower_bound(od_index[indexLenGrp].begin(), od_index[indexLenGrp].end(), HashOfsCnt(pkey, 0, 0));
-//             // auto oneit = oneIndex.find(PACK(lenPart, hashValues[pid]));
-//             if (oneit != od_index[indexLenGrp].end() && oneit->hashvalue == pkey) {
-//                 intPtr[pid] = *oneit;
-//                 v2 -= oneit->cnt;
-//             } else {
-//                 intPtr[pid].hashvalue = 0;
-//             }
+            // search if the 1-deletion
+            const auto &cur_od_hvs = od_index_hv[indexLenGrp][pid];
+            auto oneit = lower_bound(cur_od_hvs.begin(), cur_od_hvs.end(), pkey);
+            // auto oneit = oneIndex.find(PACK(lenPart, hashValues[pid]));
+            if (oneit != cur_od_hvs.end() && *oneit == pkey) {
+                auto dis = oneit - cur_od_hvs.begin();
+                intPtr[pid] = oneit - cur_od_hvs.begin();
+                v2 -= od_index_cnt[indexLenGrp][pid][dis];
+            } else {
+                intPtr[pid] = UINT_MAX ;
+            }
 
-//             // if (oneHashValues[pid].size() == 0) {
-//             //     int mhv = 0, hv = hashValues[pid];
-//             //     auto &sq = subquery[pid];
-//             //     for (int idx = 0; idx < sq.size(); idx++) {
-//             //         int chv = hv + mhv * prime_exp[sq.size() - 1 - idx];
-//             //         mhv = mhv * PRIME + sq[idx] + 1;
-//             //         chv -= mhv * prime_exp[sq.size() - 1 - idx];
-//             //         oneHashValues[pid].push_back(chv);
-//             //     }
-//             // }
-//             auto const &id_st = odk_st[pid];
-//             auto const &id_ed = odk_st[pid + 1];
-//             for (auto id = id_st; id < id_ed; id++) {
-//                 auto const &odk = od_keys[id].hashvalue;
-//                 auto invit = lower_bound(parts_index[indexLenGrp].begin(), parts_index[indexLenGrp].end(), HashOfsCnt(odk, 0, 0));
-//                 if (invit != parts_index[indexLenGrp].end() && invit->hashvalue == odk) {
-//                     onePtr[pid].push_back(*invit);
-//                     v2 -= invit->cnt;
-//                 } else {
-//                     onePtr[pid].push_back(HashOfsCnt(0, 0, 0));
-//                 }
-//             }
+            // if (oneHashValues[pid].size() == 0) {
+            //     int mhv = 0, hv = hashValues[pid];
+            //     auto &sq = subquery[pid];
+            //     for (int idx = 0; idx < sq.size(); idx++) {
+            //         int chv = hv + mhv * prime_exp[sq.size() - 1 - idx];
+            //         mhv = mhv * PRIME + sq[idx] + 1;
+            //         chv -= mhv * prime_exp[sq.size() - 1 - idx];
+            //         oneHashValues[pid].push_back(chv);
+            //     }
+            // }
+            auto const &id_st = odk_st[pid];
+            auto const &id_ed = odk_st[pid + 1];
+            for (auto id = id_st; id < id_ed; id++) {
+                auto const &odk = od_keys[id];
+                const auto &cur_hvs = parts_index_hv[indexLenGrp][pid];
+                auto invit = lower_bound(cur_hvs.begin(), cur_hvs.end(), odk);
+                if (invit != cur_hvs.end() && *invit == odk) {
+                    auto dis = invit - cur_hvs.begin();
+                    onePtr[pid].push_back(dis);
+                    v2 -= parts_index_cnt[indexLenGrp][pid][dis];
+                } else {
+                    onePtr[pid].push_back(UINT_MAX);
+                }
+            }
 
-//             values[heap_cnt - 1].first = v2;
-//             push_heap(values.begin(), values.begin() + heap_cnt);
-//         } else {
-//             auto ov_st = LogTime();
-//             // add candidates
-//             if (intPtr[pid].hashvalue != 0) {
-//                 auto ofs_st = intPtr[pid].ofs;
-//                 auto ofs_ed = intPtr[pid].ofs + intPtr[pid].cnt;
-//                 for (auto ofs = ofs_st; ofs < ofs_ed; ofs++) {
-//                     // Attention here is the ods_arr
-//                     auto const &hrp = ods_arr[indexLenGrp][ofs];
-//                     if(hrp.rid >= rid) break;
-//                     unsigned int rLen = dataset[hrp.rid].size();
-//                     int Ha = floor((len - det * rLen) / (1 + det) + EPS);
-//                     int Hb = floor((rLen - det * len) / (1 + det) + EPS);
-//                     unsigned int H = Ha + Hb; // maximum allowable difference
-//                     // If the current iteration index i is greater than this maximum allowable difference H
-//                     // current entry in the inverted list is skipped,
-//                     if (i > H) continue;
-//                     // position filter
-//                     if (negRef[hrp.rid] == false && quickRef[hrp.rid] == false)
-//                         candidates.push_back(hrp.rid);
+            values[heap_cnt - 1].first = v2;
+            push_heap(values.begin(), values.begin() + heap_cnt);
+        } else {
+            auto ov_st = LogTime();
+            // add candidates
+            if (intPtr[pid] != UINT_MAX) {
+                auto ofs_st = od_index_offset[indexLenGrp][pid][intPtr[pid]];
+                auto ofs_ed = ofs_st + od_index_cnt[indexLenGrp][pid][intPtr[pid]];
+                // auto ofs_st = intPtr[pid].ofs;
+                // auto ofs_ed = intPtr[pid].ofs + intPtr[pid].cnt;
+                for (auto ofs = ofs_st; ofs < ofs_ed; ofs++) {
+                    auto const tmp_rid = ods_rids[indexLenGrp][pid][ofs];
+                    if(tmp_rid >= rid) break;
+                    int tmp_pos = odkeys_st[tmp_rid][pid];
+                    // Attention here is the ods_arr
+                    // auto const &hrp = ods_arr[indexLenGrp][ofs];
+                    unsigned int rLen = dataset[tmp_rid].size();
+                    int Ha = floor((len - det * rLen) / (1 + det) + EPS);
+                    int Hb = floor((rLen - det * len) / (1 + det) + EPS);
+                    unsigned int H = Ha + Hb; // maximum allowable difference
+                    // If the current iteration index i is greater than this maximum allowable difference H
+                    // current entry in the inverted list is skipped,
+                    if (i > H) continue;
+                    // position filter
+                    if (negRef[tmp_rid] == false && quickRef[tmp_rid] == false)
+                        candidates.push_back(tmp_rid);
 
-//                     // We need to let them be int in case of negative minus result
-//                     auto const hrp_pos = (int)hrp.pos;
-//                     if (pid_pos - hrp_pos > Ha || hrp_pos - pid_pos > Hb)
-//                         negRef[hrp.rid] = true;
-//                     else
-//                         quickRef[hrp.rid] = true;
-//                 }
-//             }
+                    // We need to let them be int in case of negative minus result
+                    // auto const hrp_pos = (int)hrp.pos;
+                    if (pid_pos - tmp_pos > Ha || tmp_pos - pid_pos > Hb)
+                        negRef[tmp_rid] = true;
+                    else
+                        quickRef[tmp_rid] = true;
+                }
+            }
 
-//             for (int id = 0; id < (int)onePtr[pid].size(); ++id) {
-//                 if (onePtr[pid][id].hashvalue != 0) {
-//                     auto ofs_st = onePtr[pid][id].ofs;
-//                     auto ofs_ed = onePtr[pid][id].ofs + onePtr[pid][id].cnt;
-//                     for (auto ofs = ofs_st; ofs < ofs_ed; ofs++) {
-//                         auto const &hrp = parts_arr[indexLenGrp][ofs];
-//                         if(hrp.rid >= rid) break;
-//                         unsigned int rLen = dataset[hrp.rid].size();
-//                         int Ha = floor((len - det * rLen) / (1 + det) + EPS);
-//                         int Hb = floor((rLen - det * len) / (1 + det) + EPS);
-//                         unsigned int H = Ha + Hb; // maximum allowable difference
-//                         // If the current iteration index i is greater than this maximum allowable difference H
-//                         // current entry in the inverted list is skipped,
-//                         if (i > H) continue;
-//                         // position filter
-//                         if (negRef[hrp.rid] == false && quickRef[hrp.rid] == false)
-//                             candidates.push_back(hrp.rid);
+            for (int id = 0; id < (int)onePtr[pid].size(); ++id) {
+                if (onePtr[pid][id] != UINT_MAX) {
+                    auto ofs_st = parts_index_offset[indexLenGrp][pid][onePtr[pid][id]];
+                    auto ofs_ed = ofs_st + parts_index_cnt[indexLenGrp][pid][onePtr[pid][id]];
+                    // auto ofs_st = onePtr[pid][id].ofs;
+                    // auto ofs_ed = onePtr[pid][id].ofs + onePtr[pid][id].cnt;
+                    for (auto ofs = ofs_st; ofs < ofs_ed; ofs++) {
+                        // auto const &hrp = parts_arr[indexLenGrp][ofs];
+                        auto const tmp_rid = parts_rids[indexLenGrp][pid][ofs];
+                        if(tmp_rid >= rid) break;
+                        int tmp_pos = odkeys_st[tmp_rid][pid];
 
-//                         // We need to let them be int in case of negative minus result
-//                         auto const hrp_pos = (int)hrp.pos;
-//                         if (pid_pos - hrp_pos > Ha || hrp_pos - pid_pos > Hb)
-//                             negRef[hrp.rid] = true;
-//                         else
-//                             quickRef[hrp.rid] = true;
-//                     }
-//                 }
-//             }
-//             // overlap_cost += RepTime(ov_st);
-//             // maintain heap
-//             --heap_cnt;
-//         }
-//     }
+                        unsigned int rLen = dataset[tmp_rid].size();
+                        int Ha = floor((len - det * rLen) / (1 + det) + EPS);
+                        int Hb = floor((rLen - det * len) / (1 + det) + EPS);
+                        unsigned int H = Ha + Hb; // maximum allowable difference
+                        // If the current iteration index i is greater than this maximum allowable difference H
+                        // current entry in the inverted list is skipped,
+                        if (i > H) continue;
+                        // position filter
+                        if (negRef[tmp_rid] == false && quickRef[tmp_rid] == false)
+                            candidates.push_back(tmp_rid);
 
-//     // listlens += cost;
+                        // We need to let them be int in case of negative minus result
+                        // auto const hrp_pos = (int)hrp.pos;
+                        if (pid_pos - tmp_pos > Ha || tmp_pos - pid_pos > Hb)
+                            negRef[tmp_rid] = true;
+                        else
+                            quickRef[tmp_rid] = true;
+                    }
+                }
+            }
+            // overlap_cost += RepTime(ov_st);
+            // maintain heap
+            --heap_cnt;
+        }
+    }
 
-//     // clear candidates
-//     for (int idx = 0; idx < candidates.size(); idx++) {
-//         if (negRef[candidates[idx]] == false && quickRef[candidates[idx]] == true) {
-//             if (overlap(candidates[idx], rid) == true) {
-//                 // resultNum++;
-//                 result_pairs[tid].emplace_back(rid, candidates[idx]);
-//             }
-//             // candidateNum++;
-//         }
-//         quickRef[candidates[idx]] = false;
-//         negRef[candidates[idx]] = false;
-//     }
-//     candidates.clear();
-// }
+    // listlens += cost;
 
-// void SetJoinParelled::findSimPairs() {
-//     auto find_st = LogTime();
-//     cout << "Start finding similar pairs " << endl;
+    // clear candidates
+    for (int idx = 0; idx < candidates.size(); idx++) {
+        if (negRef[candidates[idx]] == false && quickRef[candidates[idx]] == true) {
+            if (overlap(candidates[idx], rid) == true) {
+                // resultNum++;
+                result_pairs[tid].emplace_back(rid, candidates[idx]);
+            }
+            // candidateNum++;
+        }
+        quickRef[candidates[idx]] = false;
+        negRef[candidates[idx]] = false;
+    }
+    candidates.clear();
+}
 
-//     int maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1;
-//     vector<int> hashValues[MAXTHREADNUM];
-//     vector<vector<int>> subquery[MAXTHREADNUM];
-//     vector<HashRidPos> p_keys[MAXTHREADNUM];
-//     vector<HashRidPos> od_keys[MAXTHREADNUM];
-//     vector<unsigned short> odk_st[MAXTHREADNUM];
+void SetJoinParelled::findSimPairs() {
+    auto find_st = LogTime();
+    cout << "Start finding similar pairs " << endl;
+
+    int maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1;
+    // vector<int> hashValues[MAXTHREADNUM];
+    vector<vector<int>> subquery[MAXTHREADNUM];
+    vector<unsigned int> p_keys[MAXTHREADNUM];
+    vector<unsigned int> od_keys[MAXTHREADNUM];
+    vector<unsigned short> odk_st[MAXTHREADNUM];
     
-//     for(int i = 0; i < MAXTHREADNUM; i++) {
-//         hashValues[i].resize(maxIndexPartNum);
-//         subquery[i].resize(maxIndexPartNum);
-//         subquery[i].resize(maxIndexPartNum);
-//         p_keys[i].resize(maxIndexPartNum);
-//         od_keys[i].resize(maxSize);
-//         odk_st[i].resize(maxIndexPartNum);
-//     }
+    for(int i = 0; i < MAXTHREADNUM; i++) {
+        // hashValues[i].resize(maxIndexPartNum);
+        subquery[i].resize(maxIndexPartNum);
+        p_keys[i].resize(maxIndexPartNum);
+        od_keys[i].resize(maxSize);
+        odk_st[i].resize(maxIndexPartNum);
+    }
 
-//     // Allocation and calculate candidates
+    // Allocation and calculate candidates
 
-// #pragma omp parallel for
-//     for (int rid = 0; rid < n; rid++) {
-//         int len = dataset[rid].size();
-//         if (len == 0)
-//             continue;   
+#pragma omp parallel for
+    for (int rid = 0; rid < n; rid++) {
+        int len = dataset[rid].size();
+        if (len == 0)
+            continue;   
 
-//         const int tid = omp_get_thread_num();
-//         // We only need to access the indexLenGrp that current record belongs to and the previous group
-//         // But the previous group we have not created the partition key,etc for the current record
-//         // In this case we need generate them now
-//         for (int indexLenGrp = max(0, range_id[rid] - 1); indexLenGrp <= range_id[rid]; ++indexLenGrp) {
-//             // split the query into multiple parts if prevIndexPartNum != indexPartNum
-//             // it means if the indexLenGrp's first range is not change
-//             if (indexLenGrp != range_id[rid]) {
-//                 const int &indexLen = range[indexLenGrp].first;
-//                 const int indexPartNum = floor(2 * coe * indexLen + EPS) + 1;
-//                 p_keys[tid].resize(indexPartNum);
-//                 od_keys[tid].resize(len);
-//                 odk_st[tid].resize(indexPartNum + 1);
+        const int tid = omp_get_thread_num();
+        // We only need to access the indexLenGrp that current record belongs to and the previous group
+        // But the previous group we have not created the partition key,etc for the current record
+        // In this case we need generate them now
+        for (int indexLenGrp = max(0, range_id[rid] - 1); indexLenGrp <= range_id[rid]; ++indexLenGrp) {
+            // split the query into multiple parts if prevIndexPartNum != indexPartNum
+            // it means if the indexLenGrp's first range is not change
+            if (indexLenGrp != range_id[rid]) {
+                const int &indexLen = range[indexLenGrp].first;
+                const int indexPartNum = floor(2 * coe * indexLen + EPS) + 1;
+                p_keys[tid].resize(indexPartNum);
+                od_keys[tid].resize(len);
+                odk_st[tid].resize(indexPartNum + 1);
 
-//                 // clear subquery oneHashValues  hashValues
-//                 for (int pid = 0; pid < indexPartNum; ++pid) {
-//                     subquery[tid][pid].clear();
-//                     hashValues[tid][pid] = 0;
-//                 }
+                // clear subquery oneHashValues  hashValues
+                for (int pid = 0; pid < indexPartNum; ++pid) {
+                    subquery[tid][pid].clear();
+                    p_keys[tid][pid] = 0;
+                }
 
-//                 // allocate the tokens into subquery and hash each part
-//                 // That is the way how the query is splitted into indexPartNum
-//                 for (auto &token : dataset[rid]) {
-//                     int pid = token % indexPartNum;
-//                     subquery[tid][pid].push_back(token);
-//                     hashValues[tid][pid] = PRIME * hashValues[tid][pid] + token + 1;
-//                 }
+                // allocate the tokens into subquery and hash each part
+                // That is the way how the query is splitted into indexPartNum
+                for (auto &token : dataset[rid]) {
+                    int pid = token % indexPartNum;
+                    subquery[tid][pid].push_back(token);
+                    p_keys[tid][pid] = PRIME * p_keys[tid][pid] + token + 1;
+                }
 
-//                 unsigned short pos = 0;
-//                 unsigned short tmp_cnt = 0;
-//                 for (int pid = 0; pid < indexPartNum; ++pid) {
-//                     int64_t lenPart = indexLen + pid * (maxSize + 1);
-//                     int mhv = 0, hv = hashValues[tid][pid];
-//                     auto &subrec = subquery[tid][pid];
-                    
-//                     // get the keys of partitions
-//                     auto part_key = PACK(lenPart, hv);
+                unsigned short pos = 0;
+                unsigned short tmp_cnt = 0;
+                for (int pid = 0; pid < indexPartNum; ++pid) {
+                    int64_t lenPart = indexLen + pid * (maxSize + 1);
+                    unsigned int mhv = 0, hv = p_keys[tid][pid];
+                    auto &subrec = subquery[tid][pid];
 
-//                     p_keys[tid][pid] = HashRidPos(part_key, rid, pos);
+                    // we store the keys into one array for each record.
+                    // so we need to know the boundary of keys for onedeletions of each partition
+                    odk_st[tid][pid] = tmp_cnt;
+                    for (int idx = 0; idx < subrec.size(); idx++) {
+                        unsigned int chv = hv + mhv * prime_exp[subrec.size() - 1 - idx];
+                        mhv = mhv * PRIME + subrec[idx] + 1;
+                        chv -= mhv * prime_exp[subrec.size() - 1 - idx];
 
-//                     // we store the keys into one array for each record.
-//                     // so we need to know the boundary of keys for onedeletions of each partition
-//                     odk_st[tid][pid] = tmp_cnt;
-//                     for (int idx = 0; idx < subrec.size(); idx++) {
-//                         int chv = hv + mhv * prime_exp[subrec.size() - 1 - idx];
-//                         mhv = mhv * PRIME + subrec[idx] + 1;
-//                         chv -= mhv * prime_exp[subrec.size() - 1 - idx];
+                        // get the keys of one-deletion neighbors from the current partition
+                        // auto odkey = PACK(lenPart, chv);
+                        od_keys[tid][tmp_cnt++] = chv;
+                    }
+                    pos += subrec.size();
+                }
+                odk_st[tid][indexPartNum] = tmp_cnt;
 
-//                         // get the keys of one-deletion neighbors from the current partition
-//                         auto odkey = PACK(lenPart, chv);
-//                         od_keys[tid][tmp_cnt++] = HashRidPos(odkey, rid, pos);
-//                     }
-//                     pos += subrec.size();
-//                 }
-//                 odk_st[tid][indexPartNum] = tmp_cnt;
+                // Now all the information we have got
+                GreedyFindCandidateAndSimPairs(tid, indexLenGrp, rid, p_keys[tid], od_keys[tid], odk_st[tid]);
+            } else {
+                // We have calculated them if current indexLenGroup is the group this record belongs to the
+                const auto &existing_p_keys = parts_keys[rid];
+                const auto &existing_od_keys = onedelete_keys[rid];
+                const auto &existing_odk_st = odkeys_st[rid];
+                GreedyFindCandidateAndSimPairs(tid, indexLenGrp, rid, existing_p_keys, existing_od_keys, existing_odk_st);
+            }
+        }
+    }
 
-//                 // Now all the information we have got
-//                 GreedyFindCandidateAndSimPairs(tid, indexLenGrp, rid, p_keys[tid], od_keys[tid], odk_st[tid]);
-//             } else {
-//                 // We have calculated them if current indexLenGroup is the group this record belongs to the
-//                 const vector<HashRidPos> &existing_p_keys = parts_keys[rid];
-//                 const vector<HashRidPos> &existing_od_keys = onedelete_keys[rid];
-//                 const vector<unsigned short> &existing_odk_st = odkeys_st[rid];
-//                 GreedyFindCandidateAndSimPairs(tid, indexLenGrp, rid, existing_p_keys, existing_od_keys, existing_odk_st);
-//             }
-//         }
-//     }
+    fprintf(stderr, "%lu %lu %lu \n", resultNum, candidateNum, listlens);
+    cout << "Finding Similar Pairs Time Cost: " << RepTime(find_st) << endl;
 
-//     fprintf(stderr, "%lu %lu %lu \n", resultNum, candidateNum, listlens);
-//     cout << "Finding Similar Pairs Time Cost: " << RepTime(find_st) << endl;
+    // release memory
+    delete[] prime_exp;
+    delete[] parts_rids;
+    delete[] ods_rids;
+    delete[] parts_index_hv;
+    delete[] od_index_hv;
+    delete[] parts_index_offset;
+    delete[] od_index_offset;
+    delete[] parts_index_cnt;
+    delete[] od_index_cnt;
 
-//     // release memory
-//     delete[] prime_exp;
-//     delete[] parts_index;
-//     delete[] od_index;
-//     delete[] parts_arr;
-//     delete[] ods_arr;
-
-//     for(int i = 0; i < MAXTHREADNUM; ++i){
-//         delete [] quickRef2D[i];
-//         delete[] negRef2D[i];
-//     }
-//     delete[] quickRef2D;
-//     delete[] negRef2D;
-// }
+    for(int i = 0; i < MAXTHREADNUM; ++i){
+        delete [] quickRef2D[i];
+        delete[] negRef2D[i];
+    }
+    delete[] quickRef2D;
+    delete[] negRef2D;
+}
