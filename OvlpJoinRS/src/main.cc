@@ -26,13 +26,7 @@ int main(int argc, char *argv[]) {
     loadShortBin(bottomK_path, bottomks);
 
     // just for debug
-    if(argc > 2) {
-        const unsigned int shrink_size = stoul(argv[2]);
-        bottomks.resize(shrink_size);
-        
-        printf("For Debug using the dataset amount has been changed into %u \n", shrink_size);
-    }
-
+    // bottomks.resize(int(5e6));
     for (auto &bottom_k : bottomks) {
         if (bottom_k.size() > K)
             bottom_k.resize(K);
@@ -75,9 +69,7 @@ int main(int argc, char *argv[]) {
     // Use overlapJoin
     OvlpJoinParelled joiner(sorted_bottomKs);
     const string simP_dirpath = root_dir + "/similar_pairs/"+dataset+"_simPair_K" + to_string(K) + "_C" + to_string(c) + "/";
-    if(createDirectory(simP_dirpath) == false)
-        return 0;
-    // system(("mkdir " + simP_dirpath).c_str());
+    system(("mkdir " + simP_dirpath).c_str());
     joiner.set_external_store(simP_dirpath);
     joiner.overlapjoin(c, K);
 

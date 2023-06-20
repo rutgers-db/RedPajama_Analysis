@@ -19,38 +19,15 @@
 
 const int MAX_THREAD = 128;
 
-#define RATIO 0.005
-#define TIMES 200
-
 using namespace std;
-
-class SimPairy {
-public:
-    int id1;
-    int id2;
-    double sim;
-    SimPairy() {
-    }
-    SimPairy(int i1, int i2, double s) {
-        id1 = i1;
-        id2 = i2;
-        sim = s;
-    }
-
-    bool operator<(const SimPairy &rhs) const {
-        return this->sim > rhs.sim;
-    }
-};
-
 struct combination;
 
 extern int c;
 extern vector<vector<unsigned short>> dataset;
 extern vector<vector<combination>> combs;
-extern bool comp_int(const int a, const int b);
 extern bool comp_comb(const int a, const int b);
 extern bool comp_pair(const pair<int, int> &p1, const int val);
-
+extern bool comp_int(const int a, const int b);
 struct combination {
     int N;
     int id;
@@ -136,7 +113,7 @@ class OvlpJoinParelled {
 public:
     int n;
     int total_eles;
-    vector<vector<int>> heap;
+    vector<vector<int>> heap;   
     vector<vector<unsigned short>> records;
     vector<pair<int, int>> idmap_records;
     vector<vector<pair<int, int>>> ele_lists;
@@ -147,7 +124,7 @@ public:
 
     void overlapjoin(int overlap_threshold, int _k);
     bool is_equal(const combination &c1, const combination &c2);
-    void small_case(int L, int R);
+    void small_case();
 
     bool if_external_IO = false;
     string resultPair_storePath;

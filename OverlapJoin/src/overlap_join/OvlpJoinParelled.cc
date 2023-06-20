@@ -56,10 +56,7 @@ void OvlpJoinParelled::save_idmap(string _resPair_path){
 }
 
 // Function to handle the small sets
-void OvlpJoinParelled::small_case(int L, int R) {
-    // If the left boundary is greater or equal to the right boundary, return immediately
-    if (L >= R)
-        return;
+void OvlpJoinParelled::small_case() {
     --c;
 
     // "Global" variables in this function
@@ -80,7 +77,7 @@ void OvlpJoinParelled::small_case(int L, int R) {
     
     // Loop over all elements in reverse order
     cout << "Now we are using multithread and the thread amount is " << omp_get_num_threads() << endl;
-
+    
     gettimeofday(&mid, NULL);
 #pragma omp parallel for num_threads(MAX_THREAD)
     for (auto idx = total_eles - 1; idx >= 0; idx--) {
@@ -88,8 +85,8 @@ void OvlpJoinParelled::small_case(int L, int R) {
         if (ele_lists[idx].size() < 2)
             continue;
         vector<pair<int, int>> &vec = ele_lists[idx];
-        int size = distance(vec.begin(), lower_bound(vec.begin(), vec.end(), L, comp_pair));
-        if (vec.size() <= size + 1)
+        // int size = distance(vec.begin(), lower_bound(vec.begin(), vec.end(), 0, comp_pair));
+        if (vec.size() <= 1)
             continue;
 
         int thread_id = omp_get_thread_num();
@@ -99,7 +96,7 @@ void OvlpJoinParelled::small_case(int L, int R) {
         heap[thread_id].clear();
         combs[thread_id].clear();
         int heap_size = 0;
-        for (auto i = size; i < vec.size(); i++) {
+        for (auto i = 0 ; i < vec.size(); i++) {
             if ((int)(dataset[vec[i].first].size()) - 1 - vec[i].second < c)
                 continue;
             heap[thread_id].push_back(heap_size++);
@@ -148,7 +145,7 @@ void OvlpJoinParelled::small_case(int L, int R) {
                 heap[thread_id].pop_back();
             heap_size = heap[thread_id].size();
         }
-
+    
         if(if_external_IO == true && res_lists[thread_id].size() !=0){
             for(auto const & inv_l : res_lists[thread_id]){
                 int size = inv_l.size();
@@ -253,7 +250,7 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
     // get global order: frequency increasing order
     // sort the elements
     sort(eles.begin(), eles.end(), [](const pair<int, int> &p1, const pair<int, int> &p2) { return p1.second < p2.second; });
-
+    
     // container initialize
     dataset.resize(n);
 
@@ -293,8 +290,6 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
         save_idmap(resultPair_storePath);
     }
 
-    return;
-    
     // build real inverted index
     ele_lists.resize(total_eles);
     for (int i = 0; i < n; i++)
@@ -305,9 +300,7 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
     cout << "Transform Time: " << time3.tv_sec - time1.tv_sec + (time3.tv_usec - time1.tv_usec) / 1e6 << endl;
 
     // ****** cost model for boundary selection ******
-    int nL = 0; // estimate();
-    int nP = nL;
-    cout << " All are treated as small sets: " << n - nP << endl;
+    cout << " All are treated as small sets: " << n << endl;
 
     gettimeofday(&time4, NULL);
     // ****** conduct joining ******
@@ -317,7 +310,7 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
     gettimeofday(&t1, NULL);
 
     gettimeofday(&s2, NULL);
-    small_case(nP, n);
+    small_case();
     gettimeofday(&t2, NULL);
 
     gettimeofday(&ending, NULL);
@@ -327,13 +320,6 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
     cout << "Result Num: " << result_num << endl;
 }
 
-bool comp_pair(const pair<int, int> &p1, const int val) {
-    return p1.first < val;
-}
-
-bool comp_int(const int a, const int b) {
-    return a > b;
-}
 
 bool OvlpJoinParelled::is_equal(const combination &c1, const combination &c2) {
     for (int i = 0; i < c; i++) {
@@ -341,4 +327,8 @@ bool OvlpJoinParelled::is_equal(const combination &c1, const combination &c2) {
             return false;
     }
     return true;
+}
+
+bool comp_int(const int a, const int b) {
+    return a > b;
 }
