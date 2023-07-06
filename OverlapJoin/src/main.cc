@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
     const string bottomK_path = root_dir + "/bottomK_bins/" + bottomK_fileName; //arxiv_bottom_64.bin;
     const string dataset = extract_prefix(bottomK_path);
     // const int max_k = 1024;
-    int K = 32;
+    int K = 100;         //32   
     srand(0); // set seed for random generator
 
     // OverlapJoin Parameters
-    int c = 29;
+    int c = ceil(K*0.9); // 29
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;

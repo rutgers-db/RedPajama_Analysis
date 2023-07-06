@@ -1,4 +1,7 @@
 #include "util.h"
+
+pair<unsigned short, unsigned short> hf; // hash functions
+
 void print_memory() {
 #ifdef __linux__
   struct sysinfo memInfo;
@@ -73,4 +76,30 @@ void mergeArrays(std::vector<std::vector<pair<int,int>>>* input, int arr_len, st
     for(int i = 0; i < arr_len; i++){
         result.insert(result.end(), input[i].begin(), input[i].end());
     }
+}
+
+void generateHF(unsigned int seed){
+    srand(seed);
+    unsigned short a = 0;
+    while (a == 0)
+        a = rand();
+    unsigned short b = rand();
+    hf.first = a;
+    hf.second = b;
+}
+
+// The hash value function
+inline unsigned short hval(unsigned short &word) {
+    return hf.first * word + hf.second;
+}
+
+// This function is to hash the words in the docs based on the generated hash functions
+void hashDocuments(vector<vector<unsigned short>> docs){
+#pragma omp parallel for
+    for(unsigned int i = 0 ; i < docs.size(); i++){
+        for(unsigned short & token: docs[i]){
+            token = hval(token);
+        }
+    }
+    cout<<"Hash Completed\n";
 }

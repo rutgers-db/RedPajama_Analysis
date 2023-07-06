@@ -126,3 +126,30 @@ void getFiles(string path, vector<string> &files) {
         closedir(dr); // Close the directory
     }
 }
+
+// Function to create a directory at a specified path.
+// Returns true if directory was successfully created, false otherwise.
+bool createDirectory(const std::string& path) {
+    // Convert the string path to a filesystem path.
+    std::filesystem::path dirPath(path);
+
+    // Check if the directory already exists.
+    try {
+        // Check if the directory already exists.
+        if (std::filesystem::exists(dirPath)) {
+            // If the directory exists, print a message and return false.
+            std::cout << "Directory already exists." << std::endl;
+            return true;
+        } else {
+            // If the directory does not exist, create it (along with any necessary parent directories).
+            std::filesystem::create_directories(dirPath);
+            // Print a message and return true.
+            std::cout << "Directory created." << std::endl;
+            return true;
+        }
+    } catch(const std::filesystem::filesystem_error& e) {
+        // If an error occurred (for example, if the path is not legal), print an error message and return false.
+        std::cerr << "Error creating directory: " << e.what() << '\n';
+        return false;
+    }
+}

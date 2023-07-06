@@ -114,6 +114,32 @@ void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &r
     ofs.close();
 }
 
+// Function to write similar pairs into a binary file from a vector of pairs (Multithread version)
+void writeSimilarPairs(const string &binFileName, vector<pair<int, int>> *result_pairs) {
+    // Similar to writeVec2Bin, but for a vector of pairs
+    cout << "Writing " << binFileName << " using paralled setjoin" << endl;
+    ofstream ofs(binFileName, ios::binary);
+    unsigned long long total_pairs_amount = 0;
+    for (std::size_t i = 0; i < MAXTHREADNUM; ++i) {
+        unsigned long long pairs_amount = result_pairs[i].size();
+        total_pairs_amount += pairs_amount;
+        
+    }
+    cout << binFileName << " has " << total_pairs_amount << endl;
+
+    // write the amount
+    ofs.write((char *)&total_pairs_amount, sizeof(unsigned long long));
+    
+    // write the pairs
+    for (std::size_t i = 0; i < MAXTHREADNUM; ++i) {
+        auto & pairs_arr = result_pairs[i];
+        unsigned long long pairs_amount = pairs_arr.size();
+        ofs.write((char *)&pairs_arr[0], pairs_amount * sizeof(pair<int, int>));
+        
+    }
+    ofs.close();
+}
+
 void readDividedList(const string &binFileName, vector<vector<pair<int, int>>> &res_lists) {
     cout << "Reading " << binFileName << endl; // Print the name of the file being read
     ifstream ifs(binFileName, ios::binary);    // Open the binary file for reading

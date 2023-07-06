@@ -19,10 +19,10 @@ int main(int argc, char *argv[]) {
     const double thres = 0.9;
     // const string simP_file_path = root_dir + "/similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  "_withoutSizes.bin";
     const string simP_file_path = root_dir + "/similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
-    // Load Idmap and sortedsets
 
     print_memory();
 
+    // Load Idmap and sortedsets
     vector<int> idmap;
     loadBin2vec(idmap_file_path, idmap);
     vector<vector<unsigned short>> sorted_sets;
@@ -50,16 +50,7 @@ int main(int argc, char *argv[]) {
     // Investigate the result
     printf("joiner.result_pairs have %u pairs\n", joiner.getResultPairsAmount());
     // printf("The amount of document that occur in the pairs is %lu\n", getUniqueInts(joiner.result_pairs).size());
-    // Print the result pairs
-    // for(auto i =0; i< 5; i ++){
-    //     if(i>=joiner.result_pairs.size())
-    //         break;
-    //     auto& pair =  joiner.result_pairs[i];
-    //     printf("%d %d\n",pair.first,pair.second);
-    //     printf("%d %d\n",idmap[pair.first],idmap[pair.second]);
-    // }
-
     
-    // writeSimilarPair(simP_file_path, joiner.result_pairs);
+    writeSimilarPairs(simP_file_path, joiner.result_pairs);
     printf("At last the total time cost is: %f\n", RepTime(timer_st));
 }

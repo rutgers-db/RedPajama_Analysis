@@ -8,6 +8,7 @@ using namespace std;
 void print_memory();
 std::vector<int> getUniqueInts(const std::vector<std::pair<int, int>>& pairs);
 void mergeArrays(std::vector<std::vector<pair<int,int>>>* input, int arr_len, std::vector<std::vector<pair<int,int>>> & result);
-
+void generateHF(unsigned int seed);
+void hashDocuments(vector<vector<unsigned short>> docs);
 #endif
   

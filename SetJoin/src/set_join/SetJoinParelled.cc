@@ -72,10 +72,8 @@ void SetJoinParelled::index(double threshold) {
     const unsigned short maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1; // the possible maximum part amount of the maximum record
 
     // check if the dataset is qualified
-    unsigned long long tokens_amount = 0;
     int tokenNum = 0;
     for (int i = 0; i < dataset.size(); i++) {
-        tokens_amount += dataset[i].size();
         if (tokenNum < dataset[i].back()) tokenNum = dataset[i].back();
     }
 

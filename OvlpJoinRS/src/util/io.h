@@ -11,3 +11,4 @@ void readSimilarPair(const string &binFileName,  vector<pair<int, int>> &sim_pai
 void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &result_pairs);
 std::string extract_prefix(const std::string& filepath);
 void getFiles(string path, vector<string> &files);
+bool createDirectory(const std::string& path);
