@@ -65,6 +65,7 @@ bool SetJoinParelled::overlap(int x, int y, int posx, int posy, int current_over
 
 // The index part is to create the index of Partitions and those one deletion neighbors
 void SetJoinParelled::index(double threshold) {
+    // Initilaize the Parameters
     det = threshold;
     ALPHA = 1.0 / threshold + 0.01;
     coe = (1 - det) / (1 + det);
@@ -84,8 +85,7 @@ void SetJoinParelled::index(double threshold) {
     printf("The tokenNum is %d, it cannot exceed 65,535 cause it cannot exceed the range of unsigned short\n", tokenNum);
     assert(tokenNum < 65535);
 
-    cout << ALPHA << endl;
-    // Initialize prime exponential array to hash the
+    // Initialize prime exponential array for usage of hashing 
     prime_exp = new int[n + 1];
     prime_exp[0] = 1;
     for (int i = 1; i <= n; ++i)
@@ -117,16 +117,13 @@ void SetJoinParelled::index(double threshold) {
     }
     range_st.push_back(n);
 
-    // vector<unsigned int> hashValues[MAXTHREADNUM];
-    vector<vector<int>> subquery[MAXTHREADNUM]; // first part id second tokens
-
+    vector<vector<int>> subquery[MAXTHREADNUM]; // first thread id second tokens
     for (int i = 0; i < MAXTHREADNUM; i++) {
         subquery[i].resize(maxIndexPartNum);
         // hashValues[i].resize(maxIndexPartNum);
     }
 
     // To store the keys of parts and the one deletion neighbors
-    // vector<vector<unsigned short>> positions(n, vector<unsigned short>());
     parts_keys.resize(n);
     onedelete_keys.resize(n);
     odkeys_st.resize(n); // Because the max length of the record is almost 60000
@@ -147,6 +144,8 @@ void SetJoinParelled::index(double threshold) {
         // hashValues[tid].resize(partNum);
         parts_keys[rid].resize(partNum);
         subquery[tid].resize(partNum);
+
+        // Attention: If the parition is empty, then its hashvalue is 0
         for (auto &token : dataset[rid]) {
             int pid = token % partNum;
             auto &subrec = subquery[tid][pid];
@@ -155,9 +154,6 @@ void SetJoinParelled::index(double threshold) {
             // get the keys of partitions (or get the hash values)
             parts_keys[rid][pid] = PRIME * parts_keys[rid][pid] + token + 1;
         }
-
-        // for getting the positions
-        // unsigned short pos = 0;
 
         // for getting the keys
         onedelete_keys[rid].resize(len);
@@ -168,15 +164,12 @@ void SetJoinParelled::index(double threshold) {
             int64_t lenPart = cur_low + pid * (maxSize + 1);
             unsigned int mhv = 0, hv = parts_keys[rid][pid];
             auto &subrec = subquery[tid][pid];
-            
-            
-            // auto part_key = PACK(lenPart, hv);
-
-            // parts_keys[rid][pid] = HashRidPos(part_key, rid, pos);
 
             // we store the keys into one array for each record.
             // so we need to know the boundary of keys for onedeletions of each partition
             odkeys_st[rid][pid] = tmp_cnt;
+
+            // Maybe the subrec.size() is 0 cause some partitions are empty
             for (int idx = 0; idx < subrec.size(); idx++) {
                 int chv = hv + mhv * prime_exp[subrec.size() - 1 - idx];
                 mhv = mhv * PRIME + subrec[idx] + 1;
@@ -208,6 +201,7 @@ void SetJoinParelled::index(double threshold) {
     parts_index_cnt = new vector<vector<unsigned short>>[range.size()]; 
     od_index_cnt = new vector<vector<unsigned short>>[range.size()]; 
 
+    // Building Inverted Index for the hashed partitions and one-deletion neghbors
 #pragma omp parallel for
     for (int i = 0; i < range.size(); i++) {
         auto const &rid_st = range_st[i];
@@ -262,13 +256,23 @@ void SetJoinParelled::index(double threshold) {
                 if(tmp_cnt < 65535) // the maximum of unsigned short
                     tmp_cnt++;
             }
+            // We need to emplace_back more time out of the loop
+            // because the last hash value do not have next hash value to trigger "cur_hv != prev_hv"
             parts_index_hv[i][pid].emplace_back(prev_hv);
             parts_index_offset[i][pid].emplace_back(ofs);
             parts_index_cnt[i][pid].emplace_back(tmp_cnt);
 
             // Now build the index for od key
+            if(one_deletion_amount == 0) // it means that in current range group, current partition, all of them are empty, we don't have elements partitioned in this partition
+                continue;
+            
             auto & cur_ods_rids = ods_rids[i][pid];
             cur_ods_rids.resize(one_deletion_amount);
+            // if(cur_ods_rids.size() == 0){
+            //     cout<<"one_deletion_amount:" <<one_deletion_amount<<endl;
+            //     cout<<"error: i j pid "<< i <<" "<< pid<<endl;
+            // }
+
             iota(cur_ods_rids.begin(), cur_ods_rids.end(), 0); //cur_rids temporarily filled with 0 to one_deletion_amount-1
 
             // temporary vector for the sorting the array
