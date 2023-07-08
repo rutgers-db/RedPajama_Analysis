@@ -31,13 +31,14 @@ public:
     uint64_t resultNum = 0;
     uint64_t candidateNum = 0;
     uint64_t listlens = 0;
+    unsigned short maxIndexPartNum;
 
     vector<vector<unsigned short>> dataset;
     vector<pair<int, int>> result_pairs[MAXTHREADNUM];
 
     // parameters about caculation and dataset
     double coe;
-    const double ALPHA = 1.12;
+    double ALPHA;
     unsigned int n;       // the amount of records
     unsigned int maxSize; // the max size of the records
 
@@ -47,6 +48,11 @@ public:
     }
 
     ~SetJoinParelled() {
+    }
+
+    // Output the Parameters
+    void showPara(){
+        printf("det: %f coe: %f ALPHA: %f maxSize: %u maxIndexPartNum: %hu \n", det, coe, ALPHA, maxSize, maxIndexPartNum);
     }
 
     unsigned int getResultPairsAmount(){

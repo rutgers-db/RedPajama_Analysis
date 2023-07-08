@@ -66,10 +66,13 @@ bool SetJoinParelled::overlap(int x, int y, int posx, int posy, int current_over
 // The index part is to create the index of Partitions and those one deletion neighbors
 void SetJoinParelled::index(double threshold) {
     det = threshold;
+    ALPHA = 1.0 / threshold + 0.01;
     coe = (1 - det) / (1 + det);
     n = dataset.size();
     maxSize = dataset.back().size();
-    const unsigned short maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1; // the possible maximum part amount of the maximum record
+    maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1; // the possible maximum part amount of the maximum record
+
+    showPara(); // show parameters
 
     // check if the dataset is qualified
     int tokenNum = 0;
@@ -191,11 +194,6 @@ void SetJoinParelled::index(double threshold) {
     cout << "Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: " << RepTime(calHash_st) << endl;
     cout << "Now Let's building the inverted Index of these Paritions" << endl;
 
-    // the universe U: 1st dimension: length + part, 2nd dimension, hashvalue
-    // google_unordered_map<int64_t, vector<pair<unsigned int, unsigned short>> > * invIndex = new google_unordered_map<int64_t, vector<pair<unsigned int, unsigned short>> >[range.size()];
-    // google_unordered_map<int64_t, unsigned int > * invIndex = new google_unordered_map<int64_t, unsigned int >[range.size()];
-    // google_unordered_map<int64_t, vector<pair<unsigned int, unsigned short>> > * oneIndex = new google_unordered_map<int64_t, vector<pair<unsigned int, unsigned short>> >[range.size()];
-
     auto sort_st = LogTime();
     printf("There are %lu range groups in the setJoin\n", range.size());
 
@@ -274,7 +272,7 @@ void SetJoinParelled::index(double threshold) {
             iota(cur_ods_rids.begin(), cur_ods_rids.end(), 0); //cur_rids temporarily filled with 0 to one_deletion_amount-1
 
             // temporary vector for the sorting the array
-            vector<unsigned int> tmp_rid;(one_deletion_amount);
+            vector<unsigned int> tmp_rid(one_deletion_amount);
             tmp_rid.reserve(one_deletion_amount);
             vector<unsigned short> tmp_od_locs;
             tmp_od_locs.reserve(one_deletion_amount);
@@ -590,7 +588,6 @@ void SetJoinParelled::findSimPairs() {
     auto find_st = LogTime();
     cout << "Start finding similar pairs " << endl;
 
-    int maxIndexPartNum = floor(2 * coe * maxSize + EPS) + 1;
     // vector<int> hashValues[MAXTHREADNUM];
     vector<vector<int>> subquery[MAXTHREADNUM];
     vector<unsigned int> p_keys[MAXTHREADNUM];
