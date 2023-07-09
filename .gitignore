@@ -4,5 +4,4 @@
 .nfs*
 *.out
 *.o
-LSH/
-LSH/slimpajama/slimpajama/
+LSH/slimpajama/
