@@ -1,10 +1,15 @@
 import struct
+
+
+
+# Function to read pairs of integers from a binary file and store them in a set.
 def read_pairs_from_binary(filename):
     pairs = set()
 
     with open(filename, 'rb') as f:
         # read the first 8 bytes as a unsigned long long int to get the number of pairs
-        size = struct.unpack('Q', f.read(8))[0]  # 'Q' is the format string for unsigned long long
+        # 'Q' is the format string for unsigned long long
+        size = struct.unpack('Q', f.read(8))[0]
 
         # now read the rest of the file as pairs of ints
         for _ in range(size):
@@ -14,12 +19,14 @@ def read_pairs_from_binary(filename):
 
     return pairs
 
+# Function to read integers from a binary file and store them in a list.
 def read_ints_from_binary(filename):
     ints = []
 
     with open(filename, 'rb') as f:
         # read the first 4 bytes as an int to get the number of ints
-        size = struct.unpack('i', f.read(4))[0]  # 'i' is the format string for int
+        # 'i' is the format string for int
+        size = struct.unpack('i', f.read(4))[0]
 
         # now read the rest of the file as ints
         for _ in range(size):
@@ -29,23 +36,25 @@ def read_ints_from_binary(filename):
 
     return ints
 
+# Function to map elements of pairs in a set to new values.
 def map_elements(pair_set, idmap):
     # create a new set
     new_set = set()
-    
+
     # iterate over each pair in the original set
     for pair in pair_set:
         # map each element of the pair using idmap
         new_pair = (idmap[pair[0]], idmap[pair[1]])
-        
+
         # add the new pair to the new set
         new_set.add(new_pair)
-    
+
     return new_set
 
+# Function to correct the order of pairs in a set.
 def correct_pair_order(pair_set):
     corrected_set = set()
-    
+
     for pair in pair_set:
         # If the first element is greater than the second, reverse the pair
         if pair[0] > pair[1]:
@@ -55,6 +64,7 @@ def correct_pair_order(pair_set):
 
     return corrected_set
 
+# Function to extract individual elements from pairs in a set.
 def extract_elements(pair_set):
     # Initialize two empty sets
     ids = set()
@@ -66,11 +76,13 @@ def extract_elements(pair_set):
 
     return ids
 
+# Function to calculate the Jaccard similarity between two lists.
 def jaccard_similarity(list1, list2):
     s1 = set(list1)
     s2 = set(list2)
     return len(s1.intersection(s2)) / len(s1.union(s2))
 
+# Function to read the whole dataset into the memory
 def read_pajama_datset(dataset_name):
     parent_dir = "/research/projects/zp128/RedPajama-Data-1T/RedPajama-Data-1T/" + dataset_name
     idx_file_path = parent_dir + "/tokenized_text_document.idx"
@@ -88,7 +100,7 @@ def read_pajama_datset(dataset_name):
         # Read another 8 bytes
         idx_file.read(8)
 
-        cnt =0
+        cnt = 0
         for i in range(N):
             # Read 4 bytes and interpret them as an integer
             text_len = struct.unpack('i', idx_file.read(4))[0]
@@ -96,14 +108,13 @@ def read_pajama_datset(dataset_name):
             # Read the binary file
             entity = struct.unpack(f'{text_len}H', bin_file.read(text_len * 2))
             docs.append(entity)
-            
-import struct
 
+# Function to read a dataset and select certain documents based on given indices.
 def read_pajama_dataset_selected_docs(dataset_name, selected_indices):
     parent_dir = "/research/projects/zp128/RedPajama-Data-1T/RedPajama-Data-1T/" + dataset_name
     idx_file_path = parent_dir + "/tokenized_text_document.idx"
     bin_file_path = parent_dir + "/tokenized_text_document.bin"
-    
+
     # Use a dictionary (map) instead of a list to store the documents
     docs = {}
 
@@ -125,7 +136,8 @@ def read_pajama_dataset_selected_docs(dataset_name, selected_indices):
 
             if i in selected_indices:
                 # Read the binary file
-                entity = struct.unpack(f'{text_len}H', bin_file.read(text_len * 2))
+                entity = struct.unpack(
+                    f'{text_len}H', bin_file.read(text_len * 2))
 
                 # Add the entity to the docs dictionary
                 docs[i] = entity
@@ -135,6 +147,7 @@ def read_pajama_dataset_selected_docs(dataset_name, selected_indices):
 
     return docs
 
+# Function to check if all pairs in a set have Jaccard similarity greater than a given threshold.
 def check_jaccard_similarity(dataset, simp, thres):
     # Go through each pair in simp_setjoin
     for pair in simp:
@@ -145,4 +158,3 @@ def check_jaccard_similarity(dataset, simp, thres):
             return False  # If you want to stop at the first error
     print("All pairs have Jaccard similarity >= thres")
     return True  # If all pairs pass the check
-
