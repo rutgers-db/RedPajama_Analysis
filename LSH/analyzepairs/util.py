@@ -150,11 +150,14 @@ def read_pajama_dataset_selected_docs(dataset_name, selected_indices):
 # Function to check if all pairs in a set have Jaccard similarity greater than a given threshold.
 def check_jaccard_similarity(dataset, simp, thres):
     # Go through each pair in simp_setjoin
+    total_invalid_pairs_amount = 0
     for pair in simp:
         # Calculate the Jaccard similarity of the two documents in the pair
-        jacc = jaccard_similarity(dataset[pair[0]], dataset[pair[1]])
+        jacc = util.jaccard_similarity(dataset[pair[0]], dataset[pair[1]])
         if jacc < thres:
-            print(jacc)
-            return False  # If you want to stop at the first error
-    print("All pairs have Jaccard similarity >= thres")
-    return True  # If all pairs pass the check
+#             print(jacc)
+            total_invalid_pairs_amount  = total_invalid_pairs_amount + 1
+    if total_invalid_pairs_amount == 0:
+        print("All pairs have Jaccard similarity >= thres")
+    else:
+        print(f"There are {total_invalid_pairs_amount} pairs' similarity lower than threshold.")
