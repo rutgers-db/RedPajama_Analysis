@@ -1,0 +1,99 @@
+import os
+import struct
+from datasketch import MinHash
+from collections import defaultdict
+from multiprocessing import Process, Queue, cpu_count, Pool
+import queue
+import time
+import argparse
+import pickle
+import numpy as np
+from tqdm import tqdm
+
+def _H(hs):
+    return bytes(hs.byteswap().data)
+
+doc_queues = [Queue(1000000) for _ in range(9)]
+
+def generate_minhash(dataset_name, doc_queues, chunk_id, r=13, num_perm=128):
+    parent_dir = "/common/users/zp128/RedPajama_Tokenized/" + dataset_name
+    chunk_file_path = f"{parent_dir}/chunk_{chunk_id}.pickle"
+    
+    # Load the chunk file into memory
+    with open(chunk_file_path, 'rb') as chunk_file:
+        chunk_data = pickle.load(chunk_file)
+
+    for doc in tqdm(chunk_data, desc=f"Processing documents in chunk {chunk_id}", total= len(chunk_data)):
+        # Read the text length
+        
+        doc_id = doc["doc_id"]
+        tokens = doc["text"]
+
+        minhash = MinHash(num_perm=num_perm)
+        for token in tokens:
+            minhash.update(str(token).encode('utf8'))
+
+        # LSH
+        if minhash.is_empty() == False:
+            for i, doc_queue in enumerate(doc_queues):
+                H = _H(minhash.hashvalues[i * r : (i + 1) * r])
+                doc_queue.put((doc_id, H))
+
+
+def find_similar_pairs(simp_file_path, doc_queue, idx, threshold=0.8, bands=9, ranges = 13):
+    similar_pairs = []
+
+    # Create dictionaries for each hash slice
+    lsh_dict = defaultdict(int)
+    f = open(simp_file_path.replace(".txt", f"-{idx}.txt"), "w")
+    while True:
+        try:
+            doc_id, H = doc_queue.get(timeout=30)
+            cand = lsh_dict.get(H, -1)
+            if cand != -1:
+                f.write(f'{doc_id} :: {cand}\n')
+            else:
+                lsh_dict[H] = doc_id
+        except queue.Empty:
+            break
+
+if __name__ == "__main__":
+    # ParseS
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-dataset")
+    args = parser.parse_args()
+    dataset_name = args.dataset # "stackexchange"
+
+    # Similar pairs output directory
+    simP_dir = "../similar_pairs/" + dataset_name+"/" 
+    if not os.path.exists(simP_dir):
+        os.mkdir(simP_dir)
+    simP_file = simP_dir + dataset_name + "_simp_lsh.txt"
+
+    bands = 9
+    chunk_amount = 71
+
+    processes = []
+    #Producer
+    for chunk_id in range(chunk_amount):
+        # Producer
+        p = Process(
+                target=generate_minhash,
+                args=(dataset_name, doc_queues, chunk_id),
+            )
+        processes.append(p)
+        p.start()
+    
+    # Consumer
+    print("start")
+    for process_id in range(bands):
+        p = Process(
+            target=find_similar_pairs,
+            args=(simP_file, doc_queues[process_id], process_id,),
+        )
+        processes.append(p)
+        p.start()
+    
+    print("All start")
+    for p in processes:
+        p.join()
