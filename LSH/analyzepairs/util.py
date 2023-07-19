@@ -117,7 +117,7 @@ def read_pajama_dataset_selected_docs(dataset_name, selected_indices):
 
     # Use a dictionary (map) instead of a list to store the documents
     docs = {}
-
+    
     # Open the files in binary mode
     with open(idx_file_path, 'rb') as idx_file, open(bin_file_path, 'rb') as bin_file:
         # Seek to the 18th byte
@@ -141,6 +141,7 @@ def read_pajama_dataset_selected_docs(dataset_name, selected_indices):
 
                 # Add the entity to the docs dictionary
                 docs[i] = entity
+                    
             else:
                 # If the index is not in the selected_indices set, skip this document in the bin file
                 bin_file.seek(bin_file.tell() + text_len * 2)
@@ -161,3 +162,13 @@ def check_jaccard_similarity(dataset, simp, thres):
         print("All pairs have Jaccard similarity >= thres")
     else:
         print(f"There are {total_invalid_pairs_amount} pairs' similarity lower than threshold.")
+        
+def delete_short_doc(d, threshold):
+    """
+    Deletes all items from a docs dictionary where the length of the value is less than a given threshold.
+
+    Parameters:
+    d: The dictionary to modify.
+    threshold: The minimum length for values.
+    """
+    return {k: v for k, v in d.items() if len(v) >= threshold}
