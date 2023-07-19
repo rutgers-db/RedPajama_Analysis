@@ -15,11 +15,13 @@ int main(int argc, char *argv[]) {
     const string bottomK_path = root_dir + "/bottomK_bins/" + bottomK_fileName; //arxiv_bottom_64.bin;
     const string dataset = extract_prefix(bottomK_path);
     // const int max_k = 1024;
-    int K = 100;         //32   
+    int K = 32;         //32   
+    double sim_thres = 0.9;
+
     srand(0); // set seed for random generator
 
     // OverlapJoin Parameters
-    int c = ceil(K*0.9); // 29
+    int c = ceil(K*sim_thres); // 29
 
     // Input bottom_k and shrink their size to the specified K
     vector<vector<unsigned short>> bottomks;
@@ -78,7 +80,7 @@ int main(int argc, char *argv[]) {
     if(createDirectory(simP_dirpath) == false)
         return 0;
     // system(("mkdir " + simP_dirpath).c_str());
-    joiner.set_external_store(simP_dirpath);
+    // joiner.set_external_store(simP_dirpath);
     joiner.overlapjoin(c, K);
 
     // Investigate the result

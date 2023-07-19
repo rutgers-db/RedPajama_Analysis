@@ -35,7 +35,9 @@ public:
 
 inline bool judgeMinHashJaccard(const int & pos_1, const int & pos_2)
 {
-    if(pos_1 - c + 1 + pos_2 - c + 1<= K-c){
+    // if(pos_1 - c + 1 + pos_2 - c + 1<= K-c){
+    // Because now c is already c-- so the condition should be tuned a little bit
+    if(pos_1 - c + pos_2<= K-1){
         return true;
     }
     return false;
@@ -244,8 +246,13 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
             ele[records[i][j]].push_back(i);
     }
 
-    for (auto it = ele.begin(); it != ele.end(); it++)
-        eles.push_back(make_pair(it->first, it->second.size())); // build element frequency table
+    // for (auto it = ele.begin(); it != ele.end(); it++)
+    //     eles.push_back(make_pair(it->first, it->second.size())); // build element frequency table
+
+    // keep original hash function (Because later to check bottom-k jaccard similarity, we need to levarge the k-minimum hash values, therefore we don't wanna build frequency table here)
+    // Warning, Todo, maintain frequency table and also check correctly jaccard similarity
+     for (auto it = ele.begin(); it != ele.end(); it++)
+        eles.push_back(make_pair(it->first, it->first)); 
 
     // get global order: frequency increasing order
     // sort the elements
