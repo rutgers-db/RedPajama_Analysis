@@ -91,6 +91,9 @@ if __name__ == "__main__":
     chunk_amount = 71
     doc_queues = [Queue(10000000) for _ in range(bands)]
     processes = []
+
+    start_time = time.time()
+
     #Producer
     for chunk_id in range(chunk_amount):
         # Producer
@@ -114,3 +117,6 @@ if __name__ == "__main__":
 
     for p in processes:
         p.join()
+    
+    elapsed_time = time.time() - start_time
+    print(f"Elapsed time: {elapsed_time} seconds")
