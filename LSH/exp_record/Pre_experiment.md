@@ -15,7 +15,11 @@
         - False Positve Pairs: 2873  
         - Contained Documents: 6034 
         - False Positive Document: 1969
-    3. LSH: Soon Debugged (Contained documents only up to ~1000), there must be something wrong
+    3. LSH: Fixed
+        - Found Similar Pairs: 20819     
+        - False Positve Pairs: 9808   
+        - Contained Documents: 25387  
+        - False Positive Document: 15463 
 
 - Exp Setting: Similarity Threshold 0.9
     1. SetJoin (Ground Truth): 
@@ -26,4 +30,9 @@
         - False Positve Pairs: 3360   
         - Contained Documents: 2886 
         - False Positive Document: 617 
+    3. LSH: Fixed
+        - Found Similar Pairs: 8010 (The pairs amount is so low because in the slimpajama they only make the pair with the center of the cluster with other members)  
+        - False Positve Pairs: 304
+        - Contained Documents: 8293 
+        - False Positive Document: 277 
     
