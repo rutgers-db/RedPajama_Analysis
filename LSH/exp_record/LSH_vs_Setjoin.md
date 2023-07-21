@@ -11,7 +11,7 @@ Mention: The LSH here is the C++ version.
 | Book    | 12.2     |  1557407 | 0.9991 | 0.1954|106069|0.9852|0.1086|
 | Arxiv    | 24.19333   | 3401118 | 0.0281 | 0.0041|72115|0.8618|0.0681|
 | stackexchange    | 94.84    |  212881 | 0.8882 | 0.2548|97949|0.6252|0.1805|
-| wikipedia    | 4135     | 
+| wikipedia    | 4135     | 18178140442|
 
 2.  Table of SetJoin (K128, B9, R13)
 
@@ -30,7 +30,7 @@ Mention: The LSH here is the C++ version.
 | Book    |  13| 1150 | 0.7678 | 0.3258|1263|0.7641|0.2819|
 | Arxiv    |28| 3285963 | 0.0008 | 0.0007|8310|0.0357|0.0384|
 | stackexchange | 73 | 11112 | 0.1968 | 0.1897|19696|0.1516|0.1849|
-| wikipedia    | 404.32 | 
+| wikipedia    | 404.32 | 3185478828|
 
 2.  Table of SetJoin (K128, B5, R25)
 
@@ -39,4 +39,4 @@ Mention: The LSH here is the C++ version.
 | Book          | 121 |396 | 415  |
 | Arxiv         | 191.97 | 3285654 | 8333  | 
 | StackExchange | 640 | 11014 | 20501  |
-| Wikipedia     |  1134.6 | 
+| Wikipedia     |  1134.6 | 141574669|
