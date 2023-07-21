@@ -15,10 +15,6 @@ public:
         for(int i = 1 ;i<=_K; i++){
             generateHashFunc(i, hf);
         }
-
-        // for(int i = 1 ;i<=_K; i++){
-        //     cout<<hf[i-1].first<<" "<< hf[i-1].second<<endl;
-        // }
     }
 
     std::vector<unsigned short> getMinHashes(const std::vector<unsigned short>& doc) {

@@ -15,7 +15,7 @@ private:
 
     struct vector_hash {
         size_t operator()(const vector<unsigned short> &vec) const {
-            unsigned int seed = 0;
+            size_t seed = 0;
             for (unsigned short i : vec) {
                 seed = PRIME * seed + i + 1;
             }
@@ -39,7 +39,7 @@ public:
 
     void run(vector<vector<unsigned short>> &minhashes) {
         assert(Band * Range <= K);
-        vector<pair<unsigned int, unsigned int>> *pairs = new vector<pair<unsigned int, unsigned int>>[Band];
+        vector<pair<size_t, unsigned int>> *pairs = new vector<pair<size_t, unsigned int>>[Band];
         for (int i = 0; i < Band; i++) {
             pairs[i].resize(minhashes.size());
         }
@@ -73,7 +73,7 @@ public:
 #pragma omp parallel for
         for (int i = 0; i < Band; i++) {
             sort(pairs[i].begin(), pairs[i].end());
-            
+            printf("%d : sorted\n",i);
             // Get the groups share the same keys
             auto prev_key = pairs[i][0].first;
             unsigned long long prev_loc = 0;
