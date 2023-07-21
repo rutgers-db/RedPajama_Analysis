@@ -1,6 +1,12 @@
 import struct
+import glob
 
-
+def find_file(directory, prefix):
+    # Use glob to get all the files that start with the given prefix in the directory
+    files = glob.glob(f'{directory}/{prefix}*')
+    
+    # Return the first match or None if no match found
+    return files[0] if files else None
 
 # Function to read pairs of integers from a binary file and store them in a set.
 def read_pairs_from_binary(filename):

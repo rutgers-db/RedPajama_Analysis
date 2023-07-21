@@ -12,10 +12,15 @@ int main(int argc, char *argv[]) {
     const string sortedsets_file_path = root_dir + "/sorted_sets/" + dataset_name +"_sortedsets.bin";
     const string idmap_file_path = root_dir + "/sorted_sets/" +  dataset_name + "_idmap.bin";
 
+    int band = 9;
+    int range = 13;
     const double thres = 0.8;
+    if(thres==0.9){
+        band = 5;
+        range = 25;
+    }
     const int K = 128;
-    const int band = 9;
-    const int range = 13;
+    
     const string simP_file_path = "./similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+"_K" +to_string(K)+"B" + to_string(band) +"R" +to_string(range)+ ".bin";
 
     // Load Idmap and sortedsets
@@ -27,21 +32,23 @@ int main(int argc, char *argv[]) {
     auto timer_st = LogTime();
     cout<<"Getting MinHash"<<endl;
 
+    // for(int i = 50000 ;i<50300;i++){
+    //     outputVector(sorted_sets[i]);
+    // }
     // Get MinHashes
     vector<vector<unsigned short>> minhashes(sorted_sets.size());
     MinHash minHasher(K);
 
+    
     #pragma omp parallel for
     for(unsigned int i = 0; i < minhashes.size(); i++){
         minhashes[i] = minHasher.getMinHashes(sorted_sets[i]);
     }
+    
+
     // Free sorted sets
     vector<vector<unsigned short>>().swap(sorted_sets);
     printf("MinHash Opertation Finished\n");
-
-    // for(int i =0 ;i< 10 ;i++){
-    //     outputVector(minhashes[i]);
-    // }
 
     // LSH
     LSH lsh(K,band,range);

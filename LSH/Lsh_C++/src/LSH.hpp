@@ -6,7 +6,7 @@
 #define PRIME 2017
 
 using namespace std;
-
+// const int mod_p = 2<<31 - 1;
 class LSH {
 private:
     int K;     // number of hash functions
@@ -15,7 +15,6 @@ private:
 
     struct vector_hash {
         size_t operator()(const vector<unsigned short> &vec) const {
-            hash<unsigned short> hasher;
             unsigned int seed = 0;
             for (unsigned short i : vec) {
                 seed = PRIME * seed + i + 1;
@@ -57,7 +56,6 @@ public:
                 if (i + Range > K) {
                     break;
                 }
-
                 vector<unsigned short> slice(minhash.begin() + i, minhash.begin() + i + Range);
                 size_t hashValue = hasher(slice);
 
@@ -66,9 +64,8 @@ public:
                 // band_buckets[b][hashValue].push_back(docId);
             }
         }
-        // for(int i = 0;i<10;i++){
-        //     cout<<pairs[0][i].first<<" "<< pairs[0][i].second<<endl;
-        // }
+
+
         cout<<"Slice and Hash Done"<<endl;
 
         vector<pair<unsigned int, unsigned int>> *temp_pairs;
@@ -78,10 +75,10 @@ public:
             sort(pairs[i].begin(), pairs[i].end());
             
             // Get the groups share the same keys
-            unsigned prev_key = pairs[i][0].first;
+            auto prev_key = pairs[i][0].first;
             unsigned long long prev_loc = 0;
             for (unsigned long long j = 1; j < pairs[i].size(); j++) {
-                auto & key = pairs[i][j].first;
+                auto key = pairs[i][j].first;
                 if (key != prev_key) {
                     auto st = prev_loc;
                     auto ed = j;
