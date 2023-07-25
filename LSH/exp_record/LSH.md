@@ -168,8 +168,9 @@ All the rate here is calculated based on the result of setjoin 0.9 threshold
 | wikipedia    | 
 
 10. Table of LSH (K9000, B20, R450)
+
 | Dataset| Time(s) | Pairs | Pairs FP rate| Pairs FN rate| Distinct Docs | Docs FP rate| Docs FN rate|
 |----------|----------|----------|----------|----------|----------|----------|----------|
 | Book    | 719.72   | 6 | 0.0 | 0.9848|12|0.0|0.9711|
-| Arxiv    | 1137.14 | | 3277375 | 0.0 | 0.0025|7087|0.0|0.1495|
+| Arxiv    | 1137.14 | 3277375 | 0.0 | 0.0025|7087|0.0|0.1495|
 | stackexchange    |  
