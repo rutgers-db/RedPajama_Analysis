@@ -85,6 +85,14 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | stackexchange    |  215.200 | 12040 | 0.016 | 0.6292|21808|0.0094|0.5177|
 | wikipedia    | 
 
+10. Table of LSH (K9000, B20, R450)
+
+| Dataset| Time(s) | Pairs | Pairs FP rate| Pairs FN rate| Distinct Docs | Docs FP rate| Docs FN rate|
+|----------|----------|----------|----------|----------|----------|----------|----------|
+| Book    | 719.72   | 6 | 0.0 | 0.9965|12|0.0|0.9932|
+| Arxiv    | 1137.14 | 3277375 | 0.0 | 0.0127|7087|0.0|0.3374|
+| stackexchange    |  
+
 ##  Compared with Setjoin Result under threshold 0.9
 All the rate here is calculated based on the result of setjoin 0.9 threshold
 1. Table of LSH (K128, B4, R32)
