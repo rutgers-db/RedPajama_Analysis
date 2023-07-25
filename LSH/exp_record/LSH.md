@@ -91,7 +91,7 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 |----------|----------|----------|----------|----------|----------|----------|----------|
 | Book    | 719.72   | 6 | 0.0 | 0.9965|12|0.0|0.9932|
 | Arxiv    | 1137.14 | 3277375 | 0.0 | 0.0127|7087|0.0|0.3374|
-| stackexchange    |  
+| stackexchange    |  4844 | 3383 | 0.0 | 0.8941|5914|0.0|0.868|
 
 ##  Compared with Setjoin Result under threshold 0.9
 All the rate here is calculated based on the result of setjoin 0.9 threshold
@@ -181,4 +181,4 @@ All the rate here is calculated based on the result of setjoin 0.9 threshold
 |----------|----------|----------|----------|----------|----------|----------|----------|
 | Book    | 719.72   | 6 | 0.0 | 0.9848|12|0.0|0.9711|
 | Arxiv    | 1137.14 | 3277375 | 0.0 | 0.0025|7087|0.0|0.1495|
-| stackexchange    |  
+| stackexchange    |  4844 | 3383 | 0.0 | 0.6928|5914|0.0|0.7115|
