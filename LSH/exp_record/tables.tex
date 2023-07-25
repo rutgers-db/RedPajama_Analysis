@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{array}
+
+\begin{document}
+
+\begin{table}[h]
+\centering
+\caption{Book Dataset}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+\hline
+     &4x32  & 8x16 & 16x8  & 4x64 & 8x32 & 16x16 & 4x128 & 8x64 & 16x16 & 20x450\\ \hline
+FP & 0.1342    & 0.9928    & 1.0   & 0.0 & 0.265 & 0.995 & 0.0 & 0.0 & 0.262 & 0.0 \\ \hline
+FN & 0.8179    & 0.313    & 0.006  & 0.954 & 0.773 & 0.183 & 0.985	& 0.919 & 0.686 & 0.997\\ \hline
+F1 & 0.301    & 0.014    & 0.0   & 0.087 & 0.347 & 0.010 & 0.029 & 0.149 & 0.440 & 0.007\\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Arxiv Dataset}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+\hline
+     &4x32  & 8x16 & 16x8  & 4x64 & 8x32 & 16x16 & 4x128 & 8x64 & 16x32 & 20x450\\ \hline
+FP & 0.0 & 0.016 & 0.972 & 0.0 & 0.0 & 0.018 & 0.0 & 0.0 & 0.0 & 0.0 \\ \hline
+FN & 0.012 & 0.006 & 0.0 & 0.012 & 0.011 & 0.003 & 0.013 & 0.012 & 0.010 & 0.013 \\ \hline
+F1 & 0.994 & 0.989 & 0.054 & 0.994 & 0.995 & 0.989 & 0.994 & 0.994 & 0.995 & 0.994 \\ \hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[h]
+\centering
+\caption{Stackexchange Dataset}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|}
+\hline
+     &4x32  & 8x16 & 16x8  & 4x64 & 8x32 & 16x16 & 4x128 & 8x64 & 16x32 & 20x450\\ \hline
+FP & 0.007 & 0.514 & 1.000 & 0.000 & 0.010 & 0.662 & 0.000 & 0.000 & 0.016 & 0.000 \\ \hline
+FN & 0.746 & 0.390 & 0.011 & 0.828 & 0.688 & 0.231 & 0.869 & 0.803 & 0.629 & 0.894 \\ \hline
+F1 & 0.405 & 0.541 & 0.030 & 0.294 & 0.475 & 0.469 & 0.232 & 0.329 & 0.539 & 0.192 \\ \hline
+\end{tabular}
+\end{table}
+
+
+\end{document}
