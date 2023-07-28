@@ -12,7 +12,7 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 10.31     | 365 | 0.1342 | 0.8179|0.301|366|0.0847|0.8094|
 | Arxiv    | 17.15 | 3281343 | 0.0 | 0.0115|0.9942|7904|0.0003|0.2612|
 | stackexchange    | 63.18 | 8176 | 0.0065 | 0.7458|0.4049|15102|0.0045|0.6644|
-| wikipedia    | 184.91
+| wikipedia    | 184.91 | 558036960 | 0.11234 | 0.96726|0.06316|2212407|0.01775|0.63658|
 2. Table of LSH (K128, B8, R16)
 
 | Dataset| Time(s) | Pairs | Pairs FP rate| Pairs FN rate| Pairs F1| Distinct Docs | Docs FP rate| Docs FN rate|
@@ -20,7 +20,7 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 9.51     | 166605 | 0.9928 | 0.313|0.0142|42195|0.9684|0.2412|
 | Arxiv    | 19.33 | 3353751 | 0.0158 | 0.0056|0.9893|13708|0.312|0.1182|
 | stackexchange    | 67.75 | 40117 | 0.5143 | 0.3901|0.5408|44476|0.2925|0.2975|
-| wikipedia    | 1784.05
+| wikipedia    | 1784.05 | 9341266797 | 0.29339 | 0.56369|0.53949|7468218|0.26662|0.08406|
 
 3. Table of LSH (K128, B16, R8)
 
@@ -29,7 +29,7 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 28.23    | 141383731 | 1.0 | 0.0058|0.0|193994|0.9909|0.0006|
 | Arxiv    | 38.62 | 120196706 | 0.9724 | 0.0|0.0537|1427708|0.9925|0.0006|
 | stackexchange    |  98.64 | 182175612 | 0.9998 | 0.0111|0.0003|12310350|0.9964|0.004|
-| wikipedia    | 
+| wikipedia    |       | 147572047827 | 0.89874 | 0.01225|0.18369|18754992|0.68122|0.00015|
 
 4. Table of LSH (K256, B4, R64)
 
@@ -38,7 +38,8 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 16.87    | 79 | 0.0 | 0.9545|0.0871|95|0.0|0.946|
 | Arxiv    | 33.19 | 3279429 | 0.0 | 0.012|0.9939|7484|0.0|0.3002|
 | stackexchange    |  119.21 | 5497 | 0.0 | 0.8279|0.2936|10060|0.0|0.7754|
-| wikipedia    | 200.87
+| wikipedia    | 200.87 | 16684657 | 0.00014 | 0.99890|0.00220|662719|0.00001|0.88917|
+
 
 5. Table of LSH (K256, B8, R32)
 
@@ -47,7 +48,8 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 18.06    | 536 | 0.2649 | 0.7729|0.347|541|0.1848|0.7491|
 | Arxiv    | 34.40 | 3284011 | 0.0 | 0.0107|0.9946|8166|0.0006|0.2369|
 | stackexchange    |  129.8 | 10078 | 0.01 | 0.6877|0.4748|18457|0.0063|0.5906|
-| wikipedia    | 341.42
+| wikipedia    | 341.42 | 909752245 | 0.09428 | 0.94553|0.10275|3035694|0.02159|0.50329|
+
 
 6. Table of LSH (K256, B16, R16)
 
@@ -56,7 +58,8 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 16.13    | 289442 | 0.9951 | 0.1833|0.0097|59441|0.9744|0.1348|
 | Arxiv    | 33.30 | 3368734 | 0.0179 | 0.0033|0.9894|15769|0.3696|0.0705|
 | stackexchange    |  128.23 | 72789 | 0.6624 | 0.231|0.4692|65848|0.4302|0.1623|
-| wikipedia    |  2930.25
+| wikipedia    |  2930.25 | 13988316453 | 0.31890 | 0.37023|0.65443|8535787|0.31933|0.02836|
+
 
 7. Table of LSH (K512, B4, R128)
 
@@ -65,7 +68,8 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 36.42   | 26 | 0.0 | 0.985|0.0295|43|0.0|0.9755|
 | Arxiv    |  53.58 | 3277814 | 0.0 | 0.0125|0.9937|7235|0.0|0.3235|
 | stackexchange    |  222.2 | 4190 | 0.0 | 0.8689|0.2319|7504|0.0|0.8325|
-| wikipedia    | 
+| wikipedia    |   338  | 11792113 | 0.00000 | 0.99922|0.00156|180309|0.00000|0.96985|
+
 
 8. Table of LSH (K512, B8, R64)
 
@@ -74,7 +78,8 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 32.44   | 140 | 0.0 | 0.9193|0.1493|138|0.0|0.9215|
 | Arxiv    | 63.08 | 3279905 | 0.0 | 0.0119|0.994|7602|0.0|0.2892|
 | stackexchange    |  226.54 | 6285 | 0.0 | 0.8033|0.3288|11602|0.0|0.741|
-| wikipedia    |
+| wikipedia    |  335   | 22487340 | 0.00053 | 0.99851|0.00297|948967|0.00001|0.84130|
+
 
 9. Table of LSH (K512, B16, R32)
 
@@ -83,7 +88,8 @@ All the rate here is calculated based on the result of setjoin 0.8 threshold
 | Book    | 34.78   | 739 | 0.2625 | 0.6859|0.4406|773|0.2109|0.653|
 | Arxiv    | 59.34 | 3286267 | 0.0 | 0.01|0.995|8436|0.002|0.2128|
 | stackexchange    |  215.200 | 12040 | 0.016 | 0.6292|0.5386|21808|0.0094|0.5177|
-| wikipedia    | 
+| wikipedia    |   564   | 1720413027 | 0.09902 | 0.89754|0.18400|3873356|0.03229|0.37316|
+
 
 10. Table of LSH (K9000, B20, R450)
 
