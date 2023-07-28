@@ -6,3 +6,5 @@
 *.o
 LSH/slimpajama/
 LSH/similar_pairs/
+*.pyc
+*checkpoint*
