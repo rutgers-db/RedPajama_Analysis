@@ -1,0 +1,338 @@
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted2 : sorted3 : sorted1 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K128B4R32.bin
+./similar_pairs/book_sim_pairs_K128B4R32.bin has 365
+Parameters Setting:book 128 4 32
+At last the total time cost is: 10.317428
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+3 : sorted7 : sorted5 : sorted2 : sorted6 : sorted4 : sorted1 : sorted0 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K128B8R16.bin
+./similar_pairs/book_sim_pairs_K128B8R16.bin has 166605
+Parameters Setting:book 128 8 16
+At last the total time cost is: 9.510502
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+13 : sorted14 : sorted0 : sorted5 : sorted11 : sorted10 : sorted8 : sorted4 : sorted2 : sorted9 : sorted7 : sorted3 : sorted6 : sorted1 : sorted15 : sorted12 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K128B16R8.bin
+./similar_pairs/book_sim_pairs_K128B16R8.bin has 141383731
+Parameters Setting:book 128 16 8
+At last the total time cost is: 28.232485
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+2 : sorted0 : sorted1 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K256B4R64.bin
+./similar_pairs/book_sim_pairs_K256B4R64.bin has 79
+Parameters Setting:book 256 4 64
+At last the total time cost is: 16.873313
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+5 : sorted2 : sorted6 : sorted1 : sorted7 : sorted0 : sorted4 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K256B8R32.bin
+./similar_pairs/book_sim_pairs_K256B8R32.bin has 536
+Parameters Setting:book 256 8 32
+At last the total time cost is: 18.062974
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+3 : sorted14 : sorted13 : sorted10 : sorted2 : sorted6 : sorted4 : sorted5 : sorted11 : sorted1 : sorted15 : sorted8 : sorted9 : sorted0 : sorted12 : sorted7 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K256B16R16.bin
+./similar_pairs/book_sim_pairs_K256B16R16.bin has 289442
+Parameters Setting:book 256 16 16
+At last the total time cost is: 16.134530
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+1 : sorted3 : sorted0 : sorted2 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K512B4R128.bin
+./similar_pairs/book_sim_pairs_K512B4R128.bin has 26
+Parameters Setting:book 512 4 128
+At last the total time cost is: 36.422276
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted6 : sorted1 : sorted7 : sorted4 : sorted2 : sorted5 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K512B8R64.bin
+./similar_pairs/book_sim_pairs_K512B8R64.bin has 140
+Parameters Setting:book 512 8 64
+At last the total time cost is: 32.446691
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+2 : sorted9 : sorted6 : sorted14 : sorted5 : sorted10 : sorted15 : sorted13 : sorted4 : sorted11 : sorted3 : sorted1 : sorted7 : sorted0 : sorted12 : sorted8 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K512B16R32.bin
+./similar_pairs/book_sim_pairs_K512B16R32.bin has 739
+Parameters Setting:book 512 16 32
+At last the total time cost is: 34.782436
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+3 : sorted0 : sorted1 : sorted2 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K128B4R32.bin
+./similar_pairs/arxiv_sim_pairs_K128B4R32.bin has 3281343
+Parameters Setting:arxiv 128 4 32
+At last the total time cost is: 17.159356
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+6 : sorted4 : sorted5 : sorted3 : sorted0 : sorted2 : sorted7 : sorted1 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K128B8R16.bin
+./similar_pairs/arxiv_sim_pairs_K128B8R16.bin has 3353751
+Parameters Setting:arxiv 128 8 16
+At last the total time cost is: 19.334805
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+3 : sorted15 : sorted13 : sorted14 : sorted4 : sorted12 : sorted0 : sorted2 : sorted5 : sorted7 : sorted11 : sorted9 : sorted10 : sorted8 : sorted1 : sorted6 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K128B16R8.bin
+./similar_pairs/arxiv_sim_pairs_K128B16R8.bin has 120196706
+Parameters Setting:arxiv 128 16 8
+At last the total time cost is: 38.622038
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted1 : sorted2 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K256B4R64.bin
+./similar_pairs/arxiv_sim_pairs_K256B4R64.bin has 3279429
+Parameters Setting:arxiv 256 4 64
+At last the total time cost is: 33.196099
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+3 : sorted1 : sorted7 : sorted0 : sorted4 : sorted2 : sorted6 : sorted5 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K256B8R32.bin
+./similar_pairs/arxiv_sim_pairs_K256B8R32.bin has 3284011
+Parameters Setting:arxiv 256 8 32
+At last the total time cost is: 34.402791
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+11 : sorted8 : sorted9 : sorted0 : sorted15 : sorted14 : sorted7 : sorted4 : sorted2 : sorted6 : sorted10 : sorted1 : sorted3 : sorted12 : sorted5 : sorted13 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K256B16R16.bin
+./similar_pairs/arxiv_sim_pairs_K256B16R16.bin has 3368734
+Parameters Setting:arxiv 256 16 16
+At last the total time cost is: 33.309595
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted2 : sorted1 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K512B4R128.bin
+./similar_pairs/arxiv_sim_pairs_K512B4R128.bin has 3277814
+Parameters Setting:arxiv 512 4 128
+At last the total time cost is: 53.587930
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+7 : sorted4 : sorted3 : sorted2 : sorted0 : sorted5 : sorted6 : sorted1 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K512B8R64.bin
+./similar_pairs/arxiv_sim_pairs_K512B8R64.bin has 3279905
+Parameters Setting:arxiv 512 8 64
+At last the total time cost is: 63.086813
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+8 : sorted3 : sorted13 : sorted0 : sorted2 : sorted9 : sorted1 : sorted11 : sorted6 : sorted14 : sorted7 : sorted4 : sorted12 : sorted15 : sorted5 : sorted10 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K512B16R32.bin
+./similar_pairs/arxiv_sim_pairs_K512B16R32.bin has 3286267
+Parameters Setting:arxiv 512 16 32
+At last the total time cost is: 59.348941
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted1 : sorted2 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K128B4R32.bin
+./similar_pairs/stackexchange_sim_pairs_K128B4R32.bin has 8176
+Parameters Setting:stackexchange 128 4 32
+At last the total time cost is: 63.186256
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+5 : sorted4 : sorted2 : sorted3 : sorted0 : sorted6 : sorted1 : sorted7 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K128B8R16.bin
+./similar_pairs/stackexchange_sim_pairs_K128B8R16.bin has 40117
+Parameters Setting:stackexchange 128 8 16
+At last the total time cost is: 67.753449
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+1 : sorted3 : sorted0 : sorted5 : sorted14 : sorted7 : sorted6 : sorted9 : sorted4 : sorted2 : sorted8 : sorted15 : sorted11 : sorted12 : sorted10 : sorted13 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K128B16R8.bin
+./similar_pairs/stackexchange_sim_pairs_K128B16R8.bin has 182175612
+Parameters Setting:stackexchange 128 16 8
+At last the total time cost is: 98.644770
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted2 : sorted1 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K256B4R64.bin
+./similar_pairs/stackexchange_sim_pairs_K256B4R64.bin has 5497
+Parameters Setting:stackexchange 256 4 64
+At last the total time cost is: 119.218261
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted6 : sorted2 : sorted5 : sorted3 : sorted7 : sorted1 : sorted4 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K256B8R32.bin
+./similar_pairs/stackexchange_sim_pairs_K256B8R32.bin has 10078
+Parameters Setting:stackexchange 256 8 32
+At last the total time cost is: 129.816676
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted7 : sorted15 : sorted13 : sorted14 : sorted4 : sorted8 : sorted6 : sorted10 : sorted5 : sorted1 : sorted9 : sorted3 : sorted2 : sorted12 : sorted11 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K256B16R16.bin
+./similar_pairs/stackexchange_sim_pairs_K256B16R16.bin has 72789
+Parameters Setting:stackexchange 256 16 16
+At last the total time cost is: 128.234873
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+2 : sorted3 : sorted1 : sorted0 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K512B4R128.bin
+./similar_pairs/stackexchange_sim_pairs_K512B4R128.bin has 4190
+Parameters Setting:stackexchange 512 4 128
+At last the total time cost is: 222.233414
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted1 : sorted7 : sorted3 : sorted4 : sorted2 : sorted6 : sorted5 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K512B8R64.bin
+./similar_pairs/stackexchange_sim_pairs_K512B8R64.bin has 6285
+Parameters Setting:stackexchange 512 8 64
+At last the total time cost is: 226.540649
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+15 : sorted9 : sorted7 : sorted1 : sorted10 : sorted8 : sorted12 : sorted14 : sorted11 : sorted13 : sorted3 : sorted6 : sorted5 : sorted2 : sorted4 : sorted0 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K512B16R32.bin
+./similar_pairs/stackexchange_sim_pairs_K512B16R32.bin has 12040
+Parameters Setting:stackexchange 512 16 32
+At last the total time cost is: 215.200928
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+2 : sorted0 : sorted1 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K128B4R32.bin
+./similar_pairs/wikipedia_sim_pairs_K128B4R32.bin has 558036960
+Parameters Setting:wikipedia 128 4 32
+At last the total time cost is: 184.918762
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin

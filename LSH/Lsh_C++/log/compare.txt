@@ -1,0 +1,127 @@
+./similar_pairs/wikipedia_sim_pairs_K128B4R32.bin
+4464295688
+558036960
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 558036960
+Pairs in file B: 15128380899
+Unique values in file A: 2212407
+Unique values in file B: 5979655
+FP_pairs:  62688036
+FN_pairs: 14633031975
+FP_ids: 39276
+FN_ids: 3806524
+| 558036960 | 0.11234 | 0.96726|0.06316|2212407|0.01775|0.63658|
+./similar_pairs/wikipedia_sim_pairs_K128B8R16.bin
+74730134384
+9341266797
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 9341266797
+Pairs in file B: 15128380899
+Unique values in file A: 7468218
+Unique values in file B: 5979655
+FP_pairs:  2740654967
+FN_pairs: 8527769069
+FP_ids: 1991189
+FN_ids: 502626
+| 9341266797 | 0.29339 | 0.56369|0.53949|7468218|0.26662|0.08406|
+Jump the 128 16 8
+./similar_pairs/wikipedia_sim_pairs_K256B4R64.bin
+133477264
+16684657
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 16684657
+Pairs in file B: 15128380899
+Unique values in file A: 662719
+Unique values in file B: 5979655
+FP_pairs:  2323
+FN_pairs: 15111698565
+FP_ids: 6
+FN_ids: 5316942
+| 16684657 | 0.00014 | 0.99890|0.00220|662719|0.00001|0.88917|
+./similar_pairs/wikipedia_sim_pairs_K256B8R32.bin
+7278017968
+909752245
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 909752245
+Pairs in file B: 15128380899
+Unique values in file A: 3035694
+Unique values in file B: 5979655
+FP_pairs:  85774498
+FN_pairs: 14304403152
+FP_ids: 65539
+FN_ids: 3009500
+| 909752245 | 0.09428 | 0.94553|0.10275|3035694|0.02159|0.50329|
+./similar_pairs/wikipedia_sim_pairs_K256B16R16.bin
+111906531632
+13988316453
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 13988316453
+Pairs in file B: 15128380899
+Unique values in file A: 8535787
+Unique values in file B: 5979655
+FP_pairs:  4460910264
+FN_pairs: 5600974710
+FP_ids: 2725715
+FN_ids: 169583
+| 13988316453 | 0.31890 | 0.37023|0.65443|8535787|0.31933|0.02836|
+./similar_pairs/wikipedia_sim_pairs_K512B4R128.bin
+94336912
+11792113
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 11792113
+Pairs in file B: 15128380899
+Unique values in file A: 180309
+Unique values in file B: 5979655
+FP_pairs:  0
+FN_pairs: 15116588786
+FP_ids: 0
+FN_ids: 5799346
+| 11792113 | 0.00000 | 0.99922|0.00156|180309|0.00000|0.96985|
+./similar_pairs/wikipedia_sim_pairs_K512B8R64.bin
+179898728
+22487340
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 22487340
+Pairs in file B: 15128380899
+Unique values in file A: 948967
+Unique values in file B: 5979655
+FP_pairs:  12017
+FN_pairs: 15105905576
+FP_ids: 7
+FN_ids: 5030695
+| 22487340 | 0.00053 | 0.99851|0.00297|948967|0.00001|0.84130|
+./similar_pairs/wikipedia_sim_pairs_K512B16R32.bin
+13763304224
+1720413027
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 1720413027
+Pairs in file B: 15128380899
+Unique values in file A: 3873356
+Unique values in file B: 5979655
+FP_pairs:  170353349
+FN_pairs: 13578321221
+FP_ids: 125090
+FN_ids: 2231389
+| 1720413027 | 0.09902 | 0.89754|0.18400|3873356|0.03229|0.37316|
+./similar_pairs/wikipedia_sim_pairs_K128B16R8.bin
+1180576382624
+147572047827
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin has 15128380899
+There outPairs in file A: 147572047827
+Pairs in file B: 15128380899
+Unique values in file A: 18754992
+Unique values in file B: 5979655
+FP_pairs:  132628979083
+FN_pairs: 185312156
+FP_ids: 12776242
+FN_ids: 905
+| 147572047827 | 0.89874 | 0.01225|0.18369|18754992|0.68122|0.00015|

@@ -46,6 +46,12 @@ test: $(TEST_BIN_FILES)
 $(TEST_DIR)/%: $(TEST_DIR)/%.cc $(UTIL_OBJS)
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
 
+sort: $(OBJDIR)/sort_simp.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
+
+$(OBJDIR)/sort_simp.o: $(UTIL_OBJS) src/sort_simp.cc
+	$(CXX) $(CXXFLAGS) -c src/sort_simp.cc -o $@
+
 extract: $(OBJDIR)/extractSet.o
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
 

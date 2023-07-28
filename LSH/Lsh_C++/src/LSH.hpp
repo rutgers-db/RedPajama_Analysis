@@ -65,7 +65,8 @@ public:
             }
         }
 
-
+        // Free MinHashes memory
+        vector<vector<unsigned short>>().swap(minhashes);
         cout<<"Slice and Hash Done"<<endl;
 
         vector<pair<unsigned int, unsigned int>> *temp_pairs;
@@ -73,7 +74,7 @@ public:
 #pragma omp parallel for
         for (int i = 0; i < Band; i++) {
             sort(pairs[i].begin(), pairs[i].end());
-            printf("%d : sorted\n",i);
+            printf("%d : sorted, its pairs size is : %lu",i, pairs[i].size());
             // Get the groups share the same keys
             auto prev_key = pairs[i][0].first;
             unsigned long long prev_loc = 0;
@@ -107,20 +108,15 @@ public:
         }
 
         cout<<"LSH Done Now remove duplicate pairs"<<endl;
-
-        vector<pair<unsigned int, unsigned int>> all_pairs;
-        for (int b = 0; b < Band; ++b) {
-            all_pairs.insert(all_pairs.end(), temp_pairs[b].begin(), temp_pairs[b].end());
-        }
+        // free the thesetemporary vectors
         delete[] pairs;
-        delete[] temp_pairs;
 
-        // sort(execution::par_unseq,all_pairs.begin(), all_pairs.end());
-        sort(all_pairs.begin(), all_pairs.end());
-        for (const auto& pair : all_pairs) {
-            if (result_pairs.empty() || result_pairs.back() != pair) {
-                result_pairs.emplace_back(pair);
-            }
+        for (int b = 0; b < Band; ++b) {
+            result_pairs.insert(result_pairs.end(), temp_pairs[b].begin(), temp_pairs[b].end());
         }
+        delete[] temp_pairs;
+        
+        // deduplicate the result_pairs
+        deduplicate_vec(result_pairs);
     }
 };

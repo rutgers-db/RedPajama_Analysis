@@ -3,6 +3,7 @@
 #include "./src/util.hpp"
 #include "./src/minhash.hpp"
 #include "./src/LSH.hpp"
+#include "./src/External_LSH.hpp"
 using namespace std;
 int main(int argc, char *argv[]) {
     // global variables
@@ -30,7 +31,6 @@ int main(int argc, char *argv[]) {
         if (arg == "-range") {
             range = atoi(argv[i + 1]);
         }
-
     }
 
     const string simP_file_path = "./similar_pairs/" + dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
@@ -42,11 +42,7 @@ int main(int argc, char *argv[]) {
     loadShortBin(sortedsets_file_path, sorted_sets);
 
     auto timer_st = LogTime();
-    cout << "Getting MinHash" << endl;
-
-    // for(int i = 50000 ;i<50300;i++){
-    //     outputVector(sorted_sets[i]);
-    // }
+    
     // Get MinHashes
     vector<vector<unsigned short>> minhashes(sorted_sets.size());
     MinHash minHasher(K);
@@ -62,14 +58,12 @@ int main(int argc, char *argv[]) {
 
     // LSH
     LSH lsh(K, band, range);
+    // External_LSH lsh(K, band, range);
     cout << "Start LSH" << endl;
     lsh.run(minhashes);
 
-    // Free MinHashes
-    vector<vector<unsigned short>>().swap(minhashes);
-
     writeSimilarPair(simP_file_path, lsh.result_pairs);
-    printf("Parameters Setting:%s %d %d %d\n",dataset_name.c_str(), K, band, range);
+    printf("Parameters Setting:%s %d %d %d\n", dataset_name.c_str(), K, band, range);
     printf("At last the total time cost is: %f\n", RepTime(timer_st));
     return 0;
 }

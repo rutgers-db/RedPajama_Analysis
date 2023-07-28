@@ -1,0 +1,105 @@
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+2 : sorted1 : sorted0 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K128B4R32.bin
+./similar_pairs/wikipedia_sim_pairs_K128B4R32.bin has 558036960
+Parameters Setting:wikipedia 128 4 32
+At last the total time cost is: 201.517402
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+5 : sorted6 : sorted3 : sorted4 : sorted2 : sorted0 : sorted7 : sorted1 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K128B8R16.bin
+./similar_pairs/wikipedia_sim_pairs_K128B8R16.bin has 9341266797
+Parameters Setting:wikipedia 128 8 16
+At last the total time cost is: 1784.059708
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+/var/spool/slurmd/job17143/slurm_script: line 8: 1608598 Killed                  ./main $dataset_name -K $K -band $bands -range $((K/bands))
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+3 : sorted0 : sorted1 : sorted2 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K256B4R64.bin
+./similar_pairs/wikipedia_sim_pairs_K256B4R64.bin has 16684657
+Parameters Setting:wikipedia 256 4 64
+At last the total time cost is: 200.879960
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+5 : sorted2 : sorted4 : sorted1 : sorted0 : sorted3 : sorted7 : sorted6 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K256B8R32.bin
+./similar_pairs/wikipedia_sim_pairs_K256B8R32.bin has 909752245
+Parameters Setting:wikipedia 256 8 32
+At last the total time cost is: 341.427607
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+5 : sorted12 : sorted3 : sorted7 : sorted8 : sorted0 : sorted4 : sorted9 : sorted15 : sorted10 : sorted2 : sorted11 : sorted13 : sorted14 : sorted6 : sorted1 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K256B16R16.bin
+./similar_pairs/wikipedia_sim_pairs_K256B16R16.bin has 13988316453
+Parameters Setting:wikipedia 256 16 16
+At last the total time cost is: 2930.250994
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+0 : sorted1 : sorted2 : sorted3 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K512B4R128.bin
+./similar_pairs/wikipedia_sim_pairs_K512B4R128.bin has 11792113
+Parameters Setting:wikipedia 512 4 128
+At last the total time cost is: 338.114350
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+2 : sorted1 : sorted5 : sorted3 : sorted6 : sorted4 : sorted7 : sorted0 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K512B8R64.bin
+./similar_pairs/wikipedia_sim_pairs_K512B8R64.bin has 22487340
+Parameters Setting:wikipedia 512 8 64
+At last the total time cost is: 335.094893
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Getting MinHash
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+12 : sorted13 : sorted9 : sorted8 : sorted3 : sorted7 : sorted15 : sorted14 : sorted1 : sorted6 : sorted5 : sorted4 : sorted11 : sorted10 : sorted2 : sorted0 : sortedLSH Done Now remove duplicate pairs
+Writing ./similar_pairs/wikipedia_sim_pairs_K512B16R32.bin
+./similar_pairs/wikipedia_sim_pairs_K512B16R32.bin has 1720413027
+Parameters Setting:wikipedia 512 16 32
+At last the total time cost is: 564.767362
+slurmstepd: error: Detected 1 oom_kill event in StepId=17143.batch. Some of the step tasks have been OOM Killed.

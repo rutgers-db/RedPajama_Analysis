@@ -93,7 +93,7 @@ if __name__ == "__main__":
     parser.add_argument("-dataset")
     args = parser.parse_args()
     dataset_name = args.dataset  # "stackexchange"
-    threshold = 0.9
+    threshold = 0.8
     if threshold == 0.8:
         bands = 9
         ranges = 13
@@ -102,7 +102,7 @@ if __name__ == "__main__":
         ranges = 25
     processes_num = 45
     input_dir = "/common/users/zp128/RedPajama_Tokenized/"
-    out_dir = f"../similar_pairs/{dataset_name}__{threshold}/"
+    out_dir = f"../similar_pairs/{dataset_name}_{threshold}/"
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
     out_file = f"{out_dir}{dataset_name}_simp_lsh.txt"

@@ -7,13 +7,14 @@
 
 int main() {
     // Generate random pairs
-    std::vector<int> pairs(10000);
+    std::vector<std::pair<int, int>> pairs(10000);
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(1, 10000);
 
     for (auto& pair : pairs) {
-        pair= dis(gen);
+        pair.first = dis(gen);
+        pair.second = dis(gen);
     }
 
     // Sort pairs in parallel

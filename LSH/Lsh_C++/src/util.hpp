@@ -31,3 +31,34 @@ double RepTime(const std::chrono::_V2::system_clock::time_point &start) {
     auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
     return duration.count() / 1000000.0;
 }
+
+
+std::string vectorToString(const std::vector<unsigned short>& vec) {
+    std::string str;
+    for(const auto& num : vec) {
+        str.append(std::to_string(num));
+    }
+    return str;
+}
+
+/**
+ * Function: deduplicate_and_free_memory
+ * Template version that works for any type of vector.
+ * Removes duplicates from a vector and frees up unused memory.
+ *
+ * @param vec - Reference to the vector from which duplicates are to be removed.
+ */
+template<typename T>
+void deduplicate_vec(std::vector<T>& vec) {
+    // Sort the vector.
+    std::sort(vec.begin(), vec.end());
+    // Use std::unique which returns an iterator to the first element in the 
+    // duplicate range (which should be removed). 
+    auto it = std::unique(vec.begin(), vec.end());
+    // Resize the vector to new size.
+    vec.resize(std::distance(vec.begin(), it));
+    
+    // Shrink-to-fit idiom:
+    // std::vector<T>(vec).swap(vec);  
+}
+

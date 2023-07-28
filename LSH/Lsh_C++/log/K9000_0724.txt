@@ -1,0 +1,33 @@
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+4 : sorted, its pairs size is : 20574315 : sorted, its pairs size is : 2057436 : sorted, its pairs size is : 20574313 : sorted, its pairs size is : 20574310 : sorted, its pairs size is : 20574318 : sorted, its pairs size is : 2057437 : sorted, its pairs size is : 20574312 : sorted, its pairs size is : 2057432 : sorted, its pairs size is : 20574319 : sorted, its pairs size is : 2057430 : sorted, its pairs size is : 20574314 : sorted, its pairs size is : 2057438 : sorted, its pairs size is : 2057433 : sorted, its pairs size is : 2057431 : sorted, its pairs size is : 2057439 : sorted, its pairs size is : 20574317 : sorted, its pairs size is : 20574311 : sorted, its pairs size is : 2057435 : sorted, its pairs size is : 20574316 : sorted, its pairs size is : 205743LSH Done Now remove duplicate pairs
+Writing ./similar_pairs/book_sim_pairs_K9000B20R450.bin
+./similar_pairs/book_sim_pairs_K9000B20R450.bin has 6
+Parameters Setting:book 9000 20 450
+At last the total time cost is: 719.724640
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+7 : sorted, its pairs size is : 15583069 : sorted, its pairs size is : 15583062 : sorted, its pairs size is : 15583061 : sorted, its pairs size is : 155830612 : sorted, its pairs size is : 155830618 : sorted, its pairs size is : 155830613 : sorted, its pairs size is : 15583065 : sorted, its pairs size is : 155830614 : sorted, its pairs size is : 15583060 : sorted, its pairs size is : 155830616 : sorted, its pairs size is : 155830611 : sorted, its pairs size is : 155830619 : sorted, its pairs size is : 15583066 : sorted, its pairs size is : 15583068 : sorted, its pairs size is : 155830615 : sorted, its pairs size is : 155830617 : sorted, its pairs size is : 15583063 : sorted, its pairs size is : 155830610 : sorted, its pairs size is : 15583064 : sorted, its pairs size is : 1558306LSH Done Now remove duplicate pairs
+Writing ./similar_pairs/arxiv_sim_pairs_K9000B20R450.bin
+./similar_pairs/arxiv_sim_pairs_K9000B20R450.bin has 3277375
+Parameters Setting:arxiv 9000 20 450
+At last the total time cost is: 1137.148599
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+MinHash Opertation Finished
+Start LSH
+Slice and Hash Done
+17 : sorted, its pairs size is : 2982508618 : sorted, its pairs size is : 298250860 : sorted, its pairs size is : 298250863 : sorted, its pairs size is : 298250861 : sorted, its pairs size is : 2982508619 : sorted, its pairs size is : 2982508616 : sorted, its pairs size is : 298250867 : sorted, its pairs size is : 298250865 : sorted, its pairs size is : 2982508610 : sorted, its pairs size is : 298250866 : sorted, its pairs size is : 2982508615 : sorted, its pairs size is : 2982508613 : sorted, its pairs size is : 298250869 : sorted, its pairs size is : 2982508612 : sorted, its pairs size is : 298250868 : sorted, its pairs size is : 2982508611 : sorted, its pairs size is : 2982508614 : sorted, its pairs size is : 298250864 : sorted, its pairs size is : 298250862 : sorted, its pairs size is : 29825086LSH Done Now remove duplicate pairs
+Writing ./similar_pairs/stackexchange_sim_pairs_K9000B20R450.bin
+./similar_pairs/stackexchange_sim_pairs_K9000B20R450.bin has 3383
+Parameters Setting:stackexchange 9000 20 450
+At last the total time cost is: 4844.041193

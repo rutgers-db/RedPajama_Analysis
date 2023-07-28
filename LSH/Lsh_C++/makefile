@@ -14,3 +14,5 @@ merge: merge_simp.cpp $(SRC_FILES)
 sort: sort_each.cpp $(SRC_FILES)
 	${COMPILER} ${CPPFLAGS} -o ./bin/$@ $<
 
+compare: compare.cpp $(SRC_FILES)
+	${COMPILER} ${CPPFLAGS} -o ./bin/$@ $<

@@ -1,0 +1,208 @@
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K128B4R32.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 366 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K128B4R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 365 | 0.1342 | 0.8179|0.301|366|0.0847|0.8094|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K128B8R16.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 42195 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K128B8R16
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 166605 | 0.9928 | 0.313|0.0142|42195|0.9684|0.2412|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K128B16R8.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 193994 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K128B16R8
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 141383731 | 1.0 | 0.0058|0.0|193994|0.9909|0.0006|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K256B4R64.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 95 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K256B4R64
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 79 | 0.0 | 0.9545|0.0871|95|0.0|0.946|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K256B8R32.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 541 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K256B8R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 536 | 0.2649 | 0.7729|0.347|541|0.1848|0.7491|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K256B16R16.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 59441 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K256B16R16
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 289442 | 0.9951 | 0.1833|0.0097|59441|0.9744|0.1348|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K512B4R128.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 43 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K512B4R128
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 26 | 0.0 | 0.985|0.0295|43|0.0|0.9755|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K512B8R64.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 138 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K512B8R64
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 140 | 0.0 | 0.9193|0.1493|138|0.0|0.9215|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/book_sim_pairs_K512B16R32.bin
+Setjoin finds 1758 unique documents.
+C++'s LSH Method finds 773 unique documents.
+Here is the comparison under  book Setjoin 0.8 between LSH K512B16R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 1735 | 1758  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 739 | 0.2625 | 0.6859|0.4406|773|0.2109|0.653|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K128B4R32.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 7904 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K128B4R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3281343 | 0.0 | 0.0115|0.9942|7904|0.0003|0.2612|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K128B8R16.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 13708 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K128B8R16
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3353751 | 0.0158 | 0.0056|0.9893|13708|0.312|0.1182|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K128B16R8.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 1427708 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K128B16R8
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 120196706 | 0.9724 | 0.0|0.0537|1427708|0.9925|0.0006|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K256B4R64.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 7484 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K256B4R64
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3279429 | 0.0 | 0.012|0.9939|7484|0.0|0.3002|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K256B8R32.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 8166 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K256B8R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3284011 | 0.0 | 0.0107|0.9946|8166|0.0006|0.2369|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K256B16R16.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 15769 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K256B16R16
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3368734 | 0.0179 | 0.0033|0.9894|15769|0.3696|0.0705|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K512B4R128.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 7235 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K512B4R128
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3277814 | 0.0 | 0.0125|0.9937|7235|0.0|0.3235|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K512B8R64.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 7602 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K512B8R64
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3279905 | 0.0 | 0.0119|0.994|7602|0.0|0.2892|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/arxiv_sim_pairs_K512B16R32.bin
+Setjoin finds 10695 unique documents.
+C++'s LSH Method finds 8436 unique documents.
+Here is the comparison under  arxiv Setjoin 0.8 between LSH K512B16R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 3319410 | 10695  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 3286267 | 0.0 | 0.01|0.995|8436|0.002|0.2128|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K128B4R32.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 15102 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K128B4R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 8176 | 0.0065 | 0.7458|0.4049|15102|0.0045|0.6644|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K128B8R16.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 44476 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K128B8R16
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 40117 | 0.5143 | 0.3901|0.5408|44476|0.2925|0.2975|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K256B4R64.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 10060 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K256B4R64
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 5497 | 0.0 | 0.8279|0.2936|10060|0.0|0.7754|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K256B8R32.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 18457 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K256B8R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 10078 | 0.01 | 0.6877|0.4748|18457|0.0063|0.5906|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K256B16R16.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 65848 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K256B16R16
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 72789 | 0.6624 | 0.231|0.4692|65848|0.4302|0.1623|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K512B4R128.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 7504 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K512B4R128
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 4190 | 0.0 | 0.8689|0.2319|7504|0.0|0.8325|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K512B8R64.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 11602 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K512B8R64
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 6285 | 0.0 | 0.8033|0.3288|11602|0.0|0.741|
+/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs/stackexchange_sim_pairs_K512B16R32.bin
+Setjoin finds 44793 unique documents.
+C++'s LSH Method finds 21808 unique documents.
+Here is the comparison under  stackexchange Setjoin 0.8 between LSH K512B16R32
+Now print out the exp record of Setjoin 0.8 for Pairs and distinct Docs 
+| 31950 | 44793  |
+Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate
+| 12040 | 0.016 | 0.6292|0.5386|21808|0.0094|0.5177|

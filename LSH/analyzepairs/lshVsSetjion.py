@@ -29,7 +29,7 @@ band = args.band
 R = args.range
 # Parameters
 # dataset_name = "arxiv"
-thres = 0.8
+thres = 0.9
 if_check_similarity = False
 
 # Load From My LSH
@@ -80,7 +80,7 @@ union_size = len(union_set)
 
 # Intersection
 intersection_set = simp_setjoin.intersection(simp_mylsh)
-intersection_size = len(intersection_set)
+intersection_pairs_size = len(intersection_set)
 # print(f"The intersection of two sets includes {intersection_size} common pairs.")
 
 # Difference
@@ -124,6 +124,10 @@ print(f"| {len(simp_setjoin)} | {len(ids_setjoin)}  |")
 print("Now print out the exp record of LSH for | Pairs |Pairs FP rate |Pairs FN rate|Distinct Docs|Docs FP rate|Docs FN rate")
 pairs_fp_rate = round(FP_paris / len(simp_mylsh),4)
 pairs_fn_rate = round(FN_paris / len(simp_setjoin),4)
+precision = intersection_pairs_size / (intersection_pairs_size + FP_paris)
+recall = intersection_pairs_size / (intersection_pairs_size + FN_paris);
+F1 = round(2 * (precision * recall) / (precision + recall),4)
+
 ids_fp_rate = round(FP_ids / len(ids_mylsh),4)
 ids_fn_rate =round( FN_ids / len(ids_setjoin),4)
-print(f"| {len(simp_mylsh)} | {pairs_fp_rate} | {pairs_fn_rate}|{len(ids_mylsh)}|{ids_fp_rate}|{ids_fn_rate}|")
+print(f"| {len(simp_mylsh)} | {pairs_fp_rate} | {pairs_fn_rate}|{F1}|{len(ids_mylsh)}|{ids_fp_rate}|{ids_fn_rate}|")
