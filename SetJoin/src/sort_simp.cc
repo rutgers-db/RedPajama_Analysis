@@ -14,15 +14,16 @@ void correctPairOrder(vector<pair<int, int>> & pairs){
 }
 
 int main(int argc, char *argv[]){
-    const string dataset_name = string(argv[1]); 
-    const double thres = 0.8;
-    const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    const string simP_file_path = root_dir + "/similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
-    const string sortedsimP_file_path = root_dir + "/sorted_simp/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
+    // const string dataset_name = string(argv[1]); 
+    // const double thres = 0.8;
+    // const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
+    // const string simP_file_path = root_dir + "/similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
+    // const string sortedsimP_file_path = root_dir + "/sorted_simp/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
+    
+    const string simP_file_path = string(argv[1]);
+    const string sortedsimP_file_path = string(argv[2]);
     vector<pair<int,int>> pairs;
     readSimilarPair(simP_file_path, pairs);
-    
     correctPairOrder(pairs);
-
     writeSimilarPair(sortedsimP_file_path, pairs);
 }
