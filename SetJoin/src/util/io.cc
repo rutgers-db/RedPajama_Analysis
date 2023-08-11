@@ -102,6 +102,21 @@ void readSimilarPair(const string &binFileName, vector<pair<int, int>> &sim_pair
     ifs.close();
 }
 
+void readSimilarPair(const string &binFileName, vector<pair<unsigned int, unsigned int>> &sim_pairs) {
+    // Similar to loadBin2vec, but for a vector of pairs
+    cout << "Reading " << binFileName << endl;
+    ifstream ifs(binFileName, ios::binary);
+    if (!ifs) {
+        cout << "error open bin file" << binFileName << endl;
+        return;
+    }
+    unsigned long long size;
+    ifs.read((char *)&size, sizeof(unsigned long long));
+    sim_pairs.resize(size);
+    ifs.read((char *)&sim_pairs[0], size * sizeof(pair<unsigned int, unsigned int>));
+    ifs.close();
+}
+
 // Function to write similar pairs into a binary file from a vector of pairs
 void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &result_pairs) {
     // Similar to writeVec2Bin, but for a vector of pairs

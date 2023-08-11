@@ -74,3 +74,50 @@ void mergeArrays(std::vector<std::vector<pair<int,int>>>* input, int arr_len, st
         result.insert(result.end(), input[i].begin(), input[i].end());
     }
 }
+
+// Function to find the k smallest unique numbers from the given vector of numbers.
+// The function returns a vector of the k smallest unique numbers.
+// Parameters:
+//   - nums: Input vector of numbers.
+//   - k: The number of smallest unique numbers to return.
+std::vector<unsigned short> kMostMinUnique(const std::vector<unsigned short>& nums, int k) {
+    
+    // counts: An unordered_map that keeps track of the frequency of each number in the input vector.
+    std::unordered_map<unsigned short, int> counts;
+    
+    // Populate the frequency map.
+    for (unsigned short num : nums) {
+        counts[num]++;
+    }
+
+    // minHeap: A priority_queue used as a min heap to keep track of the k smallest unique numbers.
+    std::priority_queue<unsigned short> minHeap;
+
+    // Iterate through the frequency map.
+    for (auto& pair : counts) {
+        // If the heap has less than k elements, push the current number into the heap.
+        if (minHeap.size() < k) {
+            minHeap.push(pair.first);
+        } 
+        // If the heap has k elements and the current number is less than the largest number in the heap,
+        // remove the largest number and insert the current number.
+        else if (pair.first < minHeap.top()) {
+            minHeap.pop();
+            minHeap.push(pair.first);
+        }
+    }
+
+    // result: A vector to store the k smallest unique numbers.
+    std::vector<unsigned short> result;
+    
+    // Populate the result vector with the numbers from the heap.
+    while (!minHeap.empty()) {
+        result.push_back(minHeap.top());
+        minHeap.pop();
+    }
+
+    // The result vector is reversed as the numbers were retrieved from a min heap in descending order.
+    std::reverse(result.begin(), result.end());
+
+    return result;
+}
