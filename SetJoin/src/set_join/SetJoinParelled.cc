@@ -49,7 +49,10 @@ bool SetJoinParelled::overlap(int x, int y, int posx, int posy, int current_over
     int require_overlap = ceil(det / (1 + det) * (int)(dataset[x].size() + dataset[y].size()) - EPS);
     while (posx < (int)dataset[x].size() && posy < (int)dataset[y].size()) {
         if ((int)dataset[x].size() - posx + current_overlap < require_overlap || (int)dataset[y].size() - posy + current_overlap < require_overlap) return false;
-
+// #if VERSION == 2
+//         // if we are doing bottomk
+//         if(posx+posy - current_overlap > (int)(1+det)*max(dataset[x].size(), dataset[y].size()))   return false;
+// #endif
         if (dataset[x][posx] == dataset[y][posy]) {
             current_overlap++;
             posx++;
@@ -81,9 +84,9 @@ void SetJoinParelled::index(double threshold) {
         if (tokenNum < dataset[i].back()) tokenNum = dataset[i].back();
     }
 
-    tokenNum += 1;
+    // tokenNum += 1;
     printf("The tokenNum is %d, it cannot exceed 65,535 cause it cannot exceed the range of unsigned short\n", tokenNum);
-    assert(tokenNum < 65535);
+    assert(tokenNum <= 65535);
 
     // Initialize prime exponential array for usage of hashing 
     prime_exp = new int[n + 1];

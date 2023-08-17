@@ -17,7 +17,8 @@
 #include <cstdio>
 
 using namespace std;
-
+// Define a preprocessor macro named VERSION. IF Version 2 that is for bottomk
+#define VERSION 2
 #define PACK(x, y) ((x << 32) + y) // 32
 
 #define PRIME 2017
@@ -55,8 +56,8 @@ public:
         printf("det: %f coe: %f ALPHA: %f maxSize: %u maxIndexPartNum: %hu \n", det, coe, ALPHA, maxSize, maxIndexPartNum);
     }
 
-    unsigned int getResultPairsAmount(){
-        unsigned int pairs_amount = 0;
+    unsigned long long getResultPairsAmount(){
+        unsigned long long pairs_amount = 0;
         for(int i = 0;i<MAXTHREADNUM;i++){
             pairs_amount += result_pairs[i].size();
         }
