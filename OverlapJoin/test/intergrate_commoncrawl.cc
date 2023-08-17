@@ -6,7 +6,7 @@ using namespace std;
 
 int main(){
     string common_crawl_dirpath = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/common_crawl/";
-    int K = 64;
+    int K = 1024;
     const string shrinked_path = "/research/projects/zp128/RedPajama_Analysis/OverlapJoin/bottomK_bins/intergrated_commoncrawl_"+to_string(K)+ ".bin";
 
      // Input bottom_k of common_crawl and shrink their size to the specified K and intergrate into one file
