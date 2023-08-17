@@ -1,0 +1,24 @@
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/book_sortedsets.bin
+Iterating each pair
+|book|0.056 |0.070|0.006| 0.049 |
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+There are 1558306 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_sortedsets.bin
+Iterating each pair
+|arxiv|0.046 |0.047|0.012| 0.034 |
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Iterating each pair
+|stackexchange|0.049 |0.045|0.030| 0.030 |
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+There are 29834171 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_sortedsets.bin
+Iterating each pair
+|wikipedia|0.025 |0.020|0.021| 0.018 |
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_sortedsets.bin
+There are 28793312 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_sortedsets.bin
+Iterating each pair
+|github|0.031 |0.026|0.027| 0.022 |
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/c4_sortedsets.bin
+There are 364868892 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/c4_sortedsets.bin
+Iterating each pair
+|c4|0.032 |0.026|0.029| 0.023 |
