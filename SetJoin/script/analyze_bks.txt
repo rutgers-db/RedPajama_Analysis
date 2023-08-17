@@ -1,0 +1,387 @@
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/arxiv_sim_pairs_0.900000_0.100000.bin
+72041296
+9005161
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/arxiv_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+There outPairs in file A: 9005161
+Pairs in file B: 3285654
+Unique values in file A: 9415
+Unique values in file B: 8333
+FP_pairs:  5721869
+FN_pairs: 2362
+FP_ids: 1378
+FN_ids: 296
+ arxiv thres 0.90 shrink_ratio 0.10 
+ | 9005161 | 0.63540 | 0.00072|0.53427|9415|0.14636|0.03552|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/arxiv_sim_pairs_0.900000_0.200000.bin
+66153112
+8269138
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/arxiv_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+There outPairs in file A: 8269138
+Pairs in file B: 3285654
+Unique values in file A: 8717
+Unique values in file B: 8333
+FP_pairs:  4986514
+FN_pairs: 3030
+FP_ids: 717
+FN_ids: 333
+ arxiv thres 0.90 shrink_ratio 0.20 
+ | 8269138 | 0.60303 | 0.00092|0.56818|8717|0.08225|0.03996|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/arxiv_sim_pairs_0.900000_0.400000.bin
+53424264
+6678032
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/arxiv_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+There outPairs in file A: 6678032
+Pairs in file B: 3285654
+Unique values in file A: 8286
+Unique values in file B: 8333
+FP_pairs:  3395383
+FN_pairs: 3005
+FP_ids: 314
+FN_ids: 361
+ arxiv thres 0.90 shrink_ratio 0.40 
+ | 6678032 | 0.50844 | 0.00091|0.65892|8286|0.03790|0.04332|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/arxiv_sim_pairs_0.800000_0.100000.bin
+72125352
+9015668
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/arxiv_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+There outPairs in file A: 9015668
+Pairs in file B: 3319410
+Unique values in file A: 11172
+Unique values in file B: 10695
+FP_pairs:  5703870
+FN_pairs: 7612
+FP_ids: 1670
+FN_ids: 1193
+ arxiv thres 0.80 shrink_ratio 0.10 
+ | 9015668 | 0.63266 | 0.00229|0.53697|11172|0.14948|0.11155|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/arxiv_sim_pairs_0.800000_0.200000.bin
+66286104
+8285762
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/arxiv_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+There outPairs in file A: 8285762
+Pairs in file B: 3319410
+Unique values in file A: 10220
+Unique values in file B: 10695
+FP_pairs:  4977999
+FN_pairs: 11647
+FP_ids: 729
+FN_ids: 1204
+ arxiv thres 0.80 shrink_ratio 0.20 
+ | 8285762 | 0.60079 | 0.00351|0.57005|10220|0.07133|0.11258|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/arxiv_sim_pairs_0.800000_0.400000.bin
+53581232
+6697653
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/arxiv_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/arxiv_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/arxiv_idmap.bin
+There outPairs in file A: 6697653
+Pairs in file B: 3319410
+Unique values in file A: 9882
+Unique values in file B: 10695
+FP_pairs:  3399382
+FN_pairs: 21139
+FP_ids: 315
+FN_ids: 1128
+ arxiv thres 0.80 shrink_ratio 0.40 
+ | 6697653 | 0.50755 | 0.00637|0.65853|9882|0.03188|0.10547|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/stackexchange_sim_pairs_0.900000_0.100000.bin
+1862096
+232761
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/stackexchange_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+There outPairs in file A: 232761
+Pairs in file B: 11014
+Unique values in file A: 32803
+Unique values in file B: 20501
+FP_pairs:  225015
+FN_pairs: 3269
+FP_ids: 18395
+FN_ids: 6093
+ stackexchange thres 0.90 shrink_ratio 0.10 
+ | 232761 | 0.96672 | 0.29680|0.06354|32803|0.56077|0.29721|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/stackexchange_sim_pairs_0.900000_0.200000.bin
+128672
+16083
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/stackexchange_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+There outPairs in file A: 16083
+Pairs in file B: 11014
+Unique values in file A: 17018
+Unique values in file B: 20501
+FP_pairs:  7785
+FN_pairs: 2716
+FP_ids: 1608
+FN_ids: 5091
+ stackexchange thres 0.90 shrink_ratio 0.20 
+ | 16083 | 0.48405 | 0.24660|0.61247|17018|0.09449|0.24833|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/stackexchange_sim_pairs_0.900000_0.400000.bin
+86704
+10837
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/stackexchange_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+There outPairs in file A: 10837
+Pairs in file B: 11014
+Unique values in file A: 17582
+Unique values in file B: 20501
+FP_pairs:  1771
+FN_pairs: 1948
+FP_ids: 701
+FN_ids: 3620
+ stackexchange thres 0.90 shrink_ratio 0.40 
+ | 10837 | 0.16342 | 0.17687|0.82980|17582|0.03987|0.17658|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/stackexchange_sim_pairs_0.800000_0.100000.bin
+5127672
+640958
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/stackexchange_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+There outPairs in file A: 640958
+Pairs in file B: 31950
+Unique values in file A: 117919
+Unique values in file B: 44793
+FP_pairs:  619498
+FN_pairs: 10490
+FP_ids: 86827
+FN_ids: 13701
+ stackexchange thres 0.80 shrink_ratio 0.10 
+ | 640958 | 0.96652 | 0.32833|0.06378|117919|0.73633|0.30587|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/stackexchange_sim_pairs_0.800000_0.200000.bin
+275032
+34378
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/stackexchange_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+There outPairs in file A: 34378
+Pairs in file B: 31950
+Unique values in file A: 39917
+Unique values in file B: 44793
+FP_pairs:  10764
+FN_pairs: 8336
+FP_ids: 5078
+FN_ids: 9954
+ stackexchange thres 0.80 shrink_ratio 0.20 
+ | 34378 | 0.31311 | 0.26091|0.71204|39917|0.12721|0.22222|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/stackexchange_sim_pairs_0.800000_0.400000.bin
+210384
+26297
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/stackexchange_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/stackexchange_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_idmap.bin
+There outPairs in file A: 26297
+Pairs in file B: 31950
+Unique values in file A: 38902
+Unique values in file B: 44793
+FP_pairs:  1661
+FN_pairs: 7314
+FP_ids: 1449
+FN_ids: 7340
+ stackexchange thres 0.80 shrink_ratio 0.40 
+ | 26297 | 0.06316 | 0.22892|0.84591|38902|0.03725|0.16386|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/wikipedia_sim_pairs_0.900000_0.100000.bin
+57485316088
+7185664510
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+There outPairs in file A: 7185664510
+Pairs in file B: 141574669
+Unique values in file A: 6086428
+Unique values in file B: 2470709
+FP_pairs:  7104899530
+FN_pairs: 60809689
+FP_ids: 3904819
+FN_ids: 289100
+ wikipedia thres 0.90 shrink_ratio 0.10 
+ | 7185664510 | 0.98876 | 0.42952|0.02205|6086428|0.64156|0.11701|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/wikipedia_sim_pairs_0.900000_0.200000.bin
+30026299032
+3753287378
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+There outPairs in file A: 3753287378
+Pairs in file B: 141574669
+Unique values in file A: 4631191
+Unique values in file B: 2470709
+FP_pairs:  3667859631
+FN_pairs: 56146922
+FP_ids: 2520320
+FN_ids: 359838
+ wikipedia thres 0.90 shrink_ratio 0.20 
+ | 3753287378 | 0.97724 | 0.39659|0.04387|4631191|0.54421|0.14564|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/wikipedia_sim_pairs_0.900000_0.400000.bin
+19564424896
+2445553111
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+There outPairs in file A: 2445553111
+Pairs in file B: 141574669
+Unique values in file A: 3083841
+Unique values in file B: 2470709
+FP_pairs:  2356627878
+FN_pairs: 52649436
+FP_ids: 1084505
+FN_ids: 471373
+ wikipedia thres 0.90 shrink_ratio 0.40 
+ | 2445553111 | 0.96364 | 0.37188|0.06874|3083841|0.35167|0.19078|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/wikipedia_sim_pairs_0.800000_0.100000.bin
+148874492872
+18609311608
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+There outPairs in file A: 18609311608
+Pairs in file B: 15128380899
+Unique values in file A: 9053728
+Unique values in file B: 5979655
+FP_pairs:  11273776623
+FN_pairs: 7792845914
+FP_ids: 3534029
+FN_ids: 459956
+ wikipedia thres 0.80 shrink_ratio 0.10 
+ | 18609311608 | 0.60581 | 0.51511|0.43486|9053728|0.39034|0.07692|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/wikipedia_sim_pairs_0.800000_0.200000.bin
+106672475104
+13334059387
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+There outPairs in file A: 13334059387
+Pairs in file B: 15128380899
+Unique values in file A: 7303386
+Unique values in file B: 5979655
+FP_pairs:  5134116112
+FN_pairs: 6928437624
+FP_ids: 1719369
+FN_ids: 395638
+ wikipedia thres 0.80 shrink_ratio 0.20 
+ | 13334059387 | 0.38504 | 0.45798|0.57619|7303386|0.23542|0.06616|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/wikipedia_sim_pairs_0.800000_0.400000.bin
+128945023000
+16118127874
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/wikipedia_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/wikipedia_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/wikipedia_idmap.bin
+There outPairs in file A: 16118127874
+Pairs in file B: 15128380899
+Unique values in file A: 6130510
+Unique values in file B: 5979655
+FP_pairs:  4479946646
+FN_pairs: 3490199671
+FP_ids: 637613
+FN_ids: 486758
+ wikipedia thres 0.80 shrink_ratio 0.40 
+ | 16118127874 | 0.27794 | 0.23071|0.74493|6130510|0.10401|0.08140|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/github_sim_pairs_0.900000_0.100000.bin
+244729525128
+30591190640
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/github_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_idmap.bin
+There outPairs in file A: 30591190640
+Pairs in file B: 24474247229
+Unique values in file A: 11142716
+Unique values in file B: 10112309
+FP_pairs:  11206524048
+FN_pairs: 5089580637
+FP_ids: 2484905
+FN_ids: 1454498
+ github thres 0.90 shrink_ratio 0.10 
+ | 30591190640 | 0.36633 | 0.20796|0.70406|11142716|0.22301|0.14383|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/github_sim_pairs_0.900000_0.200000.bin
+214493705776
+26811713221
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/github_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_idmap.bin
+There outPairs in file A: 26811713221
+Pairs in file B: 24474247229
+Unique values in file A: 10219249
+Unique values in file B: 10112309
+FP_pairs:  6761256139
+FN_pairs: 4423790147
+FP_ids: 1345795
+FN_ids: 1238855
+ github thres 0.90 shrink_ratio 0.20 
+ | 26811713221 | 0.25218 | 0.18075|0.78191|10219249|0.13169|0.12251|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/github_sim_pairs_0.900000_0.400000.bin
+195100195408
+24387524425
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.900000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/github_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_idmap.bin
+There outPairs in file A: 24387524425
+Pairs in file B: 24474247229
+Unique values in file A: 9656965
+Unique values in file B: 10112309
+FP_pairs:  129566265
+FN_pairs: 216289069
+FP_ids: 551225
+FN_ids: 1006569
+ github thres 0.90 shrink_ratio 0.40 
+ | 24387524425 | 0.00531 | 0.00884|0.99292|9656965|0.05708|0.09954|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/github_sim_pairs_0.800000_0.100000.bin
+278264603208
+34783075400
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.800000.bin
+error open bin file/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/github_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_idmap.bin
+There outPairs in file A: 34783075400
+Pairs in file B: 0
+Unique values in file A: 14690513
+Unique values in file B: 0
+FP_pairs:  34783075399
+FN_pairs: 0
+FP_ids: 14690513
+FN_ids: 0
+ github thres 0.80 shrink_ratio 0.10 
+ | 34783075400 | 1.00000 | -nan|-nan|14690513|1.00000|-nan|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/github_sim_pairs_0.800000_0.200000.bin
+241445737704
+30180717212
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.800000.bin
+error open bin file/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/github_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_idmap.bin
+There outPairs in file A: 30180717212
+Pairs in file B: 0
+Unique values in file A: 13853482
+Unique values in file B: 0
+FP_pairs:  30180717211
+FN_pairs: 0
+FP_ids: 13853482
+FN_ids: 0
+ github thres 0.80 shrink_ratio 0.20 
+ | 30180717212 | 1.00000 | -nan|-nan|13853482|1.00000|-nan|
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/github_sim_pairs_0.800000_0.400000.bin
+221728345216
+27716043151
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.800000.bin
+error open bin file/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/github_sim_pairs_0.800000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/github_idmap.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/github_idmap.bin
+There outPairs in file A: 27716043151
+Pairs in file B: 0
+Unique values in file A: 13151805
+Unique values in file B: 0
+FP_pairs:  27716043150
+FN_pairs: 0
+FP_ids: 13151805
+FN_ids: 0
+ github thres 0.80 shrink_ratio 0.40 
+ | 27716043151 | 1.00000 | -nan|-nan|13151805|1.00000|-nan|
