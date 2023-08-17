@@ -13,4 +13,5 @@ void readSimilarPair(const string &binFileName, vector<pair<unsigned int, unsign
 void writeSimilarPair(const string &binFileName, const vector<pair<int, int>> &result_pairs);
 std::string extract_prefix(const std::string& filepath);
 void getFiles(string path, vector<string> &files);
+void writeEstJaccardCSV(const std::string &filename, const std::vector<std::vector<double>> &data);
 std::string getDirectoryName(const std::string& path);

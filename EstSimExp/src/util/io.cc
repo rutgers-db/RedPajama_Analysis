@@ -184,3 +184,15 @@ void getFiles(string path, vector<string> &files) {
 std::string getDirectoryName(const std::string& path) {
     return std::filesystem::path(path).filename().string();
 }
+
+void writeEstJaccardCSV(const std::string &filename, const std::vector<std::vector<double>> &data){
+    std::ofstream file(filename);
+    
+    for (const auto &row : data) {
+        for (size_t i = 0; i < row.size(); ++i) {
+            file << row[i];
+            if (i != row.size() - 1) file << ",";  // Don't write a comma after the last element
+        }
+        file << "\n";
+    }
+}

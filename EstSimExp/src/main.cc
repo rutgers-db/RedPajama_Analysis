@@ -110,6 +110,8 @@ int main(int argc, char *argv[]) {
     vector<double> adpativek_jaccard(pairs.size());
     vector<unsigned int> adaptiveKs(pairs.size());
     double error[4]={0,0,0,0};
+
+    vector<vector<double>> data(pairs.size(), vector<double>(5));
 #pragma omp parallel for
     for(int i = 0 ;i<pairs.size();i++){
         true_jaccard[i] = jaccard_similarity(sorted_sets[pairs[i].first], sorted_sets[pairs[i].second]);
@@ -127,7 +129,18 @@ int main(int argc, char *argv[]) {
 
         adpativek_bottomk[i] = bottomKJaccard(adpbk_A, adpbk_B);
         adpativek_jaccard[i] = jaccard_similarity(adpbk_A, adpbk_B);
+
+        // record data
+        data[i][0] = true_jaccard[i];
+        data[i][1] = fixk_bottomk[i];
+        data[i][2] = fixk_jaccard[i];
+        data[i][3] = adpativek_bottomk[i];
+        data[i][4] = adpativek_jaccard[i];
+
     }
+
+    const string csv_path = "./csv/" + dataset_name + "_" + to_string(min_k) + ".csv";
+    writeEstJaccardCSV(csv_path, data);
 
     // Record error
     unsigned long long ave_adpk = 0;
@@ -145,7 +158,8 @@ int main(int argc, char *argv[]) {
         e = e/true_jaccard.size();
     }
     // print out the result
-    printf("Now print out errors:\n fixk_bottomk: %.3f fixk_jaccard: %.3f adpativek_bottomk: %.3f adpativek_jaccard: %.3f ", error[0], error[1], error[2], error[3]);
-    printf("Average adpative k: %llu \n ", ave_adpk);
+    // printf("Now print out errors:\n |fixk_bottomk|fixk_jaccard| adpativek_bottomk| adpativek_jaccard|\n");
+    printf("|%s|%.3f |%.3f|%.3f| %.3f |\n", dataset_name.c_str(), error[0], error[1], error[2], error[3]);
+    // printf("Average adpative k: %llu \n ", ave_adpk);
     return 0;
 }

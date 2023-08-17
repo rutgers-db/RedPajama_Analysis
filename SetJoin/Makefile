@@ -47,16 +47,40 @@ $(TEST_DIR)/%: $(TEST_DIR)/%.cc $(UTIL_OBJS)
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
 
 sort: $(OBJDIR)/sort_simp.o
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
 
 $(OBJDIR)/sort_simp.o: $(UTIL_OBJS) src/sort_simp.cc
 	$(CXX) $(CXXFLAGS) -c src/sort_simp.cc -o $@
 
+sketch_join: $(OBJDIR)/sketch_join.o $(UTIL_OBJS) $(SETJOIN_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) $(SETJOIN_OBJS)
+
+$(OBJDIR)/sketch_join.o: $(UTIL_OBJS) src/sketch_join.cc
+	$(CXX) $(CXXFLAGS) -c src/sketch_join.cc -o $@
+
+sort_bottomks: $(OBJDIR)/sort_bottomk.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+
+$(OBJDIR)/sort_bottomk.o: $(UTIL_OBJS) src/sort_bottomk.cc
+	$(CXX) $(CXXFLAGS) -c src/sort_bottomk.cc -o $@
+
 extract: $(OBJDIR)/extractSet.o
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
 
 $(OBJDIR)/extractSet.o: $(UTIL_OBJS) src/extractSet.cc
 	$(CXX) $(CXXFLAGS) -c src/extractSet.cc -o $@
+
+compare: $(OBJDIR)/compare.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+
+$(OBJDIR)/compare.o: $(UTIL_OBJS) src/compare.cc
+	$(CXX) $(CXXFLAGS) -c src/compare.cc -o $@
+
+verify: $(OBJDIR)/verify.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+
+$(OBJDIR)/verify.o: $(UTIL_OBJS) src/verify.cc
+	$(CXX) $(CXXFLAGS) -c src/verify.cc -o $@
 
 clean:
 	@rm -r obj

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     const string sortedsets_file_path = root_dir + "/sorted_sets/" + dataset_name +"_sortedsets.bin";
     const string idmap_file_path = root_dir + "/sorted_sets/" +  dataset_name + "_idmap.bin";
     
-    const double thres = 0.9;
+    const double thres = 0.8;
     // const string simP_file_path = root_dir + "/similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  "_withoutSizes.bin";
     const string simP_file_path = root_dir + "/similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
     cout << "The Saved Path is " << simP_file_path<<endl;
