@@ -26,15 +26,17 @@ using namespace std;
 
 #define MAXTHREADNUM 128
 
+using TokenLen = unsigned int;
+
 class SetJoinParelled {
 public:
     double det;
     uint64_t resultNum = 0;
     uint64_t candidateNum = 0;
     uint64_t listlens = 0;
-    unsigned short maxIndexPartNum;
+    TokenLen maxIndexPartNum;
 
-    vector<vector<unsigned short>> dataset;
+    vector<vector<TokenLen>> dataset;
     vector<pair<int, int>> result_pairs[MAXTHREADNUM];
 
     // parameters about caculation and dataset
@@ -44,7 +46,7 @@ public:
     unsigned int maxSize; // the max size of the records
 
 
-    SetJoinParelled(vector<vector<unsigned short>> &sorted_records) {
+    SetJoinParelled(vector<vector<TokenLen>> &sorted_records) {
         dataset = sorted_records;
     }
 
@@ -63,11 +65,11 @@ public:
         }
         return pairs_amount;
     }
-    bool overlap(int x, int y, int posx = 0, int posy = 0, int current_overlap = 0);
+    bool overlap(unsigned int x, unsigned int y, int posx = 0, int posy = 0, int current_overlap = 0);
     void setjoin(double threshold);
 
     void index(double threshold);
-    void GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys, const vector<unsigned short> &odk_st);
+    void GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys, const vector<TokenLen> &odk_st);
     void findSimPairs();
 
 };

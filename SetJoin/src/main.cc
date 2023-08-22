@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
 
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    // const string dataset_name = "stackexchange";
-    const string dataset_name = string(argv[1]); 
+    const string dataset_name = "book";
+    // const string dataset_name = string(argv[1]); 
     const string sortedsets_file_path = root_dir + "/sorted_sets/" + dataset_name +"_sortedsets.bin";
     const string idmap_file_path = root_dir + "/sorted_sets/" +  dataset_name + "_idmap.bin";
     
@@ -26,9 +26,9 @@ int main(int argc, char *argv[]) {
     // Load Idmap and sortedsets
     vector<int> idmap;
     loadBin2vec(idmap_file_path, idmap);
-    vector<vector<unsigned short>> sorted_sets;
+    vector<vector<TokenLen>> sorted_sets;
     loadShortBin(sortedsets_file_path, sorted_sets);
-
+    
     // For debug
     if(argc > 2) {
         const unsigned int shrink_size = stoul(argv[2]);
@@ -49,9 +49,10 @@ int main(int argc, char *argv[]) {
     joiner.findSimPairs();
 
     // Investigate the result
-    printf("joiner.result_pairs have %u pairs\n", joiner.getResultPairsAmount());
+    printf("joiner.result_pairs have %llu pairs\n", joiner.getResultPairsAmount());
     // printf("The amount of document that occur in the pairs is %lu\n", getUniqueInts(joiner.result_pairs).size());
     
-    writeSimilarPairs(simP_file_path, joiner.result_pairs);
+    // todo recover
+    // writeSimilarPairs(simP_file_path, joiner.result_pairs);
     printf("At last the total time cost is: %f\n", RepTime(timer_st));
 }

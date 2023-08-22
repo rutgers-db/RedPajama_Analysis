@@ -60,6 +60,27 @@ void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &doc
 }
 
 // Function to load binary file into a 2D vector (documents)
+void loadShortBin(const string &binFileName, vector<vector<unsigned int>> &docs) {
+    cout << "Reading " << binFileName << endl; // Print the name of the file being read
+    ifstream ifs(binFileName, ios::binary);    // Open the binary file for reading
+    if (!ifs) {                                // If the file cannot be opened or does not exist, print an error message
+        cout << "error open bin file" << endl;
+        return; // Exit the function
+    }
+    int size;                                                     // Initialize a variable to store the size of each vector
+    while (ifs.read((char *)&size, sizeof(int))) {                // Read the size of the vector
+        vector<unsigned short> vec(size);                         // Create a vector of the read size
+        ifs.read((char *)&vec[0], sizeof(unsigned short) * size); // Read the data into the vector
+        vector<unsigned int> uint_vec(size);
+        copy(vec.begin(), vec.end(), uint_vec.begin());  
+        docs.emplace_back(uint_vec);                                   // Add the vector to the documents
+    }
+    ifs.close(); // Close the file stream after reading
+
+    printf("There are %lu documents in %s\n",docs.size(),  binFileName.c_str());
+}
+
+// Function to load binary file into a 2D vector (documents)
 void loadIntBin(const string &binFileName, vector<vector<unsigned int>> &docs){
     cout << "Reading " << binFileName << endl; // Print the name of the file being read
     ifstream ifs(binFileName, ios::binary);    // Open the binary file for reading
