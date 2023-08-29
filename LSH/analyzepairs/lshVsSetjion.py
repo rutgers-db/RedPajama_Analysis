@@ -29,17 +29,19 @@ band = args.band
 R = args.range
 # Parameters
 # dataset_name = "arxiv"
-thres = 0.9
+thres = 0.8
 if_check_similarity = False
 
 # Load From My LSH
-simp_dir_path = "/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs"
+# simp_dir_path = "/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/similar_pairs"
+simp_dir_path = "/research/projects/zp128/RedPajama_Analysis/LSH/Lsh_C++/ngram_simps"
 # file_prefix = f"{dataset_name}_sim_pairs_{thres:.6f}"
 file_prefix = f"{dataset_name}_sim_pairs_K{K}B{band}R{R}"
 
 simpairs_bin_path = util.find_file(simp_dir_path, file_prefix)
 print(simpairs_bin_path)
-idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/{dataset_name}_idmap.bin"
+# idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/{dataset_name}_idmap.bin"
+idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/{dataset_name}_idmap.bin"
 idmap = util.read_ints_from_binary(idmap_bin_path)
 sim_pairs = util.read_pairs_from_binary(simpairs_bin_path)
 simp_mylsh = util.map_elements(sim_pairs, idmap)
@@ -47,9 +49,10 @@ simp_mylsh = util.correct_pair_order(simp_mylsh)
 
 
 # load from SetJoin
-simpairs_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/similar_pairs/{dataset_name}_sim_pairs_{thres:.6f}.bin"
-idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/{dataset_name}_idmap.bin"
-idmap = util.read_ints_from_binary(idmap_bin_path)
+# simpairs_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/similar_pairs/{dataset_name}_sim_pairs_{thres:.6f}.bin"
+simpairs_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_simp/{dataset_name}_sim_pairs_{thres:.6f}.bin"
+# idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/{dataset_name}_idmap.bin"
+# idmap = util.read_ints_from_binary(idmap_bin_path)
 sim_pairs = util.read_pairs_from_binary(simpairs_bin_path)
 simp_setjoin = util.map_elements(sim_pairs, idmap)
 simp_setjoin = util.correct_pair_order(simp_setjoin)
