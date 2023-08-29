@@ -65,6 +65,7 @@ std::vector<unsigned int> getUniqueInts(const std::vector<std::pair<unsigned int
     return result;
 }
 
+
 // takes as input a vector<vector<vector<int>>>. 
 // It iterates over all the outer vector<vector<int>> elements in the array, and then for each of these, 
 // it iterates over the vector<int> elements, adding each to the result vector<vector<int>>
@@ -109,6 +110,30 @@ double shrinkBottomk(vector<vector<unsigned short>>&  bottom_ks, double ratio){
     }
     average_size/= bottom_ks.size();
     return average_size;
+}
+
+double jaccard_similarity(const std::vector<unsigned int>& text1, const std::vector<unsigned int>& text2) {
+    std::unordered_set<unsigned int> set1(text1.begin(), text1.end());
+    std::unordered_set<unsigned int> set2(text2.begin(), text2.end());
+
+    std::vector<unsigned int> intersection;
+    std::vector<unsigned int> union_set;
+
+    // calculate intersection
+    for (auto& element : set1) {
+        if (set2.count(element)) {
+            intersection.push_back(element);
+        }
+    }
+
+    // calculate union
+    union_set = text1;
+    union_set.insert(union_set.end(), text2.begin(), text2.end());
+
+    std::sort(union_set.begin(), union_set.end());
+    union_set.erase(std::unique(union_set.begin(), union_set.end()), union_set.end());
+
+    return static_cast<double>(intersection.size()) / union_set.size();
 }
 
 double jaccard_similarity(const std::vector<unsigned short>& text1, const std::vector<unsigned short>& text2) {
@@ -163,4 +188,33 @@ double bottomKJaccard(const std::vector<unsigned short>& A,
     }
 
     return static_cast<double>(overlap) / k;
+}
+
+// have two sorted vectors, A and B, and you want to find A - B (all elements in A that aren't in B)
+// Output the amount of the difference
+size_t difference(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B) {
+    size_t res = 0;
+    
+    auto itA = A.begin();
+    auto itB = B.begin();
+    
+    while (itA != A.end() && itB != B.end()) {
+        if (*itA < *itB) {
+            res++;
+            ++itA;
+        } else if (*itA > *itB) {
+            ++itB;
+        } else { // they're equal
+            ++itA;
+            ++itB;
+        }
+    }
+    
+    // If there are more elements in A
+    while (itA != A.end()) {
+        res++;
+        ++itA;
+    }
+    
+    return res;
 }

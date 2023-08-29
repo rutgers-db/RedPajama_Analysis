@@ -31,6 +31,12 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+cmp_simpairs: $(OBJDIR)/cmp_simpairs.o $(UTIL_OBJS) 
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+
+$(OBJDIR)/cmp_simpairs.o: $(UTIL_OBJS) src/cmp_simpairs.cc
+	$(CXX) $(CXXFLAGS) -c src/cmp_simpairs.cc -o $@
+
 clean:
 	@rm -r obj
 	@rm ./bin/.nfs*

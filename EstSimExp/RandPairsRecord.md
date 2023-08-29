@@ -4,7 +4,7 @@ Randomly Choose 100000 pairs and then calculate each (average) error with true j
 - Adaptive K: orignal length * 0.4
 
 If we find the errors of adaptive k is larger than that of fixed bottom k, maybe that is because the former k is adaptive and lower than latter on average.
-### Mean Error 
+### Mean Error
 
 - K: 32 
 
