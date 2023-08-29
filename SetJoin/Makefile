@@ -25,6 +25,9 @@ SETJOIN_OBJS = $(SETJOIN_SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
 TEST_SRC_FILES = $(wildcard $(TEST_DIR)/*.cc)
 TEST_BIN_FILES = $(patsubst $(TEST_DIR)/%.cc, $(TEST_DIR)/%, $(TEST_SRC_FILES))
 
+TBB_INC = oneapi-tbb-2021.9.0/include -pthread
+TBB_LIB = oneapi-tbb-2021.9.0/lib/intel64/gcc4.8 -ltbb
+
 # Target file
 TARGET = $(BINDIR)/main.exe
 
@@ -58,12 +61,24 @@ sketch_join: $(OBJDIR)/sketch_join.o $(UTIL_OBJS) $(SETJOIN_OBJS)
 $(OBJDIR)/sketch_join.o: $(UTIL_OBJS) src/sketch_join.cc
 	$(CXX) $(CXXFLAGS) -c src/sketch_join.cc -o $@
 
+ngram_join: $(OBJDIR)/ngram_join.o $(UTIL_OBJS) $(SETJOIN_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) $(SETJOIN_OBJS)
+
+$(OBJDIR)/ngram_join.o: $(UTIL_OBJS) src/ngram_join.cc
+	$(CXX) $(CXXFLAGS) -c src/ngram_join.cc -o $@
+
 sort_bottomks: $(OBJDIR)/sort_bottomk.o
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
 
 $(OBJDIR)/sort_bottomk.o: $(UTIL_OBJS) src/sort_bottomk.cc
-	$(CXX) $(CXXFLAGS) -c src/sort_bottomk.cc -o $@
+	$(CXX) $(CXXFLAGS) -c src/sort_bottomk.cc -o $@ -I $(TBB_INC) -L $(TBB_LIB)
 
+sort_ngrams: $(OBJDIR)/sort_ngrams.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+# -I $(TBB_INC) -L $(TBB_LIB)
+
+$(OBJDIR)/sort_ngrams.o: $(UTIL_OBJS) src/sort_ngrams.cc
+	$(CXX) $(CXXFLAGS) -c src/sort_ngrams.cc -o $@
 extract: $(OBJDIR)/extractSet.o
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
 

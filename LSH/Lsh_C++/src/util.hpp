@@ -15,8 +15,24 @@ void generateHashFunc(int seed, vector<pair<unsigned short, unsigned short>> &hf
     hf.emplace_back(a, b);
 }
 
+void generateHashFunc(int seed, vector<pair<unsigned int, unsigned int>> &hf) {
+    // TODO: knuth shuffling?
+    // TODO: random_seed
+    srand(seed);
+    unsigned int a = 0;
+    while (a == 0)
+        a = (unsigned int)rand();
+    unsigned int b =(unsigned int) rand();
+    hf.emplace_back(a, b);
+}
+
 // The hash value function
 inline unsigned short hval(const pair<unsigned short, unsigned short> &hf, unsigned short word) {
+    return hf.first * word + hf.second;
+}
+
+// The hash value function
+inline unsigned int hval(const pair<unsigned int, unsigned int> &hf, unsigned int word) {
     return hf.first * word + hf.second;
 }
 

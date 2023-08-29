@@ -1,3 +1,6 @@
+// Reference Command:
+// ./bin/merge_simp stackexchange ./ngram_simps -K 9000 -band 20 -range 450
+
 #include <bits/stdc++.h>
 
 typedef std::pair<unsigned int, unsigned int> Pair;
@@ -90,16 +93,34 @@ void mergeFiles(const std::vector<std::string>& filenames, const std::string& ou
 }
 
 int main() {
-    std::vector<std::string> filenames;
-    for(int i = 0 ;i<16;i++){
-        filenames.push_back("./tmp/sorted_"+to_string(i)+".bin");
-    }
-
-    string dataset_name = "wikipedia";
+    // default argument
     int K = 128;
     int band = 16;
     int range = 8;
-    const string simP_file_path = "./similar_pairs/" + dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
+    const string dataset_name = string(argv[1]);
+    const string output_dir = string(argv[2]);
+    // load arguments
+    for (int i = 1; i < argc; i++) {
+        const string arg = argv[i];
+        if (arg == "-K") {
+            K = atoi(argv[i + 1]);
+        }
+
+        if (arg == "-band") {
+            band = atoi(argv[i + 1]);
+        }
+
+        if (arg == "-range") {
+            range = atoi(argv[i + 1]);
+        }
+    }
+
+    std::vector<std::string> filenames;
+    for(int i = 0 ;i<band;i++){
+        filenames.push_back("./tmp/sorted_"+to_string(i)+".bin");
+    }
+    
+    const string simP_file_path = output_dir +"/"+ dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
     mergeFiles(filenames, simP_file_path);
     return 0;
 }
