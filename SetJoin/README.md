@@ -13,5 +13,23 @@ This algorithm aims to build the benchmark of all similar pairs in the dataset. 
 To handle the large dataset, we need to use multithread strategy.
 Also, original code occupies too much memory, so we need to modify the structure of codes.
 
+## Project Description
 
+### Input Type
+There are two kinds of Input depending on data preprocessing
+1. tokens (16bits), when loading the data using util.loadShortBin function
+2. ngrams (32bits), when loading the data using util.loadIntBin function
 
+Attention: Before loading the data, you need to define the InputDataSize in the set_join.SetJoinParelled.h (using TokenLen = unsigned int (unsigned short))
+
+### Output Type
+
+Similar pairs: pair<unsigned int, unsigned int> indicates the document id between the similar documents that are similar than the given threshold
+
+### Instruction
+
+To use the SetJoinParelled Class, After create a instance, you need to call two functions:
+1. index: The index() function builds an inverted index for partitions and one-deletion neighbors. It uses OpenMP to parallelize this process.
+2. findSimPairs: The findSimPairs() function is responsible for finding similar pairs based on the index created. It uses OpenMP for parallelization.
+
+After finding similar pairs, the result will be stored at a member variable "result_pairs"
