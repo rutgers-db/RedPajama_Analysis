@@ -14,6 +14,9 @@ To handle the large dataset, we need to use multithread strategy.
 Also, original code occupies too much memory, so we need to modify the structure of codes.
 
 ## Project Description
+### Main Idea
+The main idea of the code is to first find some candidates documents based on a partition method, then we gonna verify whether the candidate documents are similar to the current document using Jaccard Similarity
+The paper focuses on the filtering stage (how to partition the documents so that for those have the same partition, are similar documents)
 
 ### Input Type
 There are two kinds of Input depending on data preprocessing
