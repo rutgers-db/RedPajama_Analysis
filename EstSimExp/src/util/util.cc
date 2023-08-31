@@ -190,6 +190,34 @@ double bottomKJaccard(const std::vector<unsigned short>& A,
     return static_cast<double>(overlap) / k;
 }
 
+double bottomKJaccard(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B){
+    // Assuming A and B have the same size k
+    int k = A.size();
+
+    // Create a union set of A and B
+    std::unordered_set<unsigned int> unionSet(A.begin(), A.end());
+    unionSet.insert(B.begin(), B.end());
+
+    // If the union is smaller than k, then there are duplicates.
+    // Therefore, extract only the smallest k values.
+    if(unionSet.size() > k) {
+        std::vector<unsigned int> unionVec(unionSet.begin(), unionSet.end());
+        std::sort(unionVec.begin(), unionVec.end());
+        unionVec.resize(k);
+        unionSet = std::unordered_set<unsigned int>(unionVec.begin(), unionVec.end());
+    }
+
+    // Iterate the element in A and check how many of them in B and also in k mins (A union B)
+    auto kmost_B = unordered_set<unsigned int>(B.begin(), B.end());
+    int overlap = 0;
+    for(auto & ele: A){
+        if(kmost_B.find(ele) != kmost_B.end() && unionSet.find(ele) != unionSet.end()){
+            overlap++;
+        }
+    }
+
+    return static_cast<double>(overlap) / k;
+}
 // have two sorted vectors, A and B, and you want to find A - B (all elements in A that aren't in B)
 // Output the amount of the difference
 size_t difference(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B) {

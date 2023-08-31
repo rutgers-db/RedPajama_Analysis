@@ -15,6 +15,7 @@ double jaccard_similarity(const std::vector<unsigned short>& text1, const std::v
 double jaccard_similarity(const std::vector<unsigned int>& text1, const std::vector<unsigned int>& text2);
 void printHowManyThreads();
 double bottomKJaccard(const std::vector<unsigned short>& A, const std::vector<unsigned short>& B);
+double bottomKJaccard(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B);
 size_t difference(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B);
 #endif
   

@@ -23,7 +23,7 @@ void generateHashFunc(unsigned int seed, pair<unsigned int, unsigned int> &hf)
     hf.second = b;
 }
 
-void load_docs(vector<unsigned int> &doc_ids, const string binFileName, bool tokenOrngrams)
+unsigned int load_docs(vector<unsigned int> &doc_ids, const string binFileName, bool tokenOrngrams, const unsigned int min_k)
 {
     sort(doc_ids.begin(), doc_ids.end());
 
@@ -32,23 +32,31 @@ void load_docs(vector<unsigned int> &doc_ids, const string binFileName, bool tok
     if (!ifs)
     { // If the file cannot be opened or does not exist, print an error message
         cout << "error open bin file" << endl;
-        return; // Exit the function
+        return 0; // Exit the function
     }
+    unsigned int short_docs_cnt = 0;
     unsigned int cur_docid = 0;
     size_t cnt = 0;
     int size; // Initialize a variable to store the size of each vector
 
     if(tokenOrngrams == false){
         while (ifs.read((char *)&size, sizeof(int)))
-        { // Read the size of the vector
+        { 
+            // Read the size of the vector
             if (cnt >= doc_ids.size())
                 break;
 
             if (cur_docid == doc_ids[cnt])
             {
-                docs[cur_docid].resize(size);
-                ifs.read((char *)&docs[cur_docid][0], sizeof(unsigned int) * size); // Read the data into the vector
                 cnt++;
+                if(size >= min_k){
+                    docs[cur_docid].resize(size);
+                    ifs.read((char *)&docs[cur_docid][0], sizeof(unsigned int) * size); // Read the data into the vector
+                }
+                else{
+                    ifs.seekg(sizeof(unsigned int) * size, std::ios::cur);
+                    short_docs_cnt ++;
+                }
             }
             else
             {
@@ -66,12 +74,17 @@ void load_docs(vector<unsigned int> &doc_ids, const string binFileName, bool tok
                 break;
 
             if (cur_docid == doc_ids[cnt])
-            {
-                docs[cur_docid].resize(size);
-                vector<unsigned short> vec(size);                         // Create a vector of the read size
-                ifs.read((char *)&vec[0], sizeof(unsigned short) * size); // Read the data into the vector
-                copy(vec.begin(), vec.end(), docs[cur_docid].begin());  
+            {   
                 cnt++;
+                if(size >= min_k){
+                    docs[cur_docid].resize(size);
+                    vector<unsigned short> vec(size);                         // Create a vector of the read size
+                    ifs.read((char *)&vec[0], sizeof(unsigned short) * size); // Read the data into the vector
+                    copy(vec.begin(), vec.end(), docs[cur_docid].begin());  
+                }else{
+                    ifs.seekg(sizeof(unsigned short) * size, std::ios::cur);
+                    short_docs_cnt ++;
+                }
             }
             else
             {
@@ -83,7 +96,10 @@ void load_docs(vector<unsigned int> &doc_ids, const string binFileName, bool tok
         }
         ifs.close(); // Close the file stream after reading
     }
+    if (short_docs_cnt>0)
+        printf("There are %u documents in the ground truth similar docs are shorter then %d min_k", short_docs_cnt,  min_k);
     
+    return short_docs_cnt;
 }
 // The hash value function
 inline unsigned int hval(const pair<unsigned int, unsigned int> &hf, unsigned int &word)
@@ -120,9 +136,9 @@ int main(int argc, char *argv[])
 {
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    const string dataset_name = string(argv[1]);
-    const double thres = strtod(argv[2], nullptr);
-    bool tokensOrngrams = false;
+    const string dataset_name = "stackexchange"; //string(argv[1]);
+    const double thres = 0.8; //strtod(argv[2], nullptr);
+    bool tokensOrngrams = true;
     string sortedsets_file_path, simP_file_path;
     if (tokensOrngrams == false)
     {
@@ -134,8 +150,8 @@ int main(int argc, char *argv[])
         sortedsets_file_path = root_dir + "/sorted_sets/" + dataset_name + "_sortedsets.bin";
         simP_file_path = root_dir + "/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
     }
-    const unsigned int min_k = stoul(argv[3]);
-    double ratio = 0.4;
+    const unsigned int min_k = 128; //stoul(argv[3]);
+    double ratio = 0.1;
 
     //  Cause the document length of data is mostly more than 200-13
     assert(min_k <= 183);
@@ -146,8 +162,30 @@ int main(int argc, char *argv[])
 
     // Load sortedsets
     vector<unsigned int> doc_ids = getUniqueInts(pairs);
-    load_docs(doc_ids, sortedsets_file_path,tokensOrngrams);
+    unsigned int short_cnt = load_docs(doc_ids, sortedsets_file_path,tokensOrngrams, min_k);
 
+    // Due to the mink may be filter some short documents we need regenerate the doc_ids
+    if(short_cnt != 0){
+        doc_ids.clear();
+        for(auto it : docs){
+            doc_ids.emplace_back(it.first);
+        }
+        sort(doc_ids.begin(), doc_ids.end());
+
+        // erase those pairs having short documents
+        size_t orignal_pairsamount = pairs.size();
+        pairs.erase(
+        std::remove_if(pairs.begin(), pairs.end(), 
+                       [&](const std::pair<int, int>& p) {
+                           return docs.find(p.first) == docs.end() || 
+                                  docs.find(p.second) == docs.end();
+                       }), 
+        pairs.end());
+        printf("We remove %lu pairs\n", orignal_pairsamount - pairs.size());
+    }
+    
+    
+    
     // building their bottom ks
     build_bks(doc_ids);
 
@@ -164,21 +202,22 @@ int main(int argc, char *argv[])
     double fp[4] = {0, 0, 0, 0};
     double fp_docs[4] = {0, 0, 0, 0};
     vector<vector<double>> data(pairs.size(), vector<double>(5));
+
 #pragma omp parallel for
-    for (int i = 0; i < pairs.size(); i++)
+    for (auto i = 0; i < pairs.size(); i++)
     {
         true_jaccard[i] = jaccard_similarity(docs[pairs[i].first], docs[pairs[i].second]);
 
-        vector<unsigned short> bk_A(docs[pairs[i].first].begin(), docs[pairs[i].first].begin() + min_k);
-        vector<unsigned short> bk_B(docs[pairs[i].second].begin(), docs[pairs[i].second].begin() + min_k);
+        vector<unsigned int> bk_A(docs[pairs[i].first].begin(), docs[pairs[i].first].begin() + min_k);
+        vector<unsigned int> bk_B(docs[pairs[i].second].begin(), docs[pairs[i].second].begin() + min_k);
 
         fixk_bottomk[i] = bottomKJaccard(bk_A, bk_B);
         fixk_jaccard[i] = jaccard_similarity(bk_A, bk_B);
 
-        auto min_adpativek = int(min(docs[pairs[i].first].size() * ratio, docs[pairs[i].second].size() * ratio));
+        unsigned int min_adpativek = min(docs[pairs[i].first].size() * ratio, docs[pairs[i].second].size() * ratio);
         adaptiveKs[i] = min_adpativek;
-        vector<unsigned short> adpbk_A(docs[pairs[i].first].begin(), docs[pairs[i].first].begin() + min_adpativek);
-        vector<unsigned short> adpbk_B(docs[pairs[i].second].begin(), docs[pairs[i].second].begin() + min_adpativek);
+        vector<unsigned int> adpbk_A(docs[pairs[i].first].begin(), docs[pairs[i].first].begin() + min_adpativek);
+        vector<unsigned int> adpbk_B(docs[pairs[i].second].begin(), docs[pairs[i].second].begin() + min_adpativek);
 
         adpativek_bottomk[i] = bottomKJaccard(adpbk_A, adpbk_B);
         adpativek_jaccard[i] = jaccard_similarity(adpbk_A, adpbk_B);
@@ -190,6 +229,8 @@ int main(int argc, char *argv[])
         data[i][3] = adpativek_bottomk[i];
         data[i][4] = adpativek_jaccard[i];
     }
+
+    cout << "Writing the csv data" << endl;
 
     if (tokensOrngrams == false)
     {
