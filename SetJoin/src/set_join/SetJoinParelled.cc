@@ -2,14 +2,14 @@
 #include "SetJoinParelled.h"
 #include <omp.h>
 #include <limits.h>
-#include <tbb/parallel_sort.h>
+// #include <tbb/parallel_sort.h>
 #include "../util/util.h"
 
-// vector<vector<pair<int, int>>> indexVecs;
-int *prime_exp;
-bool **quickRef2D;
-bool **negRef2D;
+int *prime_exp;    // Array for storing prime numbers, presumably for hashing
+bool **quickRef2D; // 2D quick reference array
+bool **negRef2D;   // 2D negative reference array
 
+// Vectors for storing range information(the groups that based on the size of documents)
 vector<pair<unsigned int, unsigned int>> range;
 vector<unsigned int> range_st;
 vector<int> range_id;
@@ -17,14 +17,13 @@ vector<int> range_id;
 // the precalculated hashvalue key for the partitions and ondeletions
 vector<vector<unsigned int>> parts_keys;
 vector<vector<unsigned int>> onedelete_keys;
-vector<vector<TokenLen>> odkeys_st; // Because the max length of the record is almost 60000
-// We can get the position informations from odkeys_st
+vector<vector<TokenLen>> odkeys_st; // Stores position of one deletion information
 
 // index for partitions and one deletions
 // There are two dimensions:
 // 1st: (Pointer Level) Indicates the range
-// 2nd: (External Vector Level) Indicates the pid
-// The inner vector stores the vector of rid
+// 2nd: (External Vector Level) Indicates the pid (partition ID)
+// Inner vector stores the vector of rid (record ID)
 vector<vector<unsigned int>> *parts_rids; // <rid>
 vector<vector<unsigned int>> *ods_rids; // <rid>
 
@@ -44,15 +43,21 @@ vector<vector<unsigned int>> onePtrArr[MAXTHREADNUM];
 vector<pair<int, TokenLen>> valuesArr[MAXTHREADNUM]; // <value, loc>
 vector<TokenLen> scoresArr[MAXTHREADNUM];
 
-
+// Function to check if two sets overlap based on a certain condition
 bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy, int current_overlap) {
+    // Calculate required overlap based on a formula
     int require_overlap = ceil(det / (1 + det) * (int)(dataset[x].size() + dataset[y].size()) - EPS);
+
+    // Loop through both sets to find overlap
     while (posx < (int)dataset[x].size() && posy < (int)dataset[y].size()) {
-        if ((int)dataset[x].size() - posx + current_overlap < require_overlap || (int)dataset[y].size() - posy + current_overlap < require_overlap) return false;
+        // Check if remaining elements are sufficient for required overlap
+        if ((int)dataset[x].size() - posx + current_overlap < require_overlap ||
+            (int)dataset[y].size() - posy + current_overlap < require_overlap) return false;
 // #if VERSION == 2
 //         // if we are doing bottomk
 //         if(posx+posy - current_overlap > (int)(1+det)*max(dataset[x].size(), dataset[y].size()))   return false;
 // #endif
+
         if (dataset[x][posx] == dataset[y][posy]) { 
             current_overlap++;
             posx++;
@@ -66,8 +71,8 @@ bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy
     return current_overlap >= require_overlap;
 }
 
-// The index part is to create the index of Partitions and those one deletion neighbors
-void SetJoinParelled::index(double threshold) {
+// Function to create the index of Partitions and one-deletion neighbors
+    void SetJoinParelled::index(double threshold) {
     // Initilaize the Parameters
     det = threshold;
     ALPHA = 1.0 / threshold + 0.01;
@@ -78,22 +83,21 @@ void SetJoinParelled::index(double threshold) {
 
     showPara(); // show parameters
 
-    // check if the dataset is qualified
+    // Know how many tokens there
     unsigned int tokenNum = 0;
     for (int i = 0; i < dataset.size(); i++) {
         if (tokenNum < dataset[i].back()) tokenNum = dataset[i].back();
     }
 
-    // tokenNum += 1;
     printf("The tokenNum is %u \n", tokenNum);
-    // assert(tokenNum <= 65535);
 
-    // Initialize prime exponential array for usage of hashing 
+    // Initialize prime exponential array for hashing
     prime_exp = new int[n + 1];
     prime_exp[0] = 1;
     for (unsigned int i = 1; i <= n; ++i)
         prime_exp[i] = prime_exp[i - 1] * PRIME;
 
+    // Initialize quick reference arrays
     quickRef2D = new bool*[MAXTHREADNUM];
     negRef2D = new bool*[MAXTHREADNUM];
     for(unsigned int i = 0; i < MAXTHREADNUM; ++i){
@@ -105,7 +109,6 @@ void SetJoinParelled::index(double threshold) {
     
     // Get the ranges(The group based on the record's size)
     // We group those size similar ones together
-
     range_id.resize(n);
     unsigned int low = 0, high = 0;
     for (unsigned int rid = 0; rid < n; rid++) {
@@ -120,20 +123,20 @@ void SetJoinParelled::index(double threshold) {
     }
     range_st.push_back(n);
 
+    // Initialize subquery and hash value vectors
     vector<vector<TokenLen>> subquery[MAXTHREADNUM]; // first thread id second tokens
     for (unsigned int i = 0; i < MAXTHREADNUM; i++) {
         subquery[i].resize(maxIndexPartNum);
-        // hashValues[i].resize(maxIndexPartNum);
     }
 
     // To store the keys of parts and the one deletion neighbors
     parts_keys.resize(n);
     onedelete_keys.resize(n);
-    odkeys_st.resize(n); // Because the max length of the record is almost 60000
+    odkeys_st.resize(n);
 
-    // get hash values part
+    // Calculate hash values for partitions and one-deletion neighbors
     auto calHash_st = LogTime();
-
+// Parallel loop to calculate hash values
 #pragma omp parallel for
     for (unsigned int rid = 0; rid < n; rid++) {
         unsigned int len = dataset[rid].size();
@@ -142,9 +145,7 @@ void SetJoinParelled::index(double threshold) {
         const unsigned int partNum = floor(2 * coe * cur_low + EPS) + 1;
 
         unsigned int tid = omp_get_thread_num();
-        // hashValues[tid].clear();
         subquery[tid].clear();
-        // hashValues[tid].resize(partNum);
         parts_keys[rid].resize(partNum);
         subquery[tid].resize(partNum);
 
@@ -161,7 +162,6 @@ void SetJoinParelled::index(double threshold) {
         // for getting the keys
         onedelete_keys[rid].resize(len);
         odkeys_st[rid].resize(partNum + 1);
-        TokenLen j = 0;
         TokenLen tmp_cnt = 0;
         for (unsigned int pid = 0; pid < partNum; ++pid) {
             int64_t lenPart = cur_low + pid * (maxSize + 1);
@@ -193,8 +193,8 @@ void SetJoinParelled::index(double threshold) {
     auto sort_st = LogTime();
     printf("There are %lu range groups in the setJoin\n", range.size());
 
-    // parts_arr = new vector<HashRidPos>[range.size()];
-    // ods_arr = new vector<HashRidPos>[range.size()];
+    // Initialize index arrays
+    // Actually you can wrap them into a self-defined class or struct
     parts_rids = new vector<vector<unsigned int>>[range.size()]; 
     ods_rids = new vector<vector<unsigned int>>[range.size()]; 
     parts_index_hv = new vector<vector<unsigned int>>[range.size()];
@@ -256,7 +256,7 @@ void SetJoinParelled::index(double threshold) {
                     ofs = j;
                     tmp_cnt = 0;
                 }
-                if(tmp_cnt < 65535) // the maximum of TokenLen
+                if(tmp_cnt < numeric_limits<TokenLen>::max()) // the maximum of TokenLen
                     tmp_cnt++;
             }
             // We need to emplace_back more time out of the loop
@@ -271,10 +271,6 @@ void SetJoinParelled::index(double threshold) {
             
             auto & cur_ods_rids = ods_rids[i][pid];
             cur_ods_rids.resize(one_deletion_amount);
-            // if(cur_ods_rids.size() == 0){
-            //     cout<<"one_deletion_amount:" <<one_deletion_amount<<endl;
-            //     cout<<"error: i j pid "<< i <<" "<< pid<<endl;
-            // }
 
             iota(cur_ods_rids.begin(), cur_ods_rids.end(), 0); //cur_rids temporarily filled with 0 to one_deletion_amount-1
 
@@ -291,6 +287,7 @@ void SetJoinParelled::index(double threshold) {
                     tmp_od_locs.emplace_back(od_loc);
                 }
             }
+
             // sort the parts_rid[i][pid]
             sort(cur_ods_rids.begin(), cur_ods_rids.end(), [&tmp_rid,&tmp_od_locs, &pid](const unsigned int &id1, const unsigned int &id2) {
                 auto const & rid_1 = tmp_rid[id1];
@@ -302,7 +299,6 @@ void SetJoinParelled::index(double threshold) {
                 return onedelete_keys[rid_1][od_loc_1] < onedelete_keys[rid_2][od_loc_2];
             });
 
-            // build the index pointers
             // Build the index pointers for the cur_rids
             auto const & rid = tmp_rid[cur_ods_rids[0]];
             auto const & od_loc = tmp_od_locs[cur_ods_rids[0]];
@@ -321,7 +317,7 @@ void SetJoinParelled::index(double threshold) {
                     ofs = j;
                     tmp_cnt = 0;
                 }
-                if(tmp_cnt < 65535) // the maximum of TokenLen
+                if(tmp_cnt < numeric_limits<TokenLen>::max()) // the maximum of TokenLen
                     tmp_cnt++;
             }
             od_index_hv[i][pid].emplace_back(prev_hv);
@@ -334,15 +330,6 @@ void SetJoinParelled::index(double threshold) {
             }
         }
         
-        
-        // for (int rid = rid_st; rid < rid_ed; rid++) {
-        //     auto const &part_key = parts_keys[rid];
-        //     parts_arr[i].insert(parts_arr[i].end(), part_key.begin(), part_key.end());
-        //     auto const &onedelete_key = onedelete_keys[rid];
-        //     ods_arr[i].insert(ods_arr[i].end(), onedelete_key.begin(), onedelete_key.end());
-        // }
-        // sort(parts_arr[i].begin(), parts_arr[i].end());
-        // sort(ods_arr[i].begin(), ods_arr[i].end());
     }
     cout << "Sorting them And Partition Time Cost: " << RepTime(sort_st) << endl;
 
@@ -357,6 +344,7 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
     unsigned int const len = dataset[rid].size();
     auto const indexLen = range[indexLenGrp].first;
 
+    // Prepare thread-local storage for various data structures
     vector<unsigned int> candidates;
     auto & invPtr = invPtrArr[tid];
     auto & intPtr = intPtrArr[tid];
@@ -370,17 +358,11 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
     scores.resize(indexPartNum);
     auto negRef = negRef2D[tid];
     auto quickRef = quickRef2D[tid];
-    // Initialize onePtr and reserve each space
+
+    // Initialize onePtr and reserve space for each part
     for (unsigned int pid = 0; pid < indexPartNum; ++pid) {
         onePtr[pid].clear();
-        // cout<<rid << " "<< odk_st[pid+1]<<" " << odk_st[pid]<<endl;
-        // if(odk_st[pid+1] < odk_st[pid]){
-        //     cout<<"Something wrong"<<endl;
-        //     cout<<indexLenGrp<<" " << rid<<endl;
-        //     cout<<odk_st[pid+1]<<" " << odk_st[pid]<<endl;
-        // }
         assert(odk_st[pid+1] >= odk_st[pid]);
-        
         onePtr[pid].reserve(odk_st[pid+1] - odk_st[pid]);
     }
     
@@ -405,9 +387,11 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
         scores[pid] = 0;
     }
 
+    // Prepare heap for greedy selection
     unsigned int heap_cnt = indexPartNum;
     make_heap(values.begin(), values.begin() + heap_cnt);
 
+    // Initialize some variables for the greedy selection
     int cost = 0;
     unsigned int rLen = min(range[indexLenGrp].second, len);
     unsigned int Ha = floor((len - det * rLen) / (1 + det) + EPS);
@@ -425,11 +409,8 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
         cost -= sel.first;
         auto const & pkey = p_keys[pid];
         
-        // int64_t lenPart = indexLen + pid * (maxSize + 1);
-
         if (scores[sel.second] == 1) {
             if (invPtr[pid] != UINT_MAX) {
-                // auto &vec = indexLists[invPtr[pid]].getVector();
 
                 // Iterate the candidates that shares the same partition
                 auto ofs_st = parts_index_offset[indexLenGrp][pid][invPtr[pid]];
@@ -475,16 +456,6 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
                 intPtr[pid] = UINT_MAX ;
             }
 
-            // if (oneHashValues[pid].size() == 0) {
-            //     int mhv = 0, hv = hashValues[pid];
-            //     auto &sq = subquery[pid];
-            //     for (int idx = 0; idx < sq.size(); idx++) {
-            //         int chv = hv + mhv * prime_exp[sq.size() - 1 - idx];
-            //         mhv = mhv * PRIME + sq[idx] + 1;
-            //         chv -= mhv * prime_exp[sq.size() - 1 - idx];
-            //         oneHashValues[pid].push_back(chv);
-            //     }
-            // }
             auto const &id_st = odk_st[pid];
             auto const &id_ed = odk_st[pid + 1];
             for (auto id = id_st; id < id_ed; id++) {
@@ -576,7 +547,7 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
 
     // listlens += cost;
 
-    // clear candidates
+     // Clear candidates and update global results
     for (unsigned int idx = 0; idx < candidates.size(); idx++) {
         if (negRef[candidates[idx]] == false && quickRef[candidates[idx]] == true) {
             if (overlap(candidates[idx], rid) == true) {
@@ -595,14 +566,13 @@ void SetJoinParelled::findSimPairs() {
     auto find_st = LogTime();
     cout << "Start finding similar pairs " << endl;
 
-    // vector<int> hashValues[MAXTHREADNUM];
+    // Initialize thread-local storage for sub-queries, partition keys, one-deletion keys, and one-deletion key starts
     vector<vector<TokenLen>> subquery[MAXTHREADNUM];
     vector<unsigned int> p_keys[MAXTHREADNUM];
     vector<unsigned int> od_keys[MAXTHREADNUM];
     vector<TokenLen> odk_st[MAXTHREADNUM];
-    
+    // Resize the thread-local storage vectors
     for(int i = 0; i < MAXTHREADNUM; i++) {
-        // hashValues[i].resize(maxIndexPartNum);
         subquery[i].resize(maxIndexPartNum);
         p_keys[i].resize(maxIndexPartNum);
         od_keys[i].resize(maxSize);
@@ -610,20 +580,20 @@ void SetJoinParelled::findSimPairs() {
     }
 
     // Allocation and calculate candidates
-
 #pragma omp parallel for
     for (int rid = 0; rid < n; rid++) {
         int len = dataset[rid].size();
         if (len == 0)
             continue;   
 
+        // Get the thread ID for OpenMP
         const int tid = omp_get_thread_num();
         // We only need to access the indexLenGrp that current record belongs to and the previous group
         // But the previous group we have not created the partition key,etc for the current record
         // In this case we need generate them now
         for (int indexLenGrp = max(0, range_id[rid] - 1); indexLenGrp <= range_id[rid]; ++indexLenGrp) {
-            // split the query into multiple parts if prevIndexPartNum != indexPartNum
-            // it means if the indexLenGrp's first range is not change
+
+            // If the current length group is not the one the record belongs to, we need to recalculate partition keys, etc.
             if (indexLenGrp != range_id[rid]) {
                 const int &indexLen = range[indexLenGrp].first;
                 const int indexPartNum = floor(2 * coe * indexLen + EPS) + 1;
