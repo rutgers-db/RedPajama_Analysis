@@ -40,7 +40,7 @@ public:
     double det;
     uint64_t resultNum = 0;    // Number of result pairs found  
     uint64_t candidateNum = 0; // Number of candidate pairs considered
-    uint64_t listlens = 0;    
+    uint64_t listlens = 0;
     TokenLen maxIndexPartNum;  // Maximum index partition number
 
     // Dataset containing records to be joined
@@ -64,14 +64,15 @@ public:
     }
 
     // Output the Parameters
-    void showPara(){
-        printf("det: %f coe: %f ALPHA: %f maxSize: %u maxIndexPartNum: %hu \n", det, coe, ALPHA, maxSize, maxIndexPartNum);
+    void showPara() {
+        printf("det: %f coe: %f ALPHA: %f maxSize: %u maxIndexPartNum: %hu \n", det, coe, ALPHA, maxSize,
+               maxIndexPartNum);
     }
 
     // Function to get the total number of result pairs found by all threads
-    unsigned long long getResultPairsAmount(){
+    unsigned long long getResultPairsAmount() {
         unsigned long long pairs_amount = 0;
-        for(int i = 0;i<MAXTHREADNUM;i++){
+        for (int i = 0; i < MAXTHREADNUM; i++) {
             pairs_amount += result_pairs[i].size();
         }
         return pairs_amount;
@@ -87,11 +88,32 @@ public:
     void index(double threshold);
 
     // Function to find candidate and similar pairs using a greedy approach
-    void GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys, const vector<TokenLen> &odk_st);
+    void GreedyFindCandidateAndSimPairs(const int &tid, const int indexLenGrp, const unsigned int rid,
+                                        const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys,
+                                        const vector<TokenLen> &odk_st);
 
     // Function to find similar pairs
     void findSimPairs();
 
+
+private:
+    int *prime_exp;    // Array for storing prime numbers, presumably for hashing
+    bool **quickRef2D; // 2D quick reference array
+    bool **negRef2D;   // 2D negative reference array
+
+    // Vectors for storing range information(the groups that based on the size of documents)
+    vector<pair<unsigned int, unsigned int>> range;
+    vector<unsigned int> range_st;
+    vector<int> range_id;
+
+    // vectors needed when allocate by greedy heap method
+    vector<unsigned int> invPtrArr[MAXTHREADNUM];
+    vector<unsigned int> intPtrArr[MAXTHREADNUM];
+    vector<vector<unsigned int>> onePtrArr[MAXTHREADNUM];
+    vector<pair<int, TokenLen>> valuesArr[MAXTHREADNUM]; // <value, loc>
+    vector<TokenLen> scoresArr[MAXTHREADNUM];
+
 };
+
 
 #endif
