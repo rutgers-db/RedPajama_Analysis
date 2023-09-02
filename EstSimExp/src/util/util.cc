@@ -162,8 +162,8 @@ double jaccard_similarity(const std::vector<unsigned short>& text1, const std::v
 
 double bottomKJaccard(const std::vector<unsigned short>& A, 
                       const std::vector<unsigned short>& B) {
-    // Assuming A and B have the same size k
-    int k = A.size();
+    
+    int k = min(A.size(),B.size());
 
     // Create a union set of A and B
     std::unordered_set<unsigned short> unionSet(A.begin(), A.end());
@@ -191,8 +191,7 @@ double bottomKJaccard(const std::vector<unsigned short>& A,
 }
 
 double bottomKJaccard(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B){
-    // Assuming A and B have the same size k
-    int k = A.size();
+    int k = min(A.size(),B.size());
 
     // Create a union set of A and B
     std::unordered_set<unsigned int> unionSet(A.begin(), A.end());
@@ -218,6 +217,40 @@ double bottomKJaccard(const std::vector<unsigned int>& A, const std::vector<unsi
 
     return static_cast<double>(overlap) / k;
 }
+
+bool bottomKJaccard_2(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B, double thres){
+    // Assuming A and B have the same size k
+    int k = min(A.size(),B.size());
+
+    int posx =0;
+    int posy = 0;
+    
+    int current_overlap = 0;
+    int required_overlap = int(ceil(thres * k));
+    int missing_limit = k - required_overlap;
+    int missing_ele = 0;
+    while (posx < k && posy < k) {
+
+        // Check if the missing elements is more than the limit
+        // Check if remaining elements are sufficient for required overlap
+        if (missing_ele > missing_limit) return false;
+        if (current_overlap >= required_overlap) return true;
+
+        if (A[posx] == B[posy]) { 
+            current_overlap++;
+            posx++;
+            posy++;
+        } else if (A[posx] < B[posy]) {
+            posx++;
+            missing_ele++;
+        } else {
+            posy++;
+            missing_ele++;
+        }
+    }
+    return current_overlap >= required_overlap;
+}
+
 // have two sorted vectors, A and B, and you want to find A - B (all elements in A that aren't in B)
 // Output the amount of the difference
 size_t difference(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B) {

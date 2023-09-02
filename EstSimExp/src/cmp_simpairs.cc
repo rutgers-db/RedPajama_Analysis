@@ -136,9 +136,9 @@ int main(int argc, char *argv[])
 {
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    const string dataset_name = "stackexchange"; //string(argv[1]);
-    const double thres = 0.8; //strtod(argv[2], nullptr);
-    bool tokensOrngrams = true;
+    const string dataset_name = string(argv[1]); //
+    const double thres = strtod(argv[2], nullptr);
+    bool tokensOrngrams = false;
     string sortedsets_file_path, simP_file_path;
     if (tokensOrngrams == false)
     {
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
         sortedsets_file_path = root_dir + "/sorted_sets/" + dataset_name + "_sortedsets.bin";
         simP_file_path = root_dir + "/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
     }
-    const unsigned int min_k = 128; //stoul(argv[3]);
+    const unsigned int min_k = stoul(argv[3]);
     double ratio = 0.1;
 
     //  Cause the document length of data is mostly more than 200-13
@@ -203,6 +203,7 @@ int main(int argc, char *argv[])
     double fp_docs[4] = {0, 0, 0, 0};
     vector<vector<double>> data(pairs.size(), vector<double>(5));
 
+    int myJaccardNum = 0;
 #pragma omp parallel for
     for (auto i = 0; i < pairs.size(); i++)
     {
@@ -228,6 +229,9 @@ int main(int argc, char *argv[])
         data[i][2] = fixk_jaccard[i];
         data[i][3] = adpativek_bottomk[i];
         data[i][4] = adpativek_jaccard[i];
+
+        if(bottomKJaccard_2(adpbk_A, adpbk_B, thres) == false)
+            myJaccardNum ++ ;
     }
 
     cout << "Writing the csv data" << endl;
@@ -300,5 +304,6 @@ int main(int argc, char *argv[])
     printf("|%s|%.3f |%.3f|%.3f| %.3f |\n", dataset_name.c_str(), fp[0], fp[1], fp[2], fp[3]);
     printf("|%s|%.3f |%.3f|%.3f| %.3f |\n", dataset_name.c_str(), fp_docs[0], fp_docs[1], fp_docs[2], fp_docs[3]);
     printf("Average adpative k on Data(%s): %llu \n ", tokensOrngrams ? "tokens" : "ngrams", ave_adpk);
+    cout << (myJaccardNum*1.0/true_jaccard.size());
     return 0;
 }
