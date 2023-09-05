@@ -23,13 +23,13 @@ Mention: The LSH here is the C++ version.
 | Wikipedia     |  | |
 
 ##  Threshold 0.9
-1. Table of LSH (K 128, B6, R21)
+1. Table of LSH (K 128, B5, R25)
 
 | Dataset| Time(s) | Pairs | Pairs FP rate| Pairs FN rate| Pairs F1| Distinct Docs | Docs FP rate| Docs FN rate|
 |----------|----------|----------|----------|----------|----------|----------|----------|
 | Book    |
-| Arxiv    |
-| stackexchange | 358.281852| 9181 | 0.2261 | 0.1091|0.8283|17190|0.1919|0.1047|
+| Arxiv    |  |13861 | 0.2201 | 0.0273|0.8657|1624|0.0302|0.0575|
+| stackexchange | 173.045563| 7433 | 0.1235 | 0.1831|0.8457|14301|0.1076|0.1775|
 | wikipedia    |
 
 2.  Table of SetJoin 
@@ -37,6 +37,6 @@ Mention: The LSH here is the C++ version.
 | Dataset       | Time(s) | Pairs | Distinct Docs |
 |---------------|------|-------|---------------|
 | Book          |  | |   |
-| Arxiv         |  |  |   | 
+| Arxiv         |  | 11113 | 1671  |
 | StackExchange | 5586 | 7975 | 15517  |
 | Wikipedia     |  | |
