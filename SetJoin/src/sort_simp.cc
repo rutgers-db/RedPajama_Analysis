@@ -1,16 +1,21 @@
 #include "util/io.h"
+#include <execution>
 #include <bits/stdc++.h>
 using namespace std;
 
 void correctPairOrder(vector<pair<int, int>> & pairs){
-    for(auto & pair: pairs){
+
+#pragma omp parallel for
+    for(unsigned long long i =0; i<pairs.size(); i++){
+        auto & pair = pairs[i];
         if(pair.first>= pair.second){
             auto tmp =pair.first;
             pair.first = pair.second;
             pair.second = tmp;
         }
     }
-    sort(pairs.begin(), pairs.end());
+
+    sort(execution::par_unseq,pairs.begin(), pairs.end());
 }
 
 int main(int argc, char *argv[]){

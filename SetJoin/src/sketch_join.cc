@@ -13,7 +13,6 @@ using namespace std;
 int main(int argc, char *argv[]) {
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk";
-    // const string dataset_name = "stackexchange";
     const string dataset_name = string(argv[1]); 
     const string sortedbk_file_path = root_dir + "/sorted_bottomk/" + dataset_name +"_sortedbottomk.bin";
     const string idmap_file_path = root_dir + "/sorted_bottomk/" +  dataset_name + "_idmap.bin";
@@ -26,10 +25,7 @@ int main(int argc, char *argv[]) {
     const string simP_file_path = root_dir + "/similar_pairs/"+ dataset_name+ "_sim_pairs_" + to_string(thres)+ "_"+to_string(ratio)+".bin";
     cout << "The Saved Path is " << simP_file_path<<endl;
 
-    // Load Idmap and sortedsets
-    vector<int> idmap;
-    loadBin2vec(idmap_file_path, idmap);
-    vector<vector<unsigned short>> sorted_bks;
+    vector<vector<unsigned int>> sorted_bks;
     loadShortBin(sortedbk_file_path, sorted_bks);
 
     double ave_k = shrinkBottomk(sorted_bks, ratio);
@@ -44,7 +40,7 @@ int main(int argc, char *argv[]) {
     joiner.findSimPairs();
 
     // Investigate the result
-    printf("joiner.result_pairs have %u pairs\n", joiner.getResultPairsAmount());
+    printf("joiner.result_pairs have %llu pairs\n", joiner.getResultPairsAmount());
 
     // Write the similar files into directory    
     writeSimilarPairs(simP_file_path, joiner.result_pairs);
