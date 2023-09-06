@@ -100,7 +100,7 @@ void printHowManyThreads(){
     cout<<"max thread amount: "<<thread_num<<endl;
 }
 
-double shrinkBottomk(vector<vector<unsigned short>>&  bottom_ks, double ratio){
+double shrinkBottomk(vector<vector<unsigned int>>&  bottom_ks, double ratio){
     double average_size = 0;
     for(auto & vec:bottom_ks){
         unsigned int size = ceil(vec.size()*ratio);
