@@ -21,10 +21,6 @@
 
 using namespace std;
 
-// Macro to define the version of the algorithm.
-// If VERSION is set to 2, the bottomk variant is used.
-#define VERSION 1
-
 // Macros for hashing
 #define PACK(x, y) ((x << 32) + y) // 32
 #define PRIME 2017
@@ -50,7 +46,7 @@ public:
     string dataset_path{};
 
     //information
-    vector<int> dataset_info;
+    vector<unsigned int> dataset_info;
 
     //temp dataset
     unordered_map<unsigned int, vector<TokenLen>> temp_dataset;
@@ -64,7 +60,7 @@ public:
     unsigned int n{};       // Number of records in the dataset
     unsigned int maxSize{}; // Maximum size of the records
 
-    explicit SetJoinGroupParelled(vector<int> &sorted_records_info) {
+    explicit SetJoinGroupParelled(vector<unsigned int> &sorted_records_info) {
         dataset_info = sorted_records_info;
     }
 

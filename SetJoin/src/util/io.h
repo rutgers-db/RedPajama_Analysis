@@ -7,9 +7,9 @@ using namespace std;
 void loadTokensBasedOnIDX(const string & dir_path, vector<vector<unsigned short>> &docs);
 void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &docs);
 void loadShortBin(const string &binFileName, vector<vector<unsigned int>> &docs);
-void loadBinSize(const string &binFileName, vector<int> docs_size);
+void loadBinSize(const string &binFileName, vector<unsigned int>& docs_size);
 void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int, vector<TokenLen>>  &docs,
-                     vector<int> docs_size, int left_index, int right_index);
+                     vector<unsigned int> docs_size, int left_index, int right_index);
 void loadIntBin(const string &binFileName, vector<vector<unsigned int>> &docs);
 void loadBin2vec(const string &binFileName, vector<int> &vec);
 void writeVec2Bin(const string &binFileName, vector<int> &vec);

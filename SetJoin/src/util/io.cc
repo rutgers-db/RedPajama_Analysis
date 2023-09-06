@@ -99,7 +99,7 @@ void loadIntBin(const string &binFileName, vector <vector<unsigned int>> &docs) 
 }
 
 // Function to load binary file into a 2D vector (documents)
-void loadBinSize(const string &binFileName, vector<unsigned int> &docs_size) {
+void loadBinSize(const string &binFileName, vector<unsigned int>& docs_size) {
     cout << "Reading " << binFileName << endl; // Print the name of the file being read
     ifstream ifs(binFileName, ios::binary);    // Open the binary file for reading
     if (!ifs) {                                // If the file cannot be opened or does not exist, print an error message
@@ -115,8 +115,8 @@ void loadBinSize(const string &binFileName, vector<unsigned int> &docs_size) {
     printf("There are %lu documents in %s\n", docs_size.size(), binFileName.c_str());
 }
 
-void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int, vector<TokenLen>> docs,
-                     vector<int> docs_size, int left_index, int right_index) {
+void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int, vector<TokenLen>>& docs,
+                     vector<unsigned int> docs_size, int left_index, int right_index) {
     cout << "Reading " << binFileName << endl; // Print the name of the file being read
     ifstream ifs(binFileName, ios::binary);    // Open the binary file for reading
     if (!ifs) {                                // If the file cannot be opened or does not exist, print an error message
