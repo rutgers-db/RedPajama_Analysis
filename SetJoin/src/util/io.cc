@@ -144,7 +144,7 @@ void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int,
         std::vector<unsigned int> vec(size);
         ifs.read((char*)&vec[0], sizeof(unsigned int) * size);
 
-        docs[left_index] = vec;
+        docs[index] = vec;
         ifs.seekg(sizeof(int), std::ios::cur);
     }
 
