@@ -18,5 +18,9 @@ double bottomKJaccard(const std::vector<unsigned short>& A, const std::vector<un
 double bottomKJaccard(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B);
 bool bottomKJaccard_2(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B, double thres);
 size_t difference(const std::vector<unsigned int>& A, const std::vector<unsigned int>& B);
+// The hash value function
+inline unsigned int hval(const pair<unsigned int, unsigned int> &hf, unsigned int &word);
+void build_bks(vector<unsigned int> & doc, const pair<unsigned int, unsigned int> &hf);
+std::vector<unsigned int> randomPermutation(std::vector<unsigned int>& vec);
 #endif
   

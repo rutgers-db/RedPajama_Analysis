@@ -113,6 +113,8 @@ double shrinkBottomk(vector<vector<unsigned short>>&  bottom_ks, double ratio){
 }
 
 double jaccard_similarity(const std::vector<unsigned int>& text1, const std::vector<unsigned int>& text2) {
+    if(text1.size() == 0 || text2.size() == 0)
+        return 0;
     std::unordered_set<unsigned int> set1(text1.begin(), text1.end());
     std::unordered_set<unsigned int> set2(text2.begin(), text2.end());
 
@@ -137,6 +139,9 @@ double jaccard_similarity(const std::vector<unsigned int>& text1, const std::vec
 }
 
 double jaccard_similarity(const std::vector<unsigned short>& text1, const std::vector<unsigned short>& text2) {
+    if(text1.size() == 0 || text2.size() == 0)
+        return 0;
+        
     std::unordered_set<unsigned short> set1(text1.begin(), text1.end());
     std::unordered_set<unsigned short> set2(text2.begin(), text2.end());
 
@@ -278,4 +283,14 @@ size_t difference(const std::vector<unsigned int>& A, const std::vector<unsigned
     }
     
     return res;
+}
+
+std::vector<unsigned int> randomPermutation(std::vector<unsigned int>& vec) {
+    // Obtain a time-based seed
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+    // Shuffle elements randomly
+    std::shuffle(vec.begin(), vec.end(), std::default_random_engine(seed));
+
+    return vec;
 }

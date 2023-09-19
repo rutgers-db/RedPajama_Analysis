@@ -11,6 +11,7 @@
 using namespace std;
 
 unordered_map<unsigned int, vector<unsigned int>> docs;
+unordered_map<unsigned int, vector<unsigned int>> Lsketches;
 
 void generateHashFunc(unsigned int seed, pair<unsigned int, unsigned int> &hf)
 {
@@ -107,6 +108,24 @@ inline unsigned int hval(const pair<unsigned int, unsigned int> &hf, unsigned in
     return hf.first * word + hf.second;
 }
 
+unsigned int find_maxElement(const vector<unsigned int> &doc_ids){
+    unsigned int tmp_elements[128]={0};
+#pragma omp parallel for
+    for (int i = 0; i < doc_ids.size(); i++)
+    {
+        auto id = doc_ids[i];
+        auto tid = omp_get_thread_num();
+        // build bottom k for this document
+        for (auto &ele : docs[id])
+        {   
+            
+            tmp_elements[tid] = max(tmp_elements[tid], ele);
+        }
+    }
+
+    return (*max_element(tmp_elements,tmp_elements+128));
+}
+
 // build bottomks
 void build_bks(const vector<unsigned int> &doc_ids)
 {
@@ -119,7 +138,7 @@ void build_bks(const vector<unsigned int> &doc_ids)
         auto id = doc_ids[i];
         // build bottom k for this document
         for (auto &ele : docs[id])
-        {
+        {   
             ele = hval(hf, ele);
         }
         sort(docs[id].begin(), docs[id].end());
@@ -127,10 +146,12 @@ void build_bks(const vector<unsigned int> &doc_ids)
 }
 
 void getFNDocRate(double* doc_fN, const vector<unsigned int> & docIds,  vector<unsigned int> * choose_docIds){
-    for(int i = 0; i< 4;i++){
+    for(int i = 0; i< 5;i++){
         doc_fN[i] = (difference(docIds,choose_docIds[i])*1.0) / docIds.size();
     }
 }
+
+
 
 int main(int argc, char *argv[])
 {
@@ -151,10 +172,11 @@ int main(int argc, char *argv[])
         simP_file_path = root_dir + "/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
     }
     const unsigned int min_k = stoul(argv[3]);
-    double ratio = 0.1;
+    double ratio = 0.25;
+    unsigned int M = 4;
 
     //  Cause the document length of data is mostly more than 200-13
-    assert(min_k <= 183);
+    // assert(min_k <= 183);
 
     // Load the similar pairs
     vector<pair<unsigned int, unsigned int>> pairs;
@@ -183,10 +205,49 @@ int main(int argc, char *argv[])
         pairs.end());
         printf("We remove %lu pairs\n", orignal_pairsamount - pairs.size());
     }
+    printf("Parameter shown: ratio %f M %u \n", ratio, M);
     
     
     
     // building their bottom ks
+    // size_t max_ele = find_maxElement(doc_ids);
+    // printf("Max elemenet of it is: %lu\n", max_ele);
+    
+    // build the permutation
+    // vector<unsigned int> perm(max_ele+1);
+    // iota(perm.begin(), perm.end(), 0);
+    // perm = randomPermutation(perm);
+    // build the sketch from function L
+for (int i = 0; i < doc_ids.size(); i++)
+    {   
+        auto id = doc_ids[i];
+        Lsketches[id] = vector<unsigned int> ();
+    }
+
+    pair<unsigned int, unsigned int> hf; // hash functions
+    generateHashFunc(1, hf);
+    
+    unsigned long long lsketch_sizes[128] = {0};
+    unsigned long long origal_sizes[128] = {0};
+#pragma omp parallel for
+    for (int i = 0; i < doc_ids.size(); i++)
+    {   
+        auto id = doc_ids[i];
+        auto & lsketch = Lsketches[id];
+        auto tid = omp_get_thread_num();
+        // build bottom k for this document
+        for (auto ele : docs[id])
+        {   
+            // ele = perm[ele];            
+            ele = hval(hf, ele);
+            if(ele%M == 0){
+                lsketch.emplace_back(ele);
+            }
+        }
+        origal_sizes[tid] += docs[id].size();
+        lsketch_sizes[tid] += lsketch.size();
+    }
+    
     build_bks(doc_ids);
 
     cout << "Iterating each pair" << endl;
@@ -197,11 +258,13 @@ int main(int argc, char *argv[])
     vector<double> fixk_jaccard(pairs.size());
     vector<double> adpativek_bottomk(pairs.size());
     vector<double> adpativek_jaccard(pairs.size());
+    vector<double> lsketch_jaccard(pairs.size());
+
     vector<unsigned int> adaptiveKs(pairs.size());
-    double error[4] = {0, 0, 0, 0};
-    double fp[4] = {0, 0, 0, 0};
-    double fp_docs[4] = {0, 0, 0, 0};
-    vector<vector<double>> data(pairs.size(), vector<double>(5));
+    double error[5] = {0, 0, 0, 0,0};
+    double fp[5] = {0, 0, 0, 0,0};
+    double fp_docs[5] = {0, 0, 0, 0,0};
+    vector<vector<double>> data(pairs.size(), vector<double>(6));
 
     int myJaccardNum = 0;
 #pragma omp parallel for
@@ -223,12 +286,14 @@ int main(int argc, char *argv[])
         adpativek_bottomk[i] = bottomKJaccard(adpbk_A, adpbk_B);
         adpativek_jaccard[i] = jaccard_similarity(adpbk_A, adpbk_B);
 
+        lsketch_jaccard[i]= jaccard_similarity(Lsketches[pairs[i].first], Lsketches[pairs[i].second]);
         // record data
         data[i][0] = true_jaccard[i];
         data[i][1] = fixk_bottomk[i];
         data[i][2] = fixk_jaccard[i];
         data[i][3] = adpativek_bottomk[i];
         data[i][4] = adpativek_jaccard[i];
+        data[i][5] = lsketch_jaccard[i];
 
         if(bottomKJaccard_2(adpbk_A, adpbk_B, thres) == false)
             myJaccardNum ++ ;
@@ -248,17 +313,21 @@ int main(int argc, char *argv[])
     }
     // Record error and calculate false positive
     unsigned long long ave_adpk = 0;
-    vector<unsigned int> * choose_docIds = new vector<unsigned int>[4];
+    vector<unsigned int> * choose_docIds = new vector<unsigned int>[5];
     for (int i = 0; i < pairs.size(); i++)
     {
         error[0] += abs(fixk_bottomk[i] - true_jaccard[i]);
         error[1] += abs(fixk_jaccard[i] - true_jaccard[i]);
         error[2] += abs(adpativek_bottomk[i] - true_jaccard[i]);
         error[3] += abs(adpativek_jaccard[i] - true_jaccard[i]);
+        error[4] += abs(lsketch_jaccard[i] - true_jaccard[i]);
+
         fp[0] += fixk_bottomk[i] < thres ? 1 : 0;
         fp[1] += fixk_jaccard[i] < thres ? 1 : 0;
         fp[2] += adpativek_bottomk[i] < thres ? 1 : 0;
         fp[3] += adpativek_jaccard[i] < thres ? 1 : 0;
+        fp[4] += lsketch_jaccard[i] < thres ? 1 : 0;
+
         ave_adpk += adaptiveKs[i];
 
         if(fixk_bottomk[i] >= thres){
@@ -277,10 +346,14 @@ int main(int argc, char *argv[])
             choose_docIds[3].emplace_back(pairs[i].first);
             choose_docIds[3].emplace_back(pairs[i].second);
         }
+        if(lsketch_jaccard[i] >= thres){
+            choose_docIds[4].emplace_back(pairs[i].first);
+            choose_docIds[4].emplace_back(pairs[i].second);
+        }
     }
 
     // Unique the choose doc ids and then calculate the FP ratio of documents
-    for(int i =0; i<4;i++){
+    for(int i =0; i<5;i++){
         sort(choose_docIds[i].begin(), choose_docIds[i].end());
         auto it = unique(choose_docIds[i].begin(), choose_docIds[i].end());
         choose_docIds[i].resize(distance(choose_docIds[i].begin(), it));
@@ -298,12 +371,23 @@ int main(int argc, char *argv[])
     {
         rate = rate / true_jaccard.size();
     }
+
+    unsigned long long total_sketchsizes = 0;
+    unsigned long long total_aveBottomksizes = 0;
+    for (unsigned int i = 0; i< 128;i++){
+        total_sketchsizes += lsketch_sizes[i];
+        total_aveBottomksizes += origal_sizes[i];
+    }
+    total_aveBottomksizes /= docs.size();
+    total_aveBottomksizes = (unsigned long long) total_aveBottomksizes * ratio;
+    total_sketchsizes /= Lsketches.size();
     // print out the result
     // printf("Now print out errors:\n |fixk_bottomk|fixk_jaccard| adpativek_bottomk| adpativek_jaccard|\n");
-    printf("|%s|%.3f |%.3f|%.3f| %.3f |\n", dataset_name.c_str(), error[0], error[1], error[2], error[3]);
-    printf("|%s|%.3f |%.3f|%.3f| %.3f |\n", dataset_name.c_str(), fp[0], fp[1], fp[2], fp[3]);
-    printf("|%s|%.3f |%.3f|%.3f| %.3f |\n", dataset_name.c_str(), fp_docs[0], fp_docs[1], fp_docs[2], fp_docs[3]);
+    printf("|%s|%.3f |%.3f|%.3f| %.3f | %.3f |\n", dataset_name.c_str(), error[0], error[1], error[2], error[3], error[4]);
+    printf("|%s|%.3f |%.3f|%.3f| %.3f | %.3f |\n", dataset_name.c_str(), fp[0], fp[1], fp[2], fp[3], fp[4]);
+    printf("|%s|%.3f |%.3f|%.3f| %.3f | %.3f |\n", dataset_name.c_str(), fp_docs[0], fp_docs[1], fp_docs[2], fp_docs[3], fp_docs[4]);
     printf("Average adpative k on Data(%s): %llu \n ", tokensOrngrams ? "tokens" : "ngrams", ave_adpk);
+    printf("Average L sketch: %llu and Average Bottomk size: %llu \n ", total_sketchsizes, total_aveBottomksizes);
     cout << (myJaccardNum*1.0/true_jaccard.size());
     return 0;
 }
