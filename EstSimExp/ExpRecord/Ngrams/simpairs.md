@@ -19,7 +19,7 @@ False Negative Rate:
 | Parameters | Fixed bottom k + BottomK formula | Fixed bottom k + Jaccard formula| Adaptive bottom k + BottomK formula|Adaptive bottom k + Jaccard formula| Lsketch|
 |----------|----------|----------|----------|----------|----------|
 | K256 AdapativeK 1024 (ratio 0.25)  Delta 0.8 (L mod 16)  |0.081 |0.308|0.035| 0.287 | 0.037 |
-| K256 AdapativeK 1024 (ratio 0.25)  Delta 0.9 (L mod 16)  |0.050 |0.189|0.037| 0.189 | 0.036 |
+| K256 AdapativeK 505 (ratio 0.25)  Delta 0.9 (L mod 16)  |0.050 |0.189|0.037| 0.189 | 0.036 |
 | K128 AdapativeK 406 (ratio 0.1) Delta 0.8 (L mod 8)  |0.108 |0.300|0.053| 0.288 | 0.056 |
 | K128 AdapativeK 199 (ratio 0.1) Delta 0.9 (L mod 8) |0.072 |0.216|0.054| 0.197 | 0.049 |
 
