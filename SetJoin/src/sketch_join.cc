@@ -4,7 +4,6 @@
 #include <bits/stdc++.h>
 #include "util/io.h"
 #include "util/util.h"
-#include "set_join/SetJoin.h"
 #include "set_join/SetJoinParelled.h"
 using namespace std;
 

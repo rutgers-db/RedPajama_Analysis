@@ -1,5 +1,5 @@
 #pragma once
-#include "../set_join/SetJoinGroupParelled.h"
+#include "../set_join/SetJoinParelled.h"
 #include <bits/stdc++.h>
 using namespace std;
 

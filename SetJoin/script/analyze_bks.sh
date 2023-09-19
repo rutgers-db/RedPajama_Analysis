@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --mem=400g
-#SBATCH --output=script/analyze_bks.txt 
-for dataset_name in arxiv stackexchange wikipedia github
+#SBATCH --mem=300g
+#SBATCH --output=script/analyze_bks_2.txt 
+for dataset_name in  wikipedia github # arxiv book wikipedia stackexchange
 do
-for thres in 0.9 0.8
+for thres in 0.8 0.9
 do
 for ratio in 0.1 0.2 0.4
 do

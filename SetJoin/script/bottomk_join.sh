@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --mem=800g
-#SBATCH --output=script/bkjoin_script.txt 
-for dataset_name in arxiv stackexchange wikipedia github
+#SBATCH --mem=500g
+#SBATCH --output=script/bkjoin_script_2.txt 
+for dataset_name in book #arxiv stackexchange wikipedia github
 do
 for thres in 0.9 0.8
 do
