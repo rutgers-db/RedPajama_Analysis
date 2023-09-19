@@ -31,6 +31,11 @@ vector<vector<TokenLen>> *od_index_cnt;
 
 // Function to check if two sets overlap based on a certain condition
 bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy, int current_overlap) {
+#if VERSION == 2
+        // if we are doing bottomk
+        return bottomKJaccard(dataset[x], dataset[y], det);
+#endif
+
     // Calculate required overlap based on a formula
     int require_overlap = ceil(det / (1 + det) * (int)(dataset[x].size() + dataset[y].size()) - EPS);
 
@@ -39,10 +44,6 @@ bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy
         // Check if remaining elements are sufficient for required overlap
         if ((int)dataset[x].size() - posx + current_overlap < require_overlap ||
             (int)dataset[y].size() - posy + current_overlap < require_overlap) return false;
-// #if VERSION == 2
-//         // if we are doing bottomk
-//         if(posx+posy - current_overlap > (int)(1+det)*max(dataset[x].size(), dataset[y].size()))   return false;
-// #endif
 
         if (dataset[x][posx] == dataset[y][posy]) { 
             current_overlap++;
@@ -58,7 +59,7 @@ bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy
 }
 
 // Function to create the index of Partitions and one-deletion neighbors
-    void SetJoinParelled::index(double threshold) {
+void SetJoinParelled::index(double threshold) {
     // Initilaize the Parameters
     det = threshold;
     ALPHA = 1.0 / threshold + 0.01;
@@ -173,7 +174,8 @@ bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy
         odkeys_st[rid][partNum] = tmp_cnt;
     }
 
-    cout << "Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: " << RepTime(calHash_st) << endl;
+    index_cost = RepTime(calHash_st);
+    cout << "Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: " << index_cost << endl;
     cout << "Now Let's building the inverted Index of these Paritions" << endl;
 
     auto sort_st = LogTime();
@@ -317,6 +319,7 @@ bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy
         }
         
     }
+    index_cost += RepTime(sort_st);
     cout << "Sorting them And Partition Time Cost: " << RepTime(sort_st) << endl;
 
     // cout << "Indexing Partitions and OneDeleteion Neighbors Time Cost: " << RepTime(index_st) << endl;
@@ -325,6 +328,9 @@ bool SetJoinParelled::overlap(unsigned int x, unsigned int y, int posx, int posy
 }
 
 void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int indexLenGrp, const unsigned int rid, const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys, const vector<TokenLen> &odk_st) {
+
+    auto mem_st = LogTime();
+
     auto const indexPartNum = p_keys.size();
     assert(indexPartNum == odk_st.size() - 1);
     unsigned int const len = dataset[rid].size();
@@ -352,8 +358,11 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
         onePtr[pid].reserve(odk_st[pid+1] - odk_st[pid]);
     }
     
+    mem_cost[tid] += RepTime(mem_st);
+    
     // Iterate each part find each part if there is identical part already exits in inverted list
     // Based on the above result, initialize the value and scores
+    auto find_st = LogTime();
     for (TokenLen pid = 0; pid < indexPartNum; pid++) {
         // A hash
         // int64_t lenPart = indexLen + pid * (maxSize + 1);
@@ -372,7 +381,9 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
         values[pid] = make_pair(v1, pid);
         scores[pid] = 0;
     }
+    find_cost[tid] += RepTime(find_st);
 
+    auto alloc_st = LogTime();
     // Prepare heap for greedy selection
     unsigned int heap_cnt = indexPartNum;
     make_heap(values.begin(), values.begin() + heap_cnt);
@@ -530,9 +541,9 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
             --heap_cnt;
         }
     }
+    alloc_cost[tid] += RepTime(alloc_st);
 
-    // listlens += cost;
-
+    auto verif_st = LogTime();
      // Clear candidates and update global results
     for (unsigned int idx = 0; idx < candidates.size(); idx++) {
         if (negRef[candidates[idx]] == false && quickRef[candidates[idx]] == true) {
@@ -546,11 +557,13 @@ void SetJoinParelled::GreedyFindCandidateAndSimPairs(const int & tid, const int 
         negRef[candidates[idx]] = false;
     }
     candidates.clear();
+    verif_cost[tid] += RepTime(verif_st);
 }
 
 void SetJoinParelled::findSimPairs() {
     auto find_st = LogTime();
     cout << "Start finding similar pairs " << endl;
+
 
     // Initialize thread-local storage for sub-queries, partition keys, one-deletion keys, and one-deletion key starts
     vector<vector<TokenLen>> subquery[MAXTHREADNUM];
@@ -581,6 +594,8 @@ void SetJoinParelled::findSimPairs() {
 
             // If the current length group is not the one the record belongs to, we need to recalculate partition keys, etc.
             if (indexLenGrp != range_id[rid]) {
+                auto hash_st = LogTime();
+
                 const int &indexLen = range[indexLenGrp].first;
                 const int indexPartNum = floor(2 * coe * indexLen + EPS) + 1;
                 p_keys[tid].resize(indexPartNum);
@@ -624,6 +639,7 @@ void SetJoinParelled::findSimPairs() {
                 }
                 odk_st[tid][indexPartNum] = tmp_cnt;
 
+                hashInFind_cost[tid] += RepTime(hash_st);
                 // Now all the information we have got
                 GreedyFindCandidateAndSimPairs(tid, indexLenGrp, rid, p_keys[tid], od_keys[tid], odk_st[tid]);
             } else {
@@ -637,7 +653,8 @@ void SetJoinParelled::findSimPairs() {
     }
 
     fprintf(stderr, "%lu %lu %lu \n", resultNum, candidateNum, listlens);
-    cout << "Finding Similar Pairs Time Cost: " << RepTime(find_st) << endl;
+    search_cost = RepTime(find_st);
+    cout << "Finding Similar Pairs Time Cost: " << search_cost << endl;
 
     // release memory
     delete[] prime_exp;

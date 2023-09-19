@@ -31,7 +31,8 @@ int main(int argc, char *argv[]) {
     SetJoinParelled joiner(sorted_sets);
     joiner.index(thres);
     joiner.findSimPairs();
-
+    joiner.reportTimeCost();
+    joiner.reportLargestGroup();
     // Investigate the result
     printf("joiner.result_pairs have %llu pairs\n", joiner.getResultPairsAmount());
     // printf("The amount of document that occur in the pairs is %lu\n", getUniqueInts(joiner.result_pairs).size());
