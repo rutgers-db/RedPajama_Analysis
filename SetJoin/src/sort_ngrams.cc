@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     writeVec2Bin(idmap_file_path, idmap_ngrams);
 
     ofstream ofs;
-    ofs.open(sortedngram_path.c_str(), ios::binary);
+    ofs.open(sortedngram_path.c_str(), ios::binary);    
     for (auto i = 0; i < idmap_ngrams.size(); i++) {
         const auto &vec = ngrams[idmap_ngrams[i]];
         unsigned int size = vec.size();

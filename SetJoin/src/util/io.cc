@@ -308,3 +308,16 @@ void getFiles(string path, vector <string> &files) {
 std::string getDirectoryName(const std::string &path) {
     return std::filesystem::path(path).filename().string();
 }
+unsigned int countFilesAmountInOneDir(string path){
+    std::vector<std::string> filenames;
+
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(path))
+            filenames.push_back(entry.path().filename().string());
+    }
+    catch (std::filesystem::filesystem_error& e) {
+        std::cerr << e.what() << std::endl;
+    }
+
+    return filenames.size();
+}

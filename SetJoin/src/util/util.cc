@@ -110,3 +110,15 @@ double shrinkBottomk(vector<vector<unsigned int>>&  bottom_ks, double ratio){
     average_size/= bottom_ks.size();
     return average_size;
 }
+
+void generateHashFunc(unsigned int seed, pair<unsigned int, unsigned int> &hf)
+{
+    srand(seed);
+    unsigned int a = 0;
+    while (a == 0)
+        a = rand();
+    unsigned int b = rand();
+    hf.first = a;
+    hf.second = b;
+}
+

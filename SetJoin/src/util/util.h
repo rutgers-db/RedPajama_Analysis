@@ -45,5 +45,13 @@ bool bottomKJaccard(const std::vector<T>& A, const std::vector<T>& B, double& th
     return current_overlap >= required_overlap;
 }
 void printHowManyThreads();
+
+// The hash value function
+inline unsigned int hval(const pair<unsigned int, unsigned int> &hf, unsigned int &word)
+{
+    return hf.first * word + hf.second;
+}
+
+void generateHashFunc(unsigned int seed, pair<unsigned int, unsigned int> &hf);
 #endif
   

@@ -117,6 +117,7 @@ void readSimilarPair(const string &binFileName, vector<pair<int, int>> &sim_pair
     ifs.read((char *)&size, sizeof(unsigned long long));
     sim_pairs.resize(size);
     ifs.read((char *)&sim_pairs[0], size * sizeof(pair<int, int>));
+    printf("There are %lu pairs in %s \n", sim_pairs.size(), binFileName.c_str());
     ifs.close();
 }
 
@@ -132,6 +133,7 @@ void readSimilarPair(const string &binFileName, vector<pair<unsigned int, unsign
     ifs.read((char *)&size, sizeof(unsigned long long));
     sim_pairs.resize(size);
     ifs.read((char *)&sim_pairs[0], size * sizeof(pair<unsigned int, unsigned int>));
+    printf("There are %lu pairs in %s \n", sim_pairs.size(), binFileName.c_str());
     ifs.close();
 }
 
