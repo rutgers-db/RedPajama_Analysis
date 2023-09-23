@@ -4,6 +4,9 @@
 #include <bits/stdc++.h>
 #include <sys/sysinfo.h>
 #include <omp.h>
+// Maximum number of threads that can be used
+#define MAXTHREADNUM 128
+
 using namespace std;
 void print_memory();
 std::vector<int> getUniqueInts(const std::vector<std::pair<int, int>>& pairs);

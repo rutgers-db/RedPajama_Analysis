@@ -9,6 +9,7 @@ TEST_DIR = test
 # Sub Directories
 UTIL_DIR = $(SRCDIR)/util
 SETJOIN_DIR = $(SRCDIR)/set_join
+GROUPPARRALLED_DIR = $(SRCDIR)/set_join/group_paralled
 
 # Compiler flags
 CXXFLAGS = -std=c++17 -O3 -fopenmp -g
@@ -21,6 +22,7 @@ UTIL_SRCS = $(wildcard $(UTIL_DIR)/*.cc)
 UTIL_OBJS = $(UTIL_SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
 SETJOIN_SRCS = $(wildcard $(SETJOIN_DIR)/*.cc)
 SETJOIN_OBJS = $(SETJOIN_SRCS:$(SRCDIR)/%.cc=$(OBJDIR)/%.o)
+
 
 TEST_SRC_FILES = $(wildcard $(TEST_DIR)/*.cc)
 TEST_BIN_FILES = $(patsubst $(TEST_DIR)/%.cc, $(TEST_DIR)/%, $(TEST_SRC_FILES))
@@ -49,11 +51,17 @@ test: $(TEST_BIN_FILES)
 $(TEST_DIR)/%: $(TEST_DIR)/%.cc $(UTIL_OBJS)
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
 
+groupParelledJoin: $(OBJDIR)/groupParelledJoin.o  $(UTIL_OBJS) $(SETJOIN_OBJS) 
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) $(SETJOIN_OBJS)
+
+$(OBJDIR)/groupParelledJoin.o: $(UTIL_OBJS) $(SETJOIN_OBJS) src/groupParelledJoin.cc
+	$(CXX) $(CXXFLAGS) -c src/groupParelledJoin.cc -o $@
+
 sort: $(OBJDIR)/sort_simp.o
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) -I $(TBB_INC) -L $(TBB_LIB)
 
 $(OBJDIR)/sort_simp.o: $(UTIL_OBJS) src/sort_simp.cc
-	$(CXX) $(CXXFLAGS) -c src/sort_simp.cc -o $@
+	$(CXX) $(CXXFLAGS) -c src/sort_simp.cc -o $@ -I $(TBB_INC) -L $(TBB_LIB)
 
 sketch_join: $(OBJDIR)/sketch_join.o $(UTIL_OBJS) $(SETJOIN_OBJS)
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) $(SETJOIN_OBJS)
@@ -79,6 +87,19 @@ sort_ngrams: $(OBJDIR)/sort_ngrams.o
 
 $(OBJDIR)/sort_ngrams.o: $(UTIL_OBJS) src/sort_ngrams.cc
 	$(CXX) $(CXXFLAGS) -c src/sort_ngrams.cc -o $@
+
+sort_lsketch: $(OBJDIR)/sort_lsketch.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+
+$(OBJDIR)/sort_lsketch.o: $(UTIL_OBJS) src/sort_lsketch.cc
+	$(CXX) $(CXXFLAGS) -c src/sort_lsketch.cc -o $@
+
+eSortNgram: $(OBJDIR)/externalsort_ngrams.o
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) -I $(TBB_INC) -L $(TBB_LIB)
+
+$(OBJDIR)/externalsort_ngrams.o: $(UTIL_OBJS) src/externalsort_ngrams.cc
+	$(CXX) $(CXXFLAGS) -c src/externalsort_ngrams.cc -o $@ -I $(TBB_INC) -L $(TBB_LIB)
+
 extract: $(OBJDIR)/extractSet.o
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
 

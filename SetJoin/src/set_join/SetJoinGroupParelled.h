@@ -1,9 +1,6 @@
-//
-// Created by 86183 on 2023/9/2.
-//
 
-#ifndef REDPAJAMA_ANALYSIS_SETJOINGROUPPARELLED_H
-#define REDPAJAMA_ANALYSIS_SETJOINGROUPPARELLED_H
+#ifndef SETJOINGROUPPARELLED_H
+#define SETJOINGROUPPARELLED_H
 
 #include <iostream>
 #include <fstream>
@@ -12,116 +9,134 @@
 #include <unordered_set>
 #include <string>
 #include <algorithm>
-#include <string.h>
+#include <cstring>
 #include <queue>
 #include <inttypes.h>
 #include <sys/time.h>
 #include <cmath>
 #include <cstdio>
+#include "../util/util.h"
+#include "group_paralled/PartitionHasher.h"
+#include "group_paralled/PartitionIndex.h"
+#include "group_paralled/RangeLoader.h"
 
 using namespace std;
 
-// Macros for hashing
-#define PACK(x, y) ((x << 32) + y) // 32
-#define PRIME 2017
-
-#define EPS 1e-5
-
-// Maximum number of threads that can be used
-#define MAXTHREADNUM 128
-
-// Type alias for token length.
-// Use unsigned int for ngram, unsigned short otherwise.
-using TokenLen = unsigned int;
-
+/**
+ * SetJoinGroupParelled: Class to perform set joins in parallel
+ * It manages the joining of datasets based on certain criteria, 
+ * especially focusing on overlapping criteria.
+ */
 class SetJoinGroupParelled {
 public:
-    double det{};
-    uint64_t resultNum = 0;    // Number of result pairs found
-    uint64_t candidateNum = 0; // Number of candidate pairs considered
-    uint64_t listlens = 0;
-    TokenLen maxIndexPartNum{};  // Maximum index partition number
-    double threshold{};
-
-    string dataset_path{};
-
-    //information
-    vector<unsigned int> dataset_info;
-
-    //temp dataset
-    unordered_map<unsigned int, vector<TokenLen>> temp_dataset;
+    string dataset_path; // Path to the dataset being processed
 
     // Array to store result pairs for each thread
     vector<pair<int, int>> result_pairs[MAXTHREADNUM];
 
     // Parameters related to calculation and dataset
+    double det{};
     double coe{};
     double ALPHA{};
-    unsigned int n{};       // Number of records in the dataset
-    unsigned int maxSize{}; // Maximum size of the records
 
-    explicit SetJoinGroupParelled(vector<unsigned int> &sorted_records_info) {
-        dataset_info = sorted_records_info;
-    }
+    // Recording time cost of different part
+    double index_cost;
+    double search_cost;
+    double hashInFind_cost[MAXTHREADNUM];
+    double alloc_cost[MAXTHREADNUM];
+    double verif_cost[MAXTHREADNUM];
 
+    /**
+     * Constructor
+     * @param path: Path to the dataset to be processed
+     */
+    explicit SetJoinGroupParelled(string path) : dataset_path(std::move(path)) {}
+
+    // Default destructor
     ~SetJoinGroupParelled() = default;
 
-    // Output the Parameters
-    void showPara() {
-        printf("det: %f coe: %f ALPHA: %f maxSize: %u maxIndexPartNum: %hu \n", det, coe, ALPHA, maxSize,
-               maxIndexPartNum);
-    }
+    /**
+     * Get the total number of result pairs found by all threads
+     * @return Total number of result pairs found
+     */
+    unsigned long long getResultPairsAmount();
 
-    // Function to get the total number of result pairs found by all threads
-    unsigned long long getResultPairsAmount() {
-        unsigned long long pairs_amount = 0;
-        for (int i = 0; i < MAXTHREADNUM; i++) {
-            pairs_amount += result_pairs[i].size();
-        }
-        return pairs_amount;
-    }
+    /**
+     * Main function to perform set join
+     * @param threshold: Overlapping threshold to decide joins
+     */
+    void setjoin(double threshold);
 
-    //init range information
-    void init();
-
-    // Function to find similar pairs
-    void findSimPairs();
-
+    void reportTimeCost();
 
 private:
-    int *prime_exp{};    // Array for storing prime numbers, presumably for hashing
-    bool **quickRef2D{}; // 2D quick reference array
-    bool **negRef2D{};   // 2D negative reference array
+    // Vectors for storing range information (groups based on the size of documents)
 
-// Vectors for storing range information(the groups that based on the size of documents)
-    vector<pair<unsigned int, unsigned int>> range;
-    vector<unsigned int> range_st;
-    vector<int> range_id;
+    /**
+     * Initialize class parameters
+     * @param threshold: Overlapping threshold
+     */
+    void initializeParameters(double threshold);
 
+    /**
+     * Processes the dataset and manages the set joins
+     */
+    void processDataset();
 
-// vectors needed when allocate by greedy heap method
-    vector<unsigned int> invPtrArr[MAXTHREADNUM];
-    vector<unsigned int> intPtrArr[MAXTHREADNUM];
-    vector<vector<unsigned int>> onePtrArr[MAXTHREADNUM];
-    vector<pair<int, TokenLen>> valuesArr[MAXTHREADNUM]; // <value, loc>
-    vector<TokenLen> scoresArr[MAXTHREADNUM];
+    /**
+     * Process the current dataset and manage its hashing and indexing
+     * @param currentDataset: Current dataset to be processed
+     * @param currentHasher: Hasher object for the current dataset
+     * @param currentIndex: Index object for the current dataset
+     * @param previousDocId: ID for previous document
+     */
+    void processCurrentDataset(
+        const vector<vector<unsigned int>>& currentDataset,
+        PartitionHasher*& currentHasher,
+        PartitionIndex*& currentIndex,
+        const unsigned int& previousDocId);
 
+    /**
+     * Process the previous dataset and manage comparisons with the current dataset
+     * @param previousDataset: Previous dataset
+     * @param currentDataset: Current dataset
+     * @param previousHasher: Hasher object for the previous dataset
+     * @param previousIndex: Index object for the previous dataset
+     * @param beforePreviousDocId: ID for before previous document
+     * @param previousDocId: ID for previous document
+     */
+    void processPreviousDataset(
+        const vector<vector<unsigned int>>& previousDataset,
+        const vector<vector<unsigned int>>& currentDataset,
+        PartitionHasher& previousHasher,
+        PartitionIndex& previousIndex,
+        const unsigned int& beforePreviousDocId,
+        const unsigned int& previousDocId);
 
-    // Function to build index for two range
-    void index(int left_range_id, int right_range_id);
+    /**
+     * Verifies pairs for overlaps
+     * @param datasetA: Dataset A for verification
+     * @param datasetB: Dataset B for verification
+     * @param docId: Document ID for referencing
+     * @param candidates: Candidate set IDs for verification
+     * @param datasetAStartId: Start ID for Dataset A
+     * @param datasetBStartId: Start ID for Dataset B
+     */
+    void verifyPairs(
+        const vector<vector<unsigned int>>& datasetA,
+        const vector<vector<unsigned int>>& datasetB,
+        unsigned int docId,
+        const vector<unsigned int>& candidates,
+        unsigned int datasetAStartId, 
+        unsigned int datasetBStartId);
 
-
-    // Function to find candidate and similar pairs using a greedy approach
-    void GreedyFindCandidateAndSimPairs(const int &tid, const int indexLenGrp, const unsigned int rid,
-                                        const vector<unsigned int> &p_keys, const vector<unsigned int> &od_keys,
-                                        const vector<TokenLen> &odk_st);
-
-    // Function to check overlap between two sets
-    bool overlap(unsigned int x, unsigned int y, int posx = 0, int posy = 0, int current_overlap = 0);
-
-    // Main function to perform set join
-    void setjoin(double threshold);
+    /**
+     * Check if two sets overlap based on the defined criteria
+     * @param x: Set X
+     * @param y: Set Y
+     * @return True if the sets jaccard's similarity is over the det, otherwise False
+     */
+    bool overlap(const vector<unsigned int>& x, const vector<unsigned int>& y);
 };
 
-
-#endif //REDPAJAMA_ANALYSIS_SETJOINGROUPPARELLED_H
+#endif // SETJOINGROUPPARELLED_H

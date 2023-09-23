@@ -39,12 +39,15 @@ int main(){
 
     vector<unsigned int> docs_length;
     // load all the lengths of the files above
-    for(auto & dataset_name : dataset_names){
-        const string sortedsets_file_path = root_dir + "/data/ngram/sorted_ngrams/" + dataset_name +"_sortedngram.bin";
-        loadIntBin(sortedsets_file_path, docs_length);
-    }
+    const string sortedsets_file_path = root_dir + "/test/sample.bin";
+    loadIntBin(sortedsets_file_path, docs_length);
+
+    // for(auto & dataset_name : dataset_names){
+    //     const string sortedsets_file_path = root_dir + "/data/ngram/sorted_ngrams/" + dataset_name +"_sortedngram.bin";
+    //     loadIntBin(sortedsets_file_path, docs_length);
+    // }
     
-    sort(docs_length.begin(),docs_length.end());
+    // sort(docs_length.begin(),docs_length.end());
 
     vector<double> groups_size;
     unsigned int low = 0, high = 0;

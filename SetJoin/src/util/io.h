@@ -1,5 +1,6 @@
 #pragma once
-#include "../set_join/SetJoinParelled.h"
+// #include "../set_join/SetJoinParelled.h"
+#include "util.h"
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -8,7 +9,7 @@ void loadTokensBasedOnIDX(const string & dir_path, vector<vector<unsigned short>
 void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &docs);
 void loadShortBin(const string &binFileName, vector<vector<unsigned int>> &docs);
 void loadBinSize(const string &binFileName, vector<unsigned int>& docs_size);
-void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int, vector<TokenLen>>  &docs,
+void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int, vector<unsigned int>>  &docs,
                      vector<unsigned int> docs_size, int left_index, int right_index);
 void loadIntBin(const string &binFileName, vector<vector<unsigned int>> &docs);
 void loadBin2vec(const string &binFileName, vector<int> &vec);
@@ -22,3 +23,4 @@ std::string extract_prefix(const std::string& filepath);
 void getFiles(string path, vector<string> &files);
 unsigned int countFilesAmountInOneDir(string path);
 std::string getDirectoryName(const std::string& path);
+void createDirectoryIfNotExists(const std::string& path);

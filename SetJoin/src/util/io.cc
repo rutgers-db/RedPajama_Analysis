@@ -1,4 +1,4 @@
-// Include necessary headers
+    // Include necessary headers
 #include "io.h"       // The custom I/O functions defined in io.h
 #include <filesystem> // Filesystem library for performing operations on files and directories
 #include <dirent.h>   // For directory management (such as open directory, close directory)
@@ -115,7 +115,7 @@ void loadBinSize(const string &binFileName, vector<unsigned int>& docs_size) {
     printf("There are %lu documents in %s\n", docs_size.size(), binFileName.c_str());
 }
 
-void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int, vector<TokenLen>>& docs,
+void readDataAtIndexRange(const string &binFileName, unordered_map<unsigned int, vector<unsigned int>>& docs,
                      vector<unsigned int> docs_size, int left_index, int right_index) {
     cout << "Reading " << binFileName << endl; // Print the name of the file being read
     ifstream ifs(binFileName, ios::binary);    // Open the binary file for reading
@@ -171,7 +171,7 @@ void loadBin2vec(const string &binFileName, vector<int> &vec) {
 void writeVec2Bin(const string &binFileName, vector<int> &vec) {
     cout << "Writing " << binFileName << endl;
     ofstream ofs;
-    ofs.open(binFileName.c_str(), ios::binary);
+    ofs.open(binFileName.c_str(), ios::binary| ios::out);
     int size = vec.size();
     ofs.write((char *) &size, sizeof(int));                                     // Write the size of the vector
     ofs.write(reinterpret_cast<const char *>(vec.data()), size * sizeof(int)); // Write the vector data
@@ -320,4 +320,19 @@ unsigned int countFilesAmountInOneDir(string path){
     }
 
     return filenames.size();
+}
+void createDirectoryIfNotExists(const std::string& path) {
+    try {
+        if (!std::filesystem::exists(path)) {
+            if (std::filesystem::create_directories(path)) {
+                std::cout << "Directory created successfully at: " << path << '\n';
+            } else {
+                std::cout << "Failed to create directory: " << path << '\n';
+            }
+        } else {
+            std::cout << "Directory already exists: " << path << '\n';
+        }
+    } catch (const std::filesystem::filesystem_error& e) {
+        std::cerr << "Error creating directory: " << e.what() << '\n';
+    }
 }

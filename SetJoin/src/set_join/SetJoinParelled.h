@@ -15,6 +15,7 @@
 #include <sys/time.h>
 #include <cmath>
 #include <cstdio>
+#include "../util/util.h"
 
 using namespace std;
 
@@ -25,11 +26,7 @@ using namespace std;
 // Macros for hashing
 #define PACK(x, y) ((x << 32) + y) // 32
 #define PRIME 2017
-
 #define EPS 1e-5
-
-// Maximum number of threads that can be used
-#define MAXTHREADNUM 128
 
 // Type alias for token length.
 // Use unsigned int for ngram, unsigned short otherwise.
@@ -83,7 +80,7 @@ public:
         double total_find_cost = 0;
         double total_alloc_cost = 0;
         double total_verif_cost = 0;
-        double sum ;
+        double sum;
         for (int i = 0; i < MAXTHREADNUM; i++) {
             total_hash_cost += hashInFind_cost[i];
             total_memeory_cost += mem_cost[i];
@@ -91,16 +88,15 @@ public:
             total_alloc_cost += alloc_cost[i];
             total_verif_cost += verif_cost[i];
         }
-        sum = total_hash_cost+total_memeory_cost+total_find_cost+total_alloc_cost+total_verif_cost;
-        total_hash_cost = total_hash_cost/sum* search_cost;
-        total_memeory_cost = total_memeory_cost/sum* search_cost;
-        total_find_cost = total_find_cost/sum* search_cost;
-        total_alloc_cost = total_alloc_cost/sum* search_cost;
-        total_verif_cost = total_verif_cost/sum* search_cost;
-
+        sum = total_hash_cost + total_memeory_cost + total_find_cost + total_alloc_cost + total_verif_cost;
+        total_hash_cost = total_hash_cost / sum * search_cost;
+        total_memeory_cost = total_memeory_cost / sum * search_cost;
+        total_find_cost = total_find_cost / sum * search_cost;
+        total_alloc_cost = total_alloc_cost / sum * search_cost;
+        total_verif_cost = total_verif_cost / sum * search_cost;
 
         printf("|index_cost| total_hash_cost| total_memeory_cost| find_cost| alloc_cost| verif_cost|\n");
-        printf("|%f|%f|%f|%f|%f|%f|\n",index_cost , total_hash_cost, total_memeory_cost, total_find_cost, total_alloc_cost, total_verif_cost);
+        printf("|%f|%f|%f|%f|%f|%f|\n", index_cost, total_hash_cost, total_memeory_cost, total_find_cost, total_alloc_cost, total_verif_cost);
     }
 
     void reportLargestGroup() {
@@ -118,6 +114,7 @@ public:
 
         printf("Average Range size: %.3f Maximum Range size ratio %.3f \n", total_size / range_size.size(), max_size / total_size);
     }
+    
     // Function to get the total number of result pairs found by all threads
     unsigned long long getResultPairsAmount() {
         unsigned long long pairs_amount = 0;
