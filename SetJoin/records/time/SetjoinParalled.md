@@ -1,5 +1,7 @@
 # Time Analysis
 
+This file records the time cost of Setjoin whose parallism is based on original methods.
+
 ## Thres:0.8 Tokens
 | Dataset| Dataset Size (GB) | Docs Amount| Found Pairs | Index Time | Online Hashing Time| Memory Time| Finding Time | Allocation Time | Verification Time| 
 |----------|----------|----------|----------|----------|----------|----------|----------|----------|
@@ -18,3 +20,11 @@
 | stackexchange    | 11G | 29825086 |11014 |364.726819|3.261139|2.324803|38.954612|177.801583|0.444563|
 | wikipedia    | 14G | 29834171 | 141574669 |163.552565|5.430413|5.188511|148.004664|817.892723|161.020637|
 | github    | 9.8G | 29834171 | 39181707284 |137.317448|6.285783|6.501419|146.362220|853.343808|327.684258|
+
+The result shown before has bugs, the time of index is not correct and the index of one deletion neghbors is not built well.
+Therefore, it will impact all the result. The result shown below is debugged already. And that makes the time in indexing significantly increases.
+
+
+## Thres:0.8 Ngrams
+| Dataset| Dataset Size (GB) | Docs Amount| Found Pairs | Index Time | Online Hashing Time| Memory Time| Finding Time | Allocation Time | Verification Time|
+| stackexchange (M8 Lsketches Ngrams)    | 23G | 29825086 |17670 |1669.860246|4.366444|5.096554|116.583303|487.957136|0.731031|

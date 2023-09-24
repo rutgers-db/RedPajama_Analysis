@@ -13,6 +13,7 @@ public:
     unsigned int cur_gp_size;
     unsigned int range_low;
     unsigned int range_high;
+    double load_cost = 0;
 
     string sortedsets_path;            // Path to the binary file
     bool if_eof = false;               // Flag indicating if the end of the file is reached
@@ -44,6 +45,8 @@ public:
         if (if_eof)
             return false;
 
+        auto load_st = LogTime();
+
         range_low = nxt_size;
         while (!ifs.eof()) {
             // Load next document vector
@@ -72,6 +75,7 @@ public:
             printf("Reach End of File and the total range group is: %d \n", range_num);
         }
 
+        load_cost += RepTime(load_st);
         return true;
     }
 };

@@ -7,7 +7,13 @@
 #include "group_paralled/PartitionIndex.h"
 #include "group_paralled/RangeLoader.h"
 
-vector<vector<unsigned int>> subquery[MAXTHREADNUM];
+vector<unsigned int> tmp_p_keys[MAXTHREADNUM];
+vector<unsigned int> tmp_od_keys[MAXTHREADNUM];
+vector<unsigned int> tmp_odk_st[MAXTHREADNUM];
+
+vector<int> prime_exp;
+vector<unsigned int> tmp_rid_arr[MAXTHREADNUM];
+vector<unsigned int> tmp_odlocs_arr[MAXTHREADNUM];
 
 bool SetJoinGroupParelled::overlap(const vector<unsigned int>& x, const vector<unsigned int>& y) {
     int requiredOverlap = ceil(det / (1 + det) * (int)(x.size() + y.size()) - EPS);
@@ -35,6 +41,14 @@ void SetJoinGroupParelled::initializeParameters(double threshold) {
     det = threshold;
     ALPHA = 1.0 / threshold + 0.01;
     coe = (1 - det) / (1 + det);
+    PartitionHasher::init_primeArr();
+
+    // reserve space for tmp vector
+    for(auto i = 0;i<MAXTHREADNUM;i++){
+        tmp_p_keys[i].reserve(3e4);
+        tmp_od_keys[i].reserve(3e4);
+        tmp_odk_st[i].reserve(3e4);
+    }
 }
 
 void SetJoinGroupParelled::setjoin(double threshold) {
@@ -43,108 +57,6 @@ void SetJoinGroupParelled::setjoin(double threshold) {
     processDataset();
     setjoin_cost = RepTime(search_st);
 }
-
-// void SetJoinGroupParelled::setjoin(double threshold){
-//     auto time_st = LogTime();
-
-//     det = threshold;
-//     ALPHA = 1.0 / threshold + 0.01;
-//     coe = (1 - det) / (1 + det);
-    
-
-//     // create range loader
-//     RangeLoader rangeloader(dataset_path, ALPHA);
-//     vector<vector<unsigned int>> * prev_range_dataset = nullptr;
-//     vector<vector<unsigned int>> * cur_range_dataset = new vector<vector<unsigned int>>();
-//     PartitionHasher * prev_hasher = nullptr;
-//     PartitionHasher * cur_hasher;
-//     PartitionIndex * prev_index = nullptr;
-//     PartitionIndex * cur_index;
-
-//     unsigned int beforePrev_rid;
-//     unsigned int prev_rid = 0;
-//     while(rangeloader.loadNextRange(*cur_range_dataset)){
-//         rangeloader.showCurrentRangeInfo();
-//         const auto & cur_dataset = *cur_range_dataset;
-//         // search in the previous datsaet and index
-//         if(prev_range_dataset != nullptr){
-//             printf("Compare with previous dataset\n");
-//             auto & prev_dataset = *prev_range_dataset;
-//             unsigned int partNum = floor(2 * coe * prev_dataset[0].size() + EPS) + 1;
-//              // find candidates
-// #pragma omp parallel for
-//             for(unsigned int rid = 0; rid < cur_dataset.size(); rid++){
-//                 vector<unsigned int> candidates;
-//                 int tid = omp_get_thread_num();
-
-//                 vector<unsigned int> p_keys;
-//                 vector<unsigned int> od_keys;
-//                 vector<unsigned int> odk_st;
-//                 prev_hasher->hash(cur_dataset[rid],partNum, tid, p_keys, od_keys, odk_st);
-
-//                 // make sure current rid is larger than all those in the previous range
-//                 unsigned int fake_rid = rid + prev_dataset.size();
-//                 prev_index->greedy_search(*prev_hasher, tid, fake_rid , p_keys, od_keys, odk_st, candidates);
-                
-//                 // verify the pairs
-//                 for (unsigned int idx = 0; idx < candidates.size(); idx++) {
-//                     auto & x = cur_dataset[rid];
-//                     auto & y = prev_dataset[candidates[idx]];
-//                     if (overlap(x, y) == true) {
-//                         result_pairs[tid].emplace_back(prev_rid + rid, beforePrev_rid + candidates[idx]);
-//                     }
-//                 }
-//             }
-//         }
-
-//         // due to the reference that use
-//         delete prev_index; // remove the range that not used
-//         delete prev_hasher; // remove the range that not used
-//         delete prev_range_dataset; // remove the range that not used
-
-//         printf("Index Current Group\n");
-//         cur_hasher = new PartitionHasher(*cur_range_dataset);
-       
-//         unsigned int partNum = floor(2 * coe * cur_dataset[0].size() + EPS) + 1; 
-//         cur_hasher->hash(cur_dataset, partNum);
-//         cur_index = new PartitionIndex(det, coe);
-//         cur_index->createIndex(*cur_hasher, partNum);
-        
-//         printf("Compare with Current dataset\n");
-//         // find candidates
-// #pragma omp parallel for
-//         for(unsigned int rid = 0; rid < cur_dataset.size(); rid++){
-//             vector<unsigned int> candidates;
-//             int tid = omp_get_thread_num();
-
-//             auto & p_keys = cur_hasher->parts_keys[rid];
-//             auto & od_keys =cur_hasher->onedelete_keys[rid];
-//             auto & odk_st = cur_hasher->odkeys_st[rid];
-//             cur_index->greedy_search(*cur_hasher, tid, rid, p_keys, od_keys, odk_st, candidates);
-            
-//             // verify the pairs
-//             for (unsigned int idx = 0; idx < candidates.size(); idx++) {
-//                 auto & x = cur_dataset[rid];
-//                 auto & y = cur_dataset[candidates[idx]];
-//                 if (overlap(x, y) == true) {
-//                     result_pairs[tid].emplace_back(prev_rid + rid, prev_rid + candidates[idx]);
-//                 }
-//             }
-//         }
-
-//         beforePrev_rid = prev_rid;
-//         prev_rid += cur_dataset.size();
-
-//         prev_range_dataset = cur_range_dataset;
-//         prev_hasher = cur_hasher;
-//         prev_index = cur_index;
-        
-//         cur_range_dataset = new vector<vector<unsigned int>>();
-
-//     }
-
-//     printf("Total Cost time is %f  in these %u documents that divided into %d ranges\n", RepTime(time_st), prev_rid, rangeloader.range_num);
-// }
 
 void SetJoinGroupParelled::processDataset() {
     auto startTime = LogTime();
@@ -161,12 +73,6 @@ void SetJoinGroupParelled::processDataset() {
     while (rangeLoader.loadNextRange(*currentDataset)) {
         rangeLoader.showCurrentRangeInfo();
 
-        
-        // if(rangeLoader.range_num < 33){
-        //     currentDataset->clear();
-        //     continue;
-        // }
-            
         // Compare with the previous dataset.
         if (previousDataset) {
             processPreviousDataset(*previousDataset, *currentDataset, *previousHasher, *previousIndex, beforePreviousDocId, previousDocId);
@@ -188,6 +94,9 @@ void SetJoinGroupParelled::processDataset() {
         previousIndex = currentIndex;
         currentDataset = new vector<vector<unsigned int>>();
     }
+
+    IO_cost = rangeLoader.load_cost;
+    
     printf("Total Cost time is %f  in these %u documents that divided into %d ranges\n", 
            RepTime(startTime), rangeLoader.docs_amount, rangeLoader.range_num);
 }
@@ -243,16 +152,16 @@ void SetJoinGroupParelled::processPreviousDataset(
         vector<unsigned int> candidates;
         int tid = omp_get_thread_num();
 
-        vector<unsigned int> p_keys;
-        vector<unsigned int> od_keys;
-        vector<unsigned int> odk_st;
+        tmp_p_keys[tid].clear();
+        tmp_od_keys[tid].clear();
+        tmp_odk_st[tid].clear();
 
-        hashInFind_cost[tid] += previousHasher.hash(currentDataset[docId],partitionNum, tid, p_keys, od_keys, odk_st);
+        hashInFind_cost[tid] += previousHasher.hash(currentDataset[docId],partitionNum, tid, tmp_p_keys[tid], tmp_od_keys[tid], tmp_odk_st[tid]);
         
         auto alloc_st = LogTime();
         // make sure current docId is larger than all those in the previous range
         unsigned int fake_docId = docId + previousDataset.size();
-        previousIndex.greedy_search(previousHasher, tid, fake_docId , p_keys, od_keys, odk_st, candidates);
+        previousIndex.greedy_search(previousHasher, tid, fake_docId , tmp_p_keys[tid], tmp_od_keys[tid], tmp_odk_st[tid], candidates);
         alloc_cost[tid] += RepTime(alloc_st);
 
         // Obtain candidates and perform verification.
@@ -274,7 +183,7 @@ void SetJoinGroupParelled::verifyPairs(
             result_pairs[threadId].emplace_back(datasetBStartId + docId, datasetAStartId + candidate);
         }
     }
-    alloc_cost[threadId] += RepTime(verif_st);
+    verif_cost[threadId] += RepTime(verif_st);
 }
 
 // Function to get the total number of result pairs found by all threads
@@ -296,14 +205,16 @@ void SetJoinGroupParelled::reportTimeCost() {
         total_alloc_cost += alloc_cost[i];
         total_verif_cost += verif_cost[i];
     }
+
+    // cout<<"Before shrinking," << total_hash_cost<<endl;
     sum = total_hash_cost + total_alloc_cost + total_verif_cost;
 
     double search_cost = setjoin_cost - index_cost;
-    
+
     total_hash_cost = total_hash_cost / sum * search_cost;
     total_alloc_cost = total_alloc_cost / sum * search_cost;
     total_verif_cost = total_verif_cost / sum * search_cost;
 
-    printf("|index_cost| total_hash_cost| alloc_cost| verif_cost|\n");
-    printf("|%f|%f|%f|%f|\n", index_cost, total_hash_cost, total_alloc_cost, total_verif_cost);
+    printf("|IO_cost|index_cost| total_hash_cost| alloc_cost| verif_cost|\n");
+    printf("|%f|%f|%f|%f|%f|\n", IO_cost, index_cost, total_hash_cost, total_alloc_cost, total_verif_cost);
 }

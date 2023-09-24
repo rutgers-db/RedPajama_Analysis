@@ -5,7 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include <omp.h>
-#include "../SetJoinGroupParelled.h"
 #include "../../util/util.h"
 
 using namespace std;
@@ -14,9 +13,11 @@ using namespace std;
 #define PRIME 2017 // A prime constant for hash calculations
 #define EPS 1e-5   // Small epsilon value, potentially for floating-point comparisons
 
+const unsigned int PRIMEEXP_SPACE = 3e7;
+extern vector<int> prime_exp;    // Array for storing prime numbers, presumably for hashing
+
 class PartitionHasher {
 private:
-    int *prime_exp;    // Array for storing prime numbers, presumably for hashing
     vector<vector<unsigned int>> subquery[MAXTHREADNUM]; // Array of vectors containing token lengths for each thread
    
 public:
@@ -24,21 +25,27 @@ public:
     vector<vector<unsigned int>> onedelete_keys; // Reference to keys after a single deletion
     vector<vector<unsigned int>> odkeys_st; // Stores the start positions of one deletion information for each partition
 
+    static void init_primeArr(){
+        prime_exp.resize(PRIMEEXP_SPACE + 1);
+        prime_exp[0] = 1;
+        for (unsigned int i = 1; i <= PRIMEEXP_SPACE; ++i)
+            prime_exp[i] = prime_exp[i - 1] * PRIME;
+    } 
+
     // Constructor
     // to do: the reason that I refer the dataset is that to save the memory space, but the orignal content of dataset
     // will be lost
     PartitionHasher(const vector<vector<unsigned int>> & dataset) {
-        // Initialize prime exponential array for hashing
-        unsigned int n = dataset.size();
-        prime_exp = new int[n + 1];
-        prime_exp[0] = 1;
-        for (unsigned int i = 1; i <= n; ++i)
-            prime_exp[i] = prime_exp[i - 1] * PRIME;
+
+        // If the dataset's max_len is too long
+        // reinitialize prime exponential array for hashing
+        unsigned max_len = dataset[dataset.size() - 1].size();
+        if(max_len > PRIMEEXP_SPACE){
+            prime_exp.resize(max_len + 1);
+            for (unsigned int i = PRIMEEXP_SPACE + 1; i <= max_len; ++i)
+                prime_exp[i] = prime_exp[i - 1] * PRIME;
+        }
         
-    }
-    ~PartitionHasher(){
-         // release memory
-        delete[] prime_exp;
     }
 
     /**

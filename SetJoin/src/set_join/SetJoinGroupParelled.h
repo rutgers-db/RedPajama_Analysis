@@ -40,11 +40,12 @@ public:
     double ALPHA{};
 
     // Recording time cost of different part
+    double IO_cost;
     double index_cost;
     double setjoin_cost;
-    double hashInFind_cost[MAXTHREADNUM];
-    double alloc_cost[MAXTHREADNUM];
-    double verif_cost[MAXTHREADNUM];
+    double hashInFind_cost[MAXTHREADNUM] = {0};
+    double alloc_cost[MAXTHREADNUM] = {0};
+    double verif_cost[MAXTHREADNUM] = {0};
 
     /**
      * Constructor

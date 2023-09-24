@@ -11,17 +11,18 @@
 
 using namespace std;
 
+extern vector<unsigned int> tmp_rid_arr[MAXTHREADNUM];
+extern vector<unsigned int> tmp_odlocs_arr[MAXTHREADNUM];
+
 class PartitionIndex {
 private:
     bool **quickRef2D; // 2D quick reference array
     bool **negRef2D;   // 2D negative reference array
 
 public:
-    double index_cost;
     double mem_cost[MAXTHREADNUM] = {0};
     double find_cost[MAXTHREADNUM] = {0};
     double alloc_cost[MAXTHREADNUM] = {0};
-    double verif_cost[MAXTHREADNUM] = {0};
 
     // Index-related containers
     vector<vector<unsigned int>> parts_rids;
@@ -44,6 +45,13 @@ public:
     double det;
     double coe;
     
+    static void allocateTmpVecSpace(){
+        for(auto tid = 0; tid <MAXTHREADNUM; tid++){
+            tmp_rid_arr[tid].reserve(1e6);
+            tmp_odlocs_arr[tid].reserve(1e6);
+        }
+    }
+
     PartitionIndex(double delta, double _coe): det(delta), coe(_coe){}
 
     ~PartitionIndex(){
@@ -148,10 +156,13 @@ public:
             iota(cur_ods_rids.begin(), cur_ods_rids.end(), 0); // cur_rids temporarily filled with 0 to one_deletion_amount-1
 
             // temporary vector for the sorting the array
-            vector<unsigned int> tmp_rid;
-            tmp_rid.reserve(one_deletion_amount);
-            vector<unsigned int> tmp_od_locs;
-            tmp_od_locs.reserve(one_deletion_amount);
+            auto tid = omp_get_thread_num();
+            auto& tmp_rid = tmp_rid_arr[tid];
+            auto& tmp_od_locs = tmp_odlocs_arr[tid];
+            // clear the array and reserve enough space if its space is not enough
+            tmp_rid.clear(); tmp_rid.reserve(one_deletion_amount);
+            tmp_od_locs.clear(); tmp_od_locs.reserve(one_deletion_amount);
+            
 
             for (unsigned int rid = 0; rid < len; rid++) {
                 unsigned int const od_loc_st = odkeys_st[rid][pid];
