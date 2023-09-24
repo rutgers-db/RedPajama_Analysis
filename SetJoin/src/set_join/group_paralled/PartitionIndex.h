@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <iostream>
+#include <execution>
+#include <tbb/tbb.h>
 #include <omp.h>
 #include <algorithm> // For sort, iota
 #include <limits>    // For numeric_limits
@@ -13,6 +15,7 @@ using namespace std;
 
 extern vector<unsigned int> tmp_rid_arr[MAXTHREADNUM];
 extern vector<unsigned int> tmp_odlocs_arr[MAXTHREADNUM];
+extern unsigned int available_threads_amount;
 
 class PartitionIndex {
 private:
@@ -105,6 +108,14 @@ public:
 
         max_len = onedelete_keys[n-1].size();
 
+        // calculate each tbb sort use how many threads
+        bool use_tbb = false;
+        if(available_threads_amount>partNum){
+            use_tbb = true;
+            
+            // int tbb_threads =int( ceil(double(available_threads_amount) / partNum));
+            cout<<"using tbb " << tbb_threads << "partNum" << endl;
+        }
         // Build Index for partitions
 #pragma omp parallel for
         for (auto pid = 0; pid < partNum; pid++) {
@@ -122,11 +133,18 @@ public:
 
             
             // Sort the partitions based on hashing value and record id
-            sort(cur_rids.begin(), cur_rids.end(), [&pid, &parts_keys](const unsigned int &rid_1, const unsigned int &rid_2) {
-                if (parts_keys[rid_1][pid] == parts_keys[rid_2][pid])
-                    return rid_1 < rid_2;
-                return parts_keys[rid_1][pid] < parts_keys[rid_2][pid];
-            });
+            if (use_tbb)
+                sort(execution::par_unseq, cur_rids.begin(), cur_rids.end(), [&pid, &parts_keys](const unsigned int &rid_1, const unsigned int &rid_2) {
+                    if (parts_keys[rid_1][pid] == parts_keys[rid_2][pid])
+                        return rid_1 < rid_2;
+                    return parts_keys[rid_1][pid] < parts_keys[rid_2][pid];
+                });
+            else
+                sort(cur_rids.begin(), cur_rids.end(), [&pid, &parts_keys](const unsigned int &rid_1, const unsigned int &rid_2) {
+                    if (parts_keys[rid_1][pid] == parts_keys[rid_2][pid])
+                        return rid_1 < rid_2;
+                    return parts_keys[rid_1][pid] < parts_keys[rid_2][pid];
+                });
 
             // Build index pointers for current partitions
             unsigned int prev_hv = parts_keys[cur_rids[0]][pid];
@@ -174,15 +192,26 @@ public:
             }
             
             // sort the parts_rid[i][pid]
-            sort(cur_ods_rids.begin(), cur_ods_rids.end(), [&tmp_rid, &tmp_od_locs, &pid, &onedelete_keys](const unsigned int &id1, const unsigned int &id2) {
-                auto const &rid_1 = tmp_rid[id1];
-                auto const &rid_2 = tmp_rid[id2];
-                auto const &od_loc_1 = tmp_od_locs[id1];
-                auto const &od_loc_2 = tmp_od_locs[id2];
-                if (onedelete_keys[rid_1][od_loc_1] == onedelete_keys[rid_2][od_loc_2])
-                    return rid_1 < rid_2;
-                return onedelete_keys[rid_1][od_loc_1] < onedelete_keys[rid_2][od_loc_2];
-            });
+            if (use_tbb)
+                sort(execution::par_unseq, cur_ods_rids.begin(), cur_ods_rids.end(), [&tmp_rid, &tmp_od_locs, &pid, &onedelete_keys](const unsigned int &id1, const unsigned int &id2) {
+                    auto const &rid_1 = tmp_rid[id1];
+                    auto const &rid_2 = tmp_rid[id2];
+                    auto const &od_loc_1 = tmp_od_locs[id1];
+                    auto const &od_loc_2 = tmp_od_locs[id2];
+                    if (onedelete_keys[rid_1][od_loc_1] == onedelete_keys[rid_2][od_loc_2])
+                        return rid_1 < rid_2;
+                    return onedelete_keys[rid_1][od_loc_1] < onedelete_keys[rid_2][od_loc_2];
+                });
+            else
+                sort(cur_ods_rids.begin(), cur_ods_rids.end(), [&tmp_rid, &tmp_od_locs, &pid, &onedelete_keys](const unsigned int &id1, const unsigned int &id2) {
+                    auto const &rid_1 = tmp_rid[id1];
+                    auto const &rid_2 = tmp_rid[id2];
+                    auto const &od_loc_1 = tmp_od_locs[id1];
+                    auto const &od_loc_2 = tmp_od_locs[id2];
+                    if (onedelete_keys[rid_1][od_loc_1] == onedelete_keys[rid_2][od_loc_2])
+                        return rid_1 < rid_2;
+                    return onedelete_keys[rid_1][od_loc_1] < onedelete_keys[rid_2][od_loc_2];
+                });
 
             // Build the index pointers for the cur_rids
             auto const &rid = tmp_rid[cur_ods_rids[0]];

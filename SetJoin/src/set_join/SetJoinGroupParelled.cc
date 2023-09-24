@@ -15,6 +15,8 @@ vector<int> prime_exp;
 vector<unsigned int> tmp_rid_arr[MAXTHREADNUM];
 vector<unsigned int> tmp_odlocs_arr[MAXTHREADNUM];
 
+unsigned int available_threads_amount;
+
 bool SetJoinGroupParelled::overlap(const vector<unsigned int>& x, const vector<unsigned int>& y) {
     int requiredOverlap = ceil(det / (1 + det) * (int)(x.size() + y.size()) - EPS);
     int xIdx = 0, yIdx = 0, currentOverlap = 0;
@@ -38,11 +40,13 @@ bool SetJoinGroupParelled::overlap(const vector<unsigned int>& x, const vector<u
 }
 
 void SetJoinGroupParelled::initializeParameters(double threshold) {
+    available_threads_amount = getHowManyThreads();
     det = threshold;
     ALPHA = 1.0 / threshold + 0.01;
     coe = (1 - det) / (1 + det);
+    
     PartitionHasher::init_primeArr();
-
+    PartitionIndex::allocateTmpVecSpace();
     // reserve space for tmp vector
     for(auto i = 0;i<MAXTHREADNUM;i++){
         tmp_p_keys[i].reserve(3e4);
