@@ -259,7 +259,8 @@ void SetJoinParelled::index(double threshold) {
             iota(cur_ods_rids.begin(), cur_ods_rids.end(), 0); // cur_rids temporarily filled with 0 to one_deletion_amount-1
 
             // temporary vector for the sorting the array
-            vector<unsigned int> tmp_rid(one_deletion_amount);
+            // vector<unsigned int> tmp_rid(one_deletion_amount);
+            vector<unsigned int> tmp_rid;
             tmp_rid.reserve(one_deletion_amount);
             vector<TokenLen> tmp_od_locs;
             tmp_od_locs.reserve(one_deletion_amount);

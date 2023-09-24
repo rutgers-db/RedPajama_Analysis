@@ -41,7 +41,7 @@ public:
 
     // Recording time cost of different part
     double index_cost;
-    double search_cost;
+    double setjoin_cost;
     double hashInFind_cost[MAXTHREADNUM];
     double alloc_cost[MAXTHREADNUM];
     double verif_cost[MAXTHREADNUM];

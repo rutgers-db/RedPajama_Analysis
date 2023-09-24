@@ -148,20 +148,20 @@ public:
             iota(cur_ods_rids.begin(), cur_ods_rids.end(), 0); // cur_rids temporarily filled with 0 to one_deletion_amount-1
 
             // temporary vector for the sorting the array
-            vector<unsigned int> tmp_rid(one_deletion_amount);
+            vector<unsigned int> tmp_rid;
             tmp_rid.reserve(one_deletion_amount);
             vector<unsigned int> tmp_od_locs;
             tmp_od_locs.reserve(one_deletion_amount);
 
             for (unsigned int rid = 0; rid < len; rid++) {
-                auto const &od_loc_st = odkeys_st[rid][pid];
-                auto const &od_loc_ed = odkeys_st[rid][pid + 1];
-                for (auto od_loc = od_loc_st; od_loc < od_loc_ed; od_loc++) {
+                unsigned int const od_loc_st = odkeys_st[rid][pid];
+                unsigned int const od_loc_ed = odkeys_st[rid][pid + 1];
+                for (unsigned int od_loc = od_loc_st; od_loc < od_loc_ed; od_loc++) {
                     tmp_rid.emplace_back(rid);
                     tmp_od_locs.emplace_back(od_loc);
                 }
             }
-
+            
             // sort the parts_rid[i][pid]
             sort(cur_ods_rids.begin(), cur_ods_rids.end(), [&tmp_rid, &tmp_od_locs, &pid, &onedelete_keys](const unsigned int &id1, const unsigned int &id2) {
                 auto const &rid_1 = tmp_rid[id1];

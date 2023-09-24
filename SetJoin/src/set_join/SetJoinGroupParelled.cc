@@ -37,9 +37,11 @@ void SetJoinGroupParelled::initializeParameters(double threshold) {
     coe = (1 - det) / (1 + det);
 }
 
-void SetJoinGroupParelled::setjoin(double threshold) {   
+void SetJoinGroupParelled::setjoin(double threshold) {
+    auto search_st = LogTime();
     initializeParameters(threshold);
     processDataset();
+    setjoin_cost = RepTime(search_st);
 }
 
 // void SetJoinGroupParelled::setjoin(double threshold){
@@ -160,7 +162,7 @@ void SetJoinGroupParelled::processDataset() {
         rangeLoader.showCurrentRangeInfo();
 
         
-        // if(rangeLoader.range_num < 34){
+        // if(rangeLoader.range_num < 33){
         //     currentDataset->clear();
         //     continue;
         // }
@@ -295,6 +297,9 @@ void SetJoinGroupParelled::reportTimeCost() {
         total_verif_cost += verif_cost[i];
     }
     sum = total_hash_cost + total_alloc_cost + total_verif_cost;
+
+    double search_cost = setjoin_cost - index_cost;
+    
     total_hash_cost = total_hash_cost / sum * search_cost;
     total_alloc_cost = total_alloc_cost / sum * search_cost;
     total_verif_cost = total_verif_cost / sum * search_cost;
