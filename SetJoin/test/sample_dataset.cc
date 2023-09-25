@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
+#include <execution>
 
 using namespace std;
 
+// g++ sample_dataset.cc -o sample.exe -I ../oneapi-tbb-2021.9.0/include -pthread -L ../oneapi-tbb-2021.9.0/lib/intel64/gcc4.8 -ltbb
 bool probability10Percent() {
     return (rand() % 100) < 5; // Returns true approximately 10% of the time
 }
@@ -27,7 +29,7 @@ void randloadIntBin(const string &binFileName, vector <vector<unsigned int>> &do
         }
     }
     ifs.close(); // Close the file stream after reading
-    printf("There are %lu documents now\n", docs.size(), binFileName.c_str());
+    printf("There are %lu documents in docs now\n", docs.size() );
 }
 
 // Function to load binary file into a 2D vector (documents)
@@ -49,17 +51,20 @@ void loadIntBin(const string &binFileName, vector <vector<unsigned int>> &docs) 
 }
 
 int main(){
-    string  dataset_names[] = {"arxiv", "book","stackexchange", "github", "wikipedia"};
+    // string  dataset_names[] = {"arxiv", "book","stackexchange", "github", "wikipedia"};
     vector<vector<unsigned int>> docs;
-    for(auto & name: dataset_names){
-        string ds_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/" + name +"_sortedngram.bin";
-        randloadIntBin(ds_path, docs);
-    }
+    string ds_path = "./sample.bin";
+    loadIntBin(ds_path, docs);
+
+    // for(auto & name: dataset_names){
+    //     string ds_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/" + name +"_sortedngram.bin";
+    //     randloadIntBin(ds_path, docs);
+    // }
 
     // load some c4 files
-    for( int i = 0; i <10; i++){
-        string c4_subfile_path = "/research/projects/zp128/RedPajama_Analysis/LSH/slimpajama/c4/" + to_string(i)+ ".bin";
-        loadIntBin(c4_subfile_path, docs);
+    for( int i = 0; i <40; i++){
+        string commoncrawl_subfile_path = "/research/projects/zp128/RedPajama_Analysis/LSH/slimpajama/common_crawl/2023-06/" + to_string(i)+ ".bin";
+        loadIntBin(commoncrawl_subfile_path, docs);
     }
 
     vector<int> idmap_docs;
@@ -67,7 +72,7 @@ int main(){
         idmap_docs.emplace_back(i);
 
     cout << "Generating idmap " << endl;
-    sort(idmap_docs.begin(), idmap_docs.end(), [&docs](const unsigned int &id1, const unsigned int &id2) {
+    sort(execution::par_unseq, idmap_docs.begin(), idmap_docs.end(), [&docs](const unsigned int &id1, const unsigned int &id2) {
         int dsize1 = docs[id1].size();
         int dsize2 = docs[id2].size();
         if (dsize1 < dsize2)
@@ -89,7 +94,7 @@ int main(){
         } });
 
     ofstream ofs;
-    ofs.open("./sample.bin", ios::binary);
+    ofs.open("./sample_2.bin", ios::binary);
     for (int i = 0; i < idmap_docs.size(); i++) {
         const auto &vec = docs[idmap_docs[i]];
         unsigned int size = vec.size();

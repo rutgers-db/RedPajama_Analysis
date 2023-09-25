@@ -9,6 +9,7 @@
 
 using namespace std;
 void print_memory();
+int getHowManyThreads();
 std::vector<int> getUniqueInts(const std::vector<std::pair<int, int>>& pairs);
 void mergeArrays(std::vector<std::vector<pair<int,int>>>* input, int arr_len, std::vector<std::vector<pair<int,int>>> & result);
 std::chrono::_V2::system_clock::time_point LogTime();

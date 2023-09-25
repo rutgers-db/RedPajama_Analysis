@@ -100,6 +100,18 @@ void printHowManyThreads(){
     cout<<"max thread amount: "<<thread_num<<endl;
 }
 
+int getHowManyThreads(){
+    int thread_num = 0;
+
+    #pragma omp parallel for
+    for(int i = 0; i<200;i++){
+        #pragma omp critical
+            thread_num = max(omp_get_thread_num(),thread_num);
+    }
+
+   return thread_num;
+}
+
 double shrinkBottomk(vector<vector<unsigned int>>&  bottom_ks, double ratio){
     double average_size = 0;
     for(auto & vec:bottom_ks){

@@ -4,7 +4,7 @@ This file records the time cost of Setjoin whose parallism is based on original 
 
 ## Thres:0.8 Tokens
 | Dataset| Dataset Size (GB) | Docs Amount| Found Pairs | Index Time | Online Hashing Time| Memory Time| Finding Time | Allocation Time | Verification Time| 
-|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | Book    | 3.4G     | 205743 | 1735 |57.253090|0.507968|0.505353|10.297710|92.340763|1181.474485|
 | Arxiv    | 4.4G | 1558306 | 3319410 |120.353089|0.772291|0.527146|35.751856|186.408094|173.887044|
 | stackexchange    | 11G | 29825086 |31950| |818.203153|3.062184|2.999524|89.290258|412.534489|26.530092|
@@ -27,4 +27,5 @@ Therefore, it will impact all the result. The result shown below is debugged alr
 
 ## Thres:0.8 Ngrams
 | Dataset| Dataset Size (GB) | Docs Amount| Found Pairs | Index Time | Online Hashing Time| Memory Time| Finding Time | Allocation Time | Verification Time|
+|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | stackexchange (M8 Lsketches Ngrams)    | 23G | 29825086 |17670 |1669.860246|4.366444|5.096554|116.583303|487.957136|0.731031|
