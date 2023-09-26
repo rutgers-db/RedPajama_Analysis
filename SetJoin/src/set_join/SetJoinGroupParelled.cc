@@ -100,7 +100,8 @@ void SetJoinGroupParelled::processDataset() {
     }
 
     IO_cost = rangeLoader.load_cost;
-    
+    docsAmount = rangeLoader.docs_amount;
+
     printf("Total Cost time is %f  in these %u documents that divided into %d ranges\n", 
            RepTime(startTime), rangeLoader.docs_amount, rangeLoader.range_num);
 }
@@ -196,6 +197,7 @@ unsigned long long SetJoinGroupParelled::getResultPairsAmount() {
     for (int i = 0; i < MAXTHREADNUM; i++) {
         pairs_amount += result_pairs[i].size();
     }
+    simPairsAmount = pairs_amount;
     return pairs_amount;
 }
 
@@ -218,7 +220,7 @@ void SetJoinGroupParelled::reportTimeCost() {
     total_hash_cost = total_hash_cost / sum * search_cost;
     total_alloc_cost = total_alloc_cost / sum * search_cost;
     total_verif_cost = total_verif_cost / sum * search_cost;
-
-    printf("|IO_cost|index_cost| total_hash_cost| alloc_cost| verif_cost|\n");
-    printf("|%f|%f|%f|%f|%f|\n", IO_cost, index_cost, total_hash_cost, total_alloc_cost, total_verif_cost);
+    
+    printf("| Docs Amount| Found Pairs |IO_cost|index_cost| total_hash_cost| alloc_cost| verif_cost|\n");
+    printf("|%u |%llu |%f|%f|%f|%f|%f|\n",docsAmount, simPairsAmount, IO_cost, index_cost, total_hash_cost, total_alloc_cost, total_verif_cost);
 }

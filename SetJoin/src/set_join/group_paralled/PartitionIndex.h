@@ -114,7 +114,7 @@ public:
             use_tbb = true;
             
             // int tbb_threads =int( ceil(double(available_threads_amount) / partNum));
-            cout<<"using tbb " << tbb_threads << "partNum" << endl;
+            cout<<"using tbb "  << endl;
         }
         // Build Index for partitions
 #pragma omp parallel for

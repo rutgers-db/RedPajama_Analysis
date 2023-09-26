@@ -33,7 +33,9 @@ public:
 
     // Array to store result pairs for each thread
     vector<pair<int, int>> result_pairs[MAXTHREADNUM];
-
+    unsigned long long simPairsAmount;
+    unsigned int docsAmount;
+    
     // Parameters related to calculation and dataset
     double det{};
     double coe{};

@@ -8,6 +8,7 @@ And then output the sorted sets in the datasets directory and their idmap.
 #include <bits/stdc++.h>
 #include "../src/util/io.h"
 #include "../src/util/util.h"
+#include <execution>
 #include <omp.h>
 
 using namespace std;
@@ -57,11 +58,15 @@ int main(int argc, char *argv[]) {
     for (unsigned int i = 0; i< 128;i++){
         total_sketchsizes += lsketch_sizes[i];
     }
+
+    // release the dataset of original ngrams
+    std::vector<std::vector<unsigned int>>().swap(ngrams);
+
     cout<<"Lsketches Generated and their average size is "<<total_sketchsizes/lsketches.size()<<endl;;
 
     // sort dataset by size first, element second, id third
     cout << "Generating idmap " << endl;
-    sort(idmap_lsketch.begin(), idmap_lsketch.end(), [&lsketches](const unsigned int &id1, const unsigned int &id2) {
+    sort(execution::par_unseq, idmap_lsketch.begin(), idmap_lsketch.end(), [&lsketches](const unsigned int &id1, const unsigned int &id2) {
         int dsize1 = lsketches[id1].size();
         int dsize2 = lsketches[id2].size();
         if (dsize1 < dsize2)
