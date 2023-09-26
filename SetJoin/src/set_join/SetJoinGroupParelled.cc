@@ -149,6 +149,15 @@ void SetJoinGroupParelled::processPreviousDataset(
     PartitionHasher& previousHasher, PartitionIndex& previousIndex,
     const unsigned int & beforePreviousDocId,const unsigned int& previousDocId) {
     printf("Finding Simpairs in the previous index\n");
+
+    // judge if the maximum doc of previous group is too short, then we not need to compare anymore
+    unsigned int prev_max_len = previousDataset[previousDataset.size() - 1].size();
+    unsigned int cur_min_len = currentDataset[0].size();
+    if( (double)cur_min_len * det > (double)prev_max_len){
+        printf("Adjacent group differ too much\n");
+        return;
+    }
+        
     
     unsigned int partitionNum = floor(2 * coe * previousDataset[0].size() + EPS) + 1;
     
