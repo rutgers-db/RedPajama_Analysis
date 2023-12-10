@@ -59,6 +59,7 @@ int main(int argc, char *argv[]) {
     // LSH
     LSH lsh(K, band, range);
     // External_LSH lsh(K, band, range);
+    // cout << "Start ExternalLSH" << endl;
     cout << "Start LSH" << endl;
     lsh.run(minhashes);
 
