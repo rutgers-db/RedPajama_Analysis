@@ -31,38 +31,41 @@ double findMax(const std::vector<double>& arr) {
 }
 
 int main(){
-    string dataset_names[] = {"arxiv", "github", "stackexchange", "wikipedia","book"};
-    const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
+    string dataset_names[] = {"arxiv", "github", "stackexchange", "wikipedia","book", "sample"};
+    const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/";
     
     double thres = 0.8;
     double ALPHA = ALPHA = 1.0 / thres + 0.0001;
 
-    vector<unsigned int> docs_length;
-    // load all the lengths of the files above
-    const string sortedsets_file_path = root_dir + "/test/sample.bin";
-    loadIntBin(sortedsets_file_path, docs_length);
+    
+    
+    // const string sortedsets_file_path = root_dir + "/test/sample.bin";
+    // loadIntBin(sortedsets_file_path, docs_length);
 
-    // for(auto & dataset_name : dataset_names){
-    //     const string sortedsets_file_path = root_dir + "/data/ngram/sorted_ngrams/" + dataset_name +"_sortedngram.bin";
-    //     loadIntBin(sortedsets_file_path, docs_length);
-    // }
+    // load all the lengths of the files above
+    for(auto & dataset_name : dataset_names){
+        const string sortedsets_file_path = root_dir + dataset_name +"_sortedngram.bin";
+        vector<unsigned int> docs_length;
+        loadIntBin(sortedsets_file_path, docs_length);
+         vector<double> groups_size;
+        unsigned int low = 0, high = 0;
+        unsigned int group_len = 0;
+        for (unsigned int rid = 0; rid < docs_length.size(); rid++) {
+            unsigned int len = docs_length[rid];
+            if (len > high) {
+                low = len;
+                high = low * ALPHA;
+                groups_size.push_back((double)len);
+                group_len++;
+            }else{
+                groups_size[group_len-1] += len;
+            }
+        }
+
+        cout<< dataset_name<< ": "<<findMax(groups_size)/250000000<<endl;
+    }
     
     // sort(docs_length.begin(),docs_length.end());
 
-    vector<double> groups_size;
-    unsigned int low = 0, high = 0;
-    unsigned int group_len = 0;
-    for (unsigned int rid = 0; rid < docs_length.size(); rid++) {
-        unsigned int len = docs_length[rid];
-        if (len > high) {
-            low = len;
-            high = low * ALPHA;
-            groups_size.push_back((double)len);
-            group_len++;
-        }else{
-            groups_size[group_len-1] += len;
-        }
-    }
-
-    cout<< findMax(groups_size)/250000000<<endl;
+   
 }
