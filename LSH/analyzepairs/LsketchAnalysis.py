@@ -30,7 +30,8 @@ simp_dir_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/
 file_prefix = f"{dataset_name}_sim_pairs_{thres:.6f}"
 
 
-simpairs_bin_path = util.find_file(simp_dir_path, file_prefix)
+# simpairs_bin_path = util.find_file(simp_dir_path, file_prefix)
+simpairs_bin_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/test_simp.bin"
 print(simpairs_bin_path)
 idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_lsketch/{dataset_name}_idmap.bin"
 
@@ -43,12 +44,10 @@ simp_lsketch = util.correct_pair_order(simp_lsketch)
 simpairs_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_simp/{dataset_name}_sim_pairs_{thres:.6f}.bin"
 print(simpairs_bin_path)
 idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/{dataset_name}_idmap.bin"
-idmap = util.read_ints_from_binary(idmap_bin_path)
+# idmap = util.read_ints_from_binary(idmap_bin_path)
 sim_pairs = util.read_pairs_from_binary(simpairs_bin_path)
-simp_lsketch = util.map_elements(simp_lsketch, idmap)
-simp_lsketch = util.correct_pair_order(simp_lsketch)
-simp_setjoin = util.map_elements(sim_pairs,idmap)
-simp_setjoin = util.correct_pair_order(simp_setjoin)
+
+simp_setjoin = util.correct_pair_order(sim_pairs)
 
 # Load the documents of simp in setjoin
 # load the real documents

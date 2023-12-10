@@ -60,7 +60,8 @@ double measureTime(Func &&f, std::vector<std::vector<int>> &data) {
 int main() {
     // Generate random data
     auto data = generateRandomData();
-    
+// #pragma omp parallel for
+    std::cout << omp_get_num_threads() << std::endl;
     // Serial sorting
     auto copy1 = data;
     double serialTime = measureTime(serialSort, copy1);

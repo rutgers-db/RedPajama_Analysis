@@ -246,13 +246,8 @@ void OvlpJoinParelled::overlapjoin(int overlap_threshold, int _k) {
             ele[records[i][j]].push_back(i);
     }
 
-    // for (auto it = ele.begin(); it != ele.end(); it++)
-    //     eles.push_back(make_pair(it->first, it->second.size())); // build element frequency table
-
-    // keep original hash function (Because later to check bottom-k jaccard similarity, we need to levarge the k-minimum hash values, therefore we don't wanna build frequency table here)
-    // Warning, Todo, maintain frequency table and also check correctly jaccard similarity
-     for (auto it = ele.begin(); it != ele.end(); it++)
-        eles.push_back(make_pair(it->first, it->first)); 
+    for (auto it = ele.begin(); it != ele.end(); it++)
+        eles.push_back(make_pair(it->first, it->second.size())); // build element frequency table
 
     // get global order: frequency increasing order
     // sort the elements

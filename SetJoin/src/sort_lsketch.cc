@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     }
 
     // release the dataset of original ngrams
-    std::vector<std::vector<unsigned int>>().swap(ngrams);
+    std::vector<std::vector<unsigned int>>().swap(ngrams); 
 
     cout<<"Lsketches Generated and their average size is "<<total_sketchsizes/lsketches.size()<<endl;;
 

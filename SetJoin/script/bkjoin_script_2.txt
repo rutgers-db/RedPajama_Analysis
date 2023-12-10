@@ -1,0 +1,114 @@
+0.90.1The Saved Path is /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.100000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+Start Set Join For Bottomk
+det: 0.900000 coe: 0.052632 ALPHA: 1.121111 maxSize: 103 maxIndexPartNum: 11 
+The tokenNum is 11783 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 0.122067
+Now Let's building the inverted Index of these Paritions
+There are 27 range groups in the setJoin
+Sorting them And Partition Time Cost: 2.38233
+Used Physical Memory: 381230030848
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 0.084908
+joiner.result_pairs have 583 pairs
+Writing /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.100000.bin using paralled setjoin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.100000.bin has 583
+At last the total time cost is: 2.659875
+Average K of the bottomks is 102.2795, under the ratio of 0.90
+0.90.2The Saved Path is /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.200000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+Start Set Join For Bottomk
+det: 0.900000 coe: 0.052632 ALPHA: 1.121111 maxSize: 205 maxIndexPartNum: 22 
+The tokenNum is 20303 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 0.281931
+Now Let's building the inverted Index of these Paritions
+There are 31 range groups in the setJoin
+Sorting them And Partition Time Cost: 4.75339
+Used Physical Memory: 381409656832
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 0.152277
+joiner.result_pairs have 499 pairs
+Writing /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.200000.bin using paralled setjoin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.200000.bin has 499
+At last the total time cost is: 5.292295
+Average K of the bottomks is 203.5655, under the ratio of 0.90
+0.90.4The Saved Path is /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.400000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+Start Set Join For Bottomk
+det: 0.900000 coe: 0.052632 ALPHA: 1.121111 maxSize: 410 maxIndexPartNum: 44 
+The tokenNum is 33309 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 0.560583
+Now Let's building the inverted Index of these Paritions
+There are 35 range groups in the setJoin
+Sorting them And Partition Time Cost: 9.55792
+Used Physical Memory: 381764239360
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 0.331011
+joiner.result_pairs have 433 pairs
+Writing /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.400000.bin using paralled setjoin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.900000_0.400000.bin has 433
+At last the total time cost is: 10.608499
+Average K of the bottomks is 407.1257, under the ratio of 0.90
+0.80.1The Saved Path is /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.100000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+Start Set Join For Bottomk
+det: 0.800000 coe: 0.111111 ALPHA: 1.260000 maxSize: 103 maxIndexPartNum: 23 
+The tokenNum is 11783 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 0.139059
+Now Let's building the inverted Index of these Paritions
+There are 16 range groups in the setJoin
+Sorting them And Partition Time Cost: 2.35835
+Used Physical Memory: 381027573760
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 1.43212
+joiner.result_pairs have 2351 pairs
+Writing /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.100000.bin using paralled setjoin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.100000.bin has 2351
+At last the total time cost is: 4.001623
+Average K of the bottomks is 102.2795, under the ratio of 0.80
+0.80.2The Saved Path is /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.200000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+Start Set Join For Bottomk
+det: 0.800000 coe: 0.111111 ALPHA: 1.260000 maxSize: 205 maxIndexPartNum: 46 
+The tokenNum is 20303 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 0.321986
+Now Let's building the inverted Index of these Paritions
+There are 18 range groups in the setJoin
+Sorting them And Partition Time Cost: 4.77327
+Used Physical Memory: 381300891648
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 5.03286
+joiner.result_pairs have 2462 pairs
+Writing /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.200000.bin using paralled setjoin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.200000.bin has 2462
+At last the total time cost is: 10.237377
+Average K of the bottomks is 203.5655, under the ratio of 0.80
+0.80.4The Saved Path is /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.400000.bin
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+There are 205743 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/book_sortedbottomk.bin
+Start Set Join For Bottomk
+det: 0.800000 coe: 0.111111 ALPHA: 1.260000 maxSize: 410 maxIndexPartNum: 92 
+The tokenNum is 33309 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 0.641206
+Now Let's building the inverted Index of these Paritions
+There are 19 range groups in the setJoin
+Sorting them And Partition Time Cost: 9.72548
+Used Physical Memory: 382117462016
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 14.996
+joiner.result_pairs have 2130 pairs
+Writing /research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.400000.bin using paralled setjoin
+/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/similar_pairs/book_sim_pairs_0.800000_0.400000.bin has 2130
+At last the total time cost is: 25.521775
+Average K of the bottomks is 407.1257, under the ratio of 0.80

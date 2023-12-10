@@ -18,6 +18,7 @@
 #include "../util/util.h"
 #include "group_paralled/PartitionHasher.h"
 #include "group_paralled/PartitionIndex.h"
+#include "group_paralled/PartitionSmallIndex.h"
 #include "group_paralled/RangeLoader.h"
 
 using namespace std;
@@ -48,6 +49,7 @@ public:
     double hashInFind_cost[MAXTHREADNUM] = {0};
     double alloc_cost[MAXTHREADNUM] = {0};
     double verif_cost[MAXTHREADNUM] = {0};
+    double lw_cost[MAXTHREADNUM] = {0};
 
     /**
      * Constructor
@@ -72,8 +74,9 @@ public:
 
     void reportTimeCost();
 
+    void testUnordered_map(double threshold);
+
 private:
-    // Vectors for storing range information (groups based on the size of documents)
 
     /**
      * Initialize class parameters
@@ -96,7 +99,8 @@ private:
     void processCurrentDataset(
         const vector<vector<unsigned int>>& currentDataset,
         PartitionHasher*& currentHasher,
-        PartitionIndex*& currentIndex,
+        // PartitionSmallIndex*& currentIndex,
+        PartitionIndex *& currentIndex,
         const unsigned int& previousDocId);
 
     /**
@@ -112,7 +116,8 @@ private:
         const vector<vector<unsigned int>>& previousDataset,
         const vector<vector<unsigned int>>& currentDataset,
         PartitionHasher& previousHasher,
-        PartitionIndex& previousIndex,
+        // PartitionSmallIndex& previousIndex,
+        PartitionIndex & previousIndex,
         const unsigned int& beforePreviousDocId,
         const unsigned int& previousDocId);
 

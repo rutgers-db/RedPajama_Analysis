@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     if (tokensOrngrams == false)
     {
         sortedsets_file_path = root_dir + "/data/ngram/sorted_ngrams/" + dataset_name + "_sortedngram.bin";
-        simP_file_path = root_dir + "/data/ngram/ngrams_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
+        simP_file_path = root_dir + "/data/ngram/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
     }
     else
     {
@@ -172,8 +172,8 @@ int main(int argc, char *argv[])
         simP_file_path = root_dir + "/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
     }
     const unsigned int min_k = stoul(argv[3]);
-    double ratio = 0.25;
-    unsigned int M = 4;
+    double ratio = 0.125;
+    unsigned int M = 8;
 
     //  Cause the document length of data is mostly more than 200-13
     // assert(min_k <= 183);
@@ -241,6 +241,7 @@ for (int i = 0; i < doc_ids.size(); i++)
             // ele = perm[ele];            
             ele = hval(hf, ele);
             if(ele%M == 0){
+                ele >>= 3;
                 lsketch.emplace_back(ele);
             }
         }

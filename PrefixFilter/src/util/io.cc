@@ -114,6 +114,23 @@ void loadBin2vec(const string &binFileName, vector<int> &vec) {
     ifs.close();
 }
 
+// Function to load binary file into a vector
+void loadBin2vec(const string &binFileName, vector<unsigned int> &vec) {
+    // Similar to loadShortBin, but for a single-dimension vector
+    cout << "Reading " << binFileName << endl;
+    ifstream ifs(binFileName, ios::binary);
+    if (!ifs) {
+        cout << "error open bin file " << binFileName << endl;
+        return;
+    }
+    unsigned int size;
+    ifs.read((char *)&size, sizeof(unsigned int));
+    vec.resize(size);
+    ifs.read((char *)&vec[0], sizeof(unsigned int) * size);
+    ifs.close();
+}
+
+
 // Function to write a vector into a binary file
 void writeVec2Bin(const string &binFileName, vector<int> &vec) {
     cout << "Writing " << binFileName << endl;

@@ -53,7 +53,7 @@ void loadIntBin(const string &binFileName, vector <vector<unsigned int>> &docs) 
 int main(){
     // string  dataset_names[] = {"arxiv", "book","stackexchange", "github", "wikipedia"};
     vector<vector<unsigned int>> docs;
-    string ds_path = "./sample.bin";
+    string ds_path = "../data/ngram/sorted_ngrams/sample_sortedngram.bin";
     loadIntBin(ds_path, docs);
 
     // for(auto & name: dataset_names){
@@ -61,11 +61,13 @@ int main(){
     //     randloadIntBin(ds_path, docs);
     // }
 
+    string c4_dir[] = {"2020-05/", "2021-04/", "2022-05/"};
     // load some c4 files
-    for( int i = 0; i <40; i++){
-        string commoncrawl_subfile_path = "/research/projects/zp128/RedPajama_Analysis/LSH/slimpajama/common_crawl/2023-06/" + to_string(i)+ ".bin";
-        loadIntBin(commoncrawl_subfile_path, docs);
-    }
+    for(int j = 0 ; j< 3 ;j++)
+        for( int i = 0; i <40; i++){
+            string commoncrawl_subfile_path = "/research/projects/zp128/RedPajama_Analysis/LSH/slimpajama/common_crawl/" + c4_dir[j] + to_string(i)+ ".bin";
+            loadIntBin(commoncrawl_subfile_path, docs);
+        }
 
     vector<int> idmap_docs;
     for (int i = 0; i < docs.size(); i++)
@@ -94,7 +96,7 @@ int main(){
         } });
 
     ofstream ofs;
-    ofs.open("./sample_2.bin", ios::binary);
+    ofs.open("./sample_full.bin", ios::binary);
     for (int i = 0; i < idmap_docs.size(); i++) {
         const auto &vec = docs[idmap_docs[i]];
         unsigned int size = vec.size();

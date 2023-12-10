@@ -5,7 +5,10 @@
 #include "../util/io.h"
 #include "group_paralled/PartitionHasher.h"
 #include "group_paralled/PartitionIndex.h"
+#include "group_paralled/PartitionSmallIndex.h"
 #include "group_paralled/RangeLoader.h"
+#include <google/dense_hash_map>
+#include "../../emhash/hash_table7.hpp"
 
 vector<unsigned int> tmp_p_keys[MAXTHREADNUM];
 vector<unsigned int> tmp_od_keys[MAXTHREADNUM];
@@ -16,6 +19,9 @@ vector<unsigned int> tmp_rid_arr[MAXTHREADNUM];
 vector<unsigned int> tmp_odlocs_arr[MAXTHREADNUM];
 
 unsigned int available_threads_amount;
+
+typedef google::dense_hash_map<unsigned int, vector<unsigned int>> hashmap_t; 
+typedef emhash7::HashMap<unsigned int, unsigned int> hash_t; 
 
 bool SetJoinGroupParelled::overlap(const vector<unsigned int>& x, const vector<unsigned int>& y) {
     int requiredOverlap = ceil(det / (1 + det) * (int)(x.size() + y.size()) - EPS);
@@ -47,6 +53,7 @@ void SetJoinGroupParelled::initializeParameters(double threshold) {
     
     PartitionHasher::init_primeArr();
     PartitionIndex::allocateTmpVecSpace();
+    PartitionSmallIndex::allocateTmpVecSpace();
     // reserve space for tmp vector
     for(auto i = 0;i<MAXTHREADNUM;i++){
         tmp_p_keys[i].reserve(3e4);
@@ -72,7 +79,10 @@ void SetJoinGroupParelled::processDataset() {
     PartitionHasher *currentHasher;
     PartitionIndex *previousIndex = nullptr;
     PartitionIndex *currentIndex;
+    // PartitionSmallIndex *previousIndex = nullptr;
+    // PartitionSmallIndex *currentIndex;
     unsigned int beforePreviousDocId, previousDocId = 0;
+    
     
     while (rangeLoader.loadNextRange(*currentDataset)) {
         rangeLoader.showCurrentRangeInfo();
@@ -136,7 +146,7 @@ void SetJoinGroupParelled::processCurrentDataset(
         auto & odk_st = currentHasher->odkeys_st[docId];
 
         // Obtain candidates
-        currentIndex->greedy_search(*currentHasher, tid, docId, p_keys, od_keys, odk_st, candidates);
+        lw_cost[tid] += currentIndex->greedy_search(*currentHasher, tid, docId, p_keys, od_keys, odk_st, candidates);
         alloc_cost[tid] += RepTime(alloc_st);
         // perform verification.
         verifyPairs(currentDataset, currentDataset, docId, candidates, previousDocId, previousDocId);
@@ -175,7 +185,7 @@ void SetJoinGroupParelled::processPreviousDataset(
         auto alloc_st = LogTime();
         // make sure current docId is larger than all those in the previous range
         unsigned int fake_docId = docId + previousDataset.size();
-        previousIndex.greedy_search(previousHasher, tid, fake_docId , tmp_p_keys[tid], tmp_od_keys[tid], tmp_odk_st[tid], candidates);
+        lw_cost[tid] += previousIndex.greedy_search(previousHasher, tid, fake_docId , tmp_p_keys[tid], tmp_od_keys[tid], tmp_odk_st[tid], candidates);
         alloc_cost[tid] += RepTime(alloc_st);
 
         // Obtain candidates and perform verification.
@@ -214,11 +224,13 @@ void SetJoinGroupParelled::reportTimeCost() {
     double total_hash_cost = 0;
     double total_alloc_cost = 0;
     double total_verif_cost = 0;
+    double total_lw_cost = 0;
     double sum;
     for (int i = 0; i < MAXTHREADNUM; i++) {
         total_hash_cost += hashInFind_cost[i];
         total_alloc_cost += alloc_cost[i];
         total_verif_cost += verif_cost[i];
+        total_lw_cost += lw_cost[i];
     }
 
     // cout<<"Before shrinking," << total_hash_cost<<endl;
@@ -229,7 +241,125 @@ void SetJoinGroupParelled::reportTimeCost() {
     total_hash_cost = total_hash_cost / sum * search_cost;
     total_alloc_cost = total_alloc_cost / sum * search_cost;
     total_verif_cost = total_verif_cost / sum * search_cost;
+    total_lw_cost = total_lw_cost / sum * search_cost;
     
-    printf("| Docs Amount| Found Pairs |IO_cost|index_cost| total_hash_cost| alloc_cost| verif_cost|\n");
-    printf("|%u |%llu |%f|%f|%f|%f|%f|\n",docsAmount, simPairsAmount, IO_cost, index_cost, total_hash_cost, total_alloc_cost, total_verif_cost);
+    printf("| Docs Amount| Found Pairs |IO_cost|index_cost| total_hash_cost| alloc_cost| verif_cost| lw_cost |\n");
+    printf("|%u |%llu |%f|%f|%f|%f|%f|%f|\n",docsAmount, simPairsAmount, IO_cost, index_cost, total_hash_cost, total_alloc_cost, total_verif_cost, total_lw_cost);
+}
+
+void SetJoinGroupParelled::testUnordered_map(double threshold){
+    initializeParameters(threshold);
+
+    RangeLoader rangeLoader(dataset_path, ALPHA);
+    vector<vector<unsigned int>> *previousDataset = nullptr;
+    vector<vector<unsigned int>> *currentDataset = new vector<vector<unsigned int>>();
+    PartitionHasher *previousHasher = nullptr;
+    PartitionHasher *currentHasher;
+    PartitionIndex *previousIndex = nullptr;
+    PartitionIndex *currentIndex;
+    // PartitionSmallIndex *previousIndex = nullptr;
+    // PartitionSmallIndex *currentIndex;
+    unsigned int beforePreviousDocId, previousDocId = 0;
+    
+    
+    while (rangeLoader.loadNextRange(*currentDataset)) {
+        rangeLoader.showCurrentRangeInfo();
+        
+        if(rangeLoader.range_num == 20){
+            const vector<vector<unsigned int>>& curDataset = *currentDataset; 
+            // test unordered+map now,
+            currentHasher = new PartitionHasher(curDataset);
+            unsigned int partitionNum = floor(2 * coe * curDataset[0].size() + EPS) + 1;
+            cout << "Hashing cost: " << currentHasher->hash(curDataset, partitionNum)<<endl;
+            auto timer_st = LogTime();
+
+            // currentIndex = new PartitionIndex(det, coe);
+            // currentIndex->createIndex(*currentHasher, partitionNum);
+
+            // Allocate memory for unordered_map
+            vector<hash_t> part_index(partitionNum);
+            vector<hash_t> odkey_index(partitionNum);
+
+            const auto &odkeys_st = currentHasher->odkeys_st;
+            const auto &onedelete_keys = currentHasher->onedelete_keys;
+            const auto &parts_keys = currentHasher->parts_keys;
+            unsigned int len = parts_keys.size();
+
+            
+#pragma omp parallel for
+            for (auto pid = 0; pid < partitionNum; pid++){
+                unsigned int one_deletion_amount = 0;
+                // part_index[pid].set_empty_key((unsigned int)-1);
+                vector<unsigned int> tmp_vec(len);
+                part_index[pid].reserve(len);
+                auto &cur_pindex = part_index[pid];
+                for (unsigned int rid = 0; rid < len; rid++) {
+                    cur_pindex[parts_keys[rid][pid]]++;
+                    one_deletion_amount += odkeys_st[rid][pid + 1] - odkeys_st[rid][pid];
+                }
+
+                unsigned int cnt = 0;
+                unsigned int pre_cnt = -1;
+
+                for(auto & it : part_index[pid]){
+                    pre_cnt = cnt;
+                    cnt += it.second;
+                    it.second = pre_cnt;
+                }
+
+                for (unsigned int rid = 0; rid < len; rid++) {
+                    tmp_vec[cur_pindex[parts_keys[rid][pid]]++] = rid;
+                }
+                
+                cnt = 0;
+                // odkey_index[pid].set_empty_key((unsigned int)-1);
+                vector<unsigned int> tmp_vec_odk(one_deletion_amount);
+                odkey_index[pid].reserve(one_deletion_amount);
+                auto &cur_odkindex = odkey_index[pid];
+                // cur_odkindex.max_load_factor(2.0);
+                cout<<"there are"<< one_deletion_amount <<endl;
+                for (unsigned int rid = 0; rid < len; rid++) {
+                    unsigned int const od_loc_st = odkeys_st[rid][pid];
+                    unsigned int const od_loc_ed = odkeys_st[rid][pid + 1];
+                    for (unsigned int od_loc = od_loc_st; od_loc < od_loc_ed; od_loc++) {
+                        auto& odk = onedelete_keys[rid][od_loc];
+                        cur_odkindex[odk]++;
+                    }
+                }
+
+                for(auto & it : odkey_index[pid]){
+                    pre_cnt = cnt;
+                    cnt += it.second;
+                    it.second = pre_cnt;
+                }
+
+                for (unsigned int rid = 0; rid < len; rid++) {
+                    unsigned int const od_loc_st = odkeys_st[rid][pid];
+                    unsigned int const od_loc_ed = odkeys_st[rid][pid + 1];
+                    for (unsigned int od_loc = od_loc_st; od_loc < od_loc_ed; od_loc++) {
+                        auto& odk = onedelete_keys[rid][od_loc];
+                        tmp_vec_odk[cur_odkindex[odk]++] = rid;
+                    }
+                }
+
+            }
+
+            cout<<"Indexing cost :" << RepTime(timer_st)<<endl;
+            break;
+        }
+        
+
+
+        // Cleanup old data.
+        delete previousIndex;
+        delete previousHasher;
+        delete previousDataset;
+        // Update references for the next iteration.
+        beforePreviousDocId = previousDocId;
+        previousDocId += currentDataset->size();
+        previousDataset = currentDataset;
+        previousHasher = currentHasher;
+        previousIndex = currentIndex;
+        currentDataset = new vector<vector<unsigned int>>();
+    }
 }

@@ -41,7 +41,7 @@ $(TARGET): $(OBJDIR)/main.o $(UTIL_OBJS) $(SETJOIN_OBJS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@ -I sparsehash-sparsehash-2.0.4/src
 
 test: $(TEST_BIN_FILES)
 	# @for test in $(TEST_BIN_FILES); do \
@@ -52,7 +52,7 @@ $(TEST_DIR)/%: $(TEST_DIR)/%.cc $(UTIL_OBJS)
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o $@ $(UTIL_OBJS)
 
 groupParelledJoin: $(OBJDIR)/groupParelledJoin.o  $(UTIL_OBJS) $(SETJOIN_OBJS) 
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) $(SETJOIN_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) $(SETJOIN_OBJS) -I $(TBB_INC) -L $(TBB_LIB)
 
 $(OBJDIR)/groupParelledJoin.o: $(UTIL_OBJS) $(SETJOIN_OBJS) src/groupParelledJoin.cc
 	$(CXX) $(CXXFLAGS) -c src/groupParelledJoin.cc -o $@
@@ -89,10 +89,10 @@ $(OBJDIR)/sort_ngrams.o: $(UTIL_OBJS) src/sort_ngrams.cc
 	$(CXX) $(CXXFLAGS) -c src/sort_ngrams.cc -o $@
 
 sort_lsketch: $(OBJDIR)/sort_lsketch.o
-	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS)
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) -I $(TBB_INC) -L $(TBB_LIB)
 
 $(OBJDIR)/sort_lsketch.o: $(UTIL_OBJS) src/sort_lsketch.cc
-	$(CXX) $(CXXFLAGS) -c src/sort_lsketch.cc -o $@
+	$(CXX) $(CXXFLAGS) -c src/sort_lsketch.cc -o $@ -I $(TBB_INC) -L $(TBB_LIB)
 
 eSortNgram: $(OBJDIR)/externalsort_ngrams.o
 	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) -I $(TBB_INC) -L $(TBB_LIB)
@@ -117,6 +117,12 @@ verify: $(OBJDIR)/verify.o
 
 $(OBJDIR)/verify.o: $(UTIL_OBJS) src/verify.cc
 	$(CXX) $(CXXFLAGS) -c src/verify.cc -o $@
+
+testUN: $(OBJDIR)/test.o $(UTIL_OBJS) $(SETJOIN_OBJS) 
+	$(CXX) $(CXXFLAGS) -I$(SRCDIR) $< -o ./bin/$@.exe $(UTIL_OBJS) $(SETJOIN_OBJS) -I $(TBB_INC) -L $(TBB_LIB) -I sparsehash-sparsehash-2.0.4/src
+
+$(OBJDIR)/test.o: $(UTIL_OBJS) $(SETJOIN_OBJS) test/testUnorderedMap.cc
+	$(CXX) $(CXXFLAGS) -c test/testUnorderedMap.cc -o $@ -I sparsehash-sparsehash-2.0.4/src
 
 clean:
 	@rm -r obj

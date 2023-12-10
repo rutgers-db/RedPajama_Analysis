@@ -16,6 +16,8 @@ public:
     vector<vector<unsigned int>> dataset;  // Sorted Bottomk (Order by their Size)
     vector<unsigned int> ori_lens;         // Their Original Length
 
+    unordered_map<unsigned int, int> tokenFrequency;
+    vector<pair<unsigned int, int>> sortedTokens;
     // Array to store result pairs for each thread
     vector<pair<int, int>> result_pairs[MAXTHREADNUM];
 
@@ -27,6 +29,7 @@ public:
     // Function to check overlap between two bottomk
     bool overlap(unsigned int x, unsigned int y);
 
+    void init();
     void group(double thres);
     void find_simp();
 

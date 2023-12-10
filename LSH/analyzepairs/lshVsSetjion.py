@@ -42,9 +42,9 @@ simpairs_bin_path = util.find_file(simp_dir_path, file_prefix)
 print(simpairs_bin_path)
 # idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/{dataset_name}_idmap.bin"
 idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/{dataset_name}_idmap.bin"
-idmap = util.read_ints_from_binary(idmap_bin_path)
-sim_pairs = util.read_pairs_from_binary(simpairs_bin_path)
-simp_mylsh = util.map_elements(sim_pairs, idmap)
+# idmap = util.read_ints_from_binary(idmap_bin_path)
+simp_mylsh = util.read_pairs_from_binary(simpairs_bin_path)
+# simp_mylsh = util.map_elements(sim_pairs, idmap)
 simp_mylsh = util.correct_pair_order(simp_mylsh)
 
 
@@ -53,8 +53,8 @@ simp_mylsh = util.correct_pair_order(simp_mylsh)
 simpairs_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_simp/{dataset_name}_sim_pairs_{thres:.6f}.bin"
 # idmap_bin_path = f"/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/{dataset_name}_idmap.bin"
 # idmap = util.read_ints_from_binary(idmap_bin_path)
-sim_pairs = util.read_pairs_from_binary(simpairs_bin_path)
-simp_setjoin = util.map_elements(sim_pairs, idmap)
+simp_setjoin = util.read_pairs_from_binary(simpairs_bin_path)
+# simp_setjoin = util.map_elements(sim_pairs, idmap)
 simp_setjoin = util.correct_pair_order(simp_setjoin)
 
 # Load the documents of simp in setjoin

@@ -10,3 +10,5 @@ LSH/similar_pairs/
 *.csv
 *checkpoint*
 oneapi-tbb-2021.9.0
+sparsehash-sparsehash-2.0.4
+.vscode

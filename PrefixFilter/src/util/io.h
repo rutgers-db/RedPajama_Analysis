@@ -9,6 +9,7 @@ void loadShortBin(const string &binFileName, vector<vector<unsigned short>> &doc
 void loadShortBin(const string &binFileName, vector<vector<unsigned int>> &docs);
 void loadIntBin(const string &binFileName, vector<vector<unsigned int>> &docs);
 void loadBin2vec(const string &binFileName, vector<int> &vec);
+void loadBin2vec(const string &binFileName, vector<unsigned int> &vec);
 void writeVec2Bin(const string &binFileName, vector<int> &vec);
 void readDividedList(const string &binFileName, vector<vector<pair<int,int>>> &res_lists);
 void readSimilarPair(const string &binFileName,  vector<pair<int, int>> &sim_pairs);

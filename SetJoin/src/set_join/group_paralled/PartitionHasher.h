@@ -76,7 +76,8 @@ public:
             subquery[tid].clear();
             parts_keys[rid].resize(partNum);
             subquery[tid].resize(partNum);
-
+            
+            // unsigned int min_subrecLen = len / partNum / 2;
             // Assign tokens to partitions and compute initial hash values
             for (auto &token : dataset[rid]) {
                 unsigned int pid = token % partNum;
@@ -97,6 +98,10 @@ public:
                 // Track the start position of one-deletion keys for the partition
                 odkeys_st[rid][pid] = tmp_cnt;
 
+                // if(subrec.size() <= min_subrecLen){
+                //     continue;
+                // }
+                    
                 // Calculate one-deletion hash values for each token in the partition
                 for (unsigned int idx = 0; idx < subrec.size(); idx++) {
                     int chv = hv + mhv * prime_exp[subrec.size() - 1 - idx];
@@ -121,6 +126,8 @@ public:
         p_keys.resize(partNum);
         subquery[tid].resize(partNum);
 
+        // unsigned int min_subrecLen = vec.size() / partNum / 2;
+
         // Assign tokens to partitions and compute initial hash values
         for (auto &token : vec) {
             unsigned int pid = token % partNum;
@@ -140,6 +147,9 @@ public:
 
             // Track the start position of one-deletion keys for the partition
             odk_st[pid] = tmp_cnt;
+
+            // if(subrec.size() <= min_subrecLen)
+            //     continue;
 
             // Calculate one-deletion hash values for each token in the partition
             for (unsigned int idx = 0; idx < subrec.size(); idx++) {

@@ -1,0 +1,38 @@
+max thread amount: 79
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Start Set Join
+det: 0.800000 coe: 0.111111 ALPHA: 1.260000 maxSize: 8435 maxIndexPartNum: 1875 
+The tokenNum is 50276 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 129.915
+Now Let's building the inverted Index of these Paritions
+There are 32 range groups in the setJoin
+Sorting them And Partition Time Cost: 688.288
+Used Physical Memory: 707440472064
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 534.417
+|index_cost| total_hash_cost| total_memeory_cost| find_cost| alloc_cost| verif_cost|
+|818.203153|3.062184|2.999524|89.290258|412.534489|26.530092|
+Average Range size: 204757340.719 Maximum Range size ratio 0.182 
+joiner.result_pairs have 31950 pairs
+At last the total time cost is: 1395.627243
+max thread amount: 79
+Reading /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+There are 29825086 documents in /research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/stackexchange_sortedsets.bin
+Start Set Join
+det: 0.900000 coe: 0.052632 ALPHA: 1.121111 maxSize: 8435 maxIndexPartNum: 888 
+The tokenNum is 50276 
+Calculating Hash Values of Partitions and OneDeleteion Neighbors Time Cost: 71.0613
+Now Let's building the inverted Index of these Paritions
+There are 60 range groups in the setJoin
+Sorting them And Partition Time Cost: 293.666
+Used Physical Memory: 690786353152
+Start finding similar pairs 
+0 0 0 
+Finding Similar Pairs Time Cost: 222.787
+|index_cost| total_hash_cost| total_memeory_cost| find_cost| alloc_cost| verif_cost|
+|364.726819|3.261139|2.324803|38.954612|177.801583|0.444563|
+Average Range size: 109203915.050 Maximum Range size ratio 0.094 
+joiner.result_pairs have 11014 pairs
+At last the total time cost is: 627.702651

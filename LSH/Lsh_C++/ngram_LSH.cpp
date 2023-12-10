@@ -56,12 +56,12 @@ int main(int argc, char *argv[]) {
     printf("MinHash Opertation Finished\n");
 
     // LSH
-    // LSH64 lsh(K, band, range);
-    External_LSH64 lsh(K, band, range);
+    LSH64 lsh(K, band, range);
+    // External_LSH64 lsh(K, band, range);
     cout << "Start LSH" << endl;
     lsh.run(minhashes);
 
-    // writeSimilarPair(simP_file_path, lsh.result_pairs);
+    writeSimilarPair(simP_file_path, lsh.result_pairs);
     printf("Parameters Setting:%s %d %d %d\n", dataset_name.c_str(), K, band, range);
     printf("At last the total time cost is: %f\n", RepTime(timer_st));
     return 0;
