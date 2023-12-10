@@ -23,7 +23,7 @@ This file records the time cost of Setjoin whose parallism is based on group lev
 |gihub | 281G| 110G |25539436 |393251283 |769.935467|2300.508319|84.031356|7034.427743|283.438409|
 | sample (Pure Ngrams)    | 225G | 82G |13574695 |2452114 |417.217665|1401.418946|58.377853|3684.730249|2.536970|
 | book (M8 Lsketches NGrams) | 39G | |205645 |273 |90.646460|180.885536|44.155980|218.456019|0.113344| 
-
+| book (Pure NGrams) | 305G | 286G|205645 |273 |360.147514|824.177096|205.646046|1792.314978|2.225705|
 
 ### For Counting LowerBound Cost
 | Dataset| Dataset Size (GB) | Used Memory| Docs Amount| Found Pairs | IO time | Index Time | Online Hashing Time| Allocation Time | Verification Time| Lowerbound Time|

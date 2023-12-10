@@ -9,9 +9,11 @@ Mention: The LSH here is the C++ version.
 | Dataset| Time(s) | Pairs | Pairs FP rate| Pairs FN rate| Pairs F1| Distinct Docs | Docs FP rate| Docs FN rate|
 |----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | Book    |
-| Arxiv    |
-| stackexchange | 358.281852| 9181 | 0.0398 | 0.4971|0.6601|17190|0.0283|0.427|
-| wikipedia    |
+| Arxiv    | 162.454954 |
+| stackexchange |153.259485| 9181 | 0.0398 | 0.4971|0.6601|17190|0.0283|0.427|
+| wikipedia    | 448.599124| 32427814|
+| github| 858.364394| 709412120|
+| sample|650| 3361276|
 
 2.  Table of SetJoin 
 
