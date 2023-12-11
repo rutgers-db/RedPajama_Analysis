@@ -14,6 +14,15 @@ Mention: The LSH here is the C++ version.
 | wikipedia    | 448.599124| 32427814|
 | github| 858.364394| 709412120|
 | sample|650| 3361276|
+| c4|4847| 2689799380|
+| common_crawl/2019-30 (external Hashing) |3306| 143441852|
+| common_crawl/2020-05(external Hashing) |4119| 223899916|
+| common_crawl/2021-04(external Hashing) |3883| 198424672|
+| common_crawl/2022-05(external Hashing)|3489| 151713810|
+| common_crawl/2023-06 (external Hashing)|3695| 207802987|
+
+
+All of those LSH running on common_crawl/2019-30, /2020-05 all use 300~500GB memory
 
 2.  Table of SetJoin 
 
