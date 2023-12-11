@@ -164,9 +164,9 @@ int main(int argc, char *argv[]){
         }
     }
 
-    const string fileA_simp_path = "./similar_pairs/" + dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
-    const string fileB_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/" + dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
-
+    const string fileA_simp_path = "./ngram_simps/" + dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
+    // const string fileB_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/" + dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
+    const string fileB_simp_path = "./test_simp.bin";
     compareFiles(fileA_simp_path, fileB_simp_path);
 
 }

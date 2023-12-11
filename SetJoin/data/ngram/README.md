@@ -13,7 +13,7 @@ This file records the maximimum group size when runing SetjoinGroupParelled whos
 |book (Pure Ngrams) |308G | 57.2G |
 |c4 (Pure Ngrams) | 2.6T | 243G |
 |common_crawl_2019-30 (Pure Ngrams) |1.7T | 165G | | 
-|common_crawl_2020-05 (Pure Ngrams) |2.1T | | | 
+|common_crawl_2020-05 (Pure Ngrams) |2.1T | 188G| | 
 |common_crawl_2021-04 (Pure Ngrams) |1.9T | | | 
 |common_crawl_2022-05 (Pure Ngrams) |1.9T | | | 
 |common_crawl_2023-06 (Pure Ngrams) |1.6T| | | 

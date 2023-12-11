@@ -11,6 +11,9 @@ main: main.cpp $(SRC_FILES)
 ngram_LSH: ngram_LSH.cpp $(SRC_FILES)
 	${COMPILER} ${CPPFLAGS} -o ./bin/$@ $<
 
+bigdata_lsh: bigdata_lsh.cpp $(SRC_FILES)
+	${COMPILER} ${CPPFLAGS} -o ./bin/$@ $<
+
 merge: merge_simp.cpp $(SRC_FILES)
 	${COMPILER} ${CPPFLAGS} -o ./bin/$@ $<
 

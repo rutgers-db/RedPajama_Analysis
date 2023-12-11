@@ -39,4 +39,36 @@ public:
 
         return min_hashes;
     }
+
+    void getMinHashesByBuffer(const string &binFileName, vector<vector<unsigned int>>& minhashes ) {
+        cout << "Reading " << binFileName << endl;
+        ifstream ifs(binFileName, ios::binary);
+        if (!ifs) {
+            cout << "error open bin file" << endl;
+            return;
+        }
+
+        
+        unsigned int bufferSize = 1e6; // Define your buffer size
+        vector<vector<unsigned int>> buffer; // Buffer to hold a chunk of data
+
+        int size;
+        while (!ifs.eof()) {
+            buffer.clear();
+            for (int i = 0; i < bufferSize && ifs.read((char *)&size, sizeof(int)); ++i) {
+                vector<unsigned int> vec(size);
+                ifs.read((char *)&vec[0], sizeof(unsigned int) * size);
+                buffer.emplace_back(vec);
+            }
+            auto ori_size = minhashes.size();
+            minhashes.resize(ori_size + buffer.size());
+            // Process the current buffer
+#pragma omp parallel for
+            for (unsigned int i = 0; i < buffer.size(); i++) {
+                minhashes[ori_size + i] = getMinHashes(buffer[i]);
+            }
+        }
+        ifs.close();
+        
+    }
 };
