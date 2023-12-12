@@ -17,7 +17,8 @@
 #include <cstdio>
 #include "../util/util.h"
 #include "group_paralled/PartitionHasher.h"
-#include "group_paralled/PartitionIndex.h"
+// #include "group_paralled/PartitionIndex.h"
+#include "group_paralled/PartitionMapIndex.h"
 #include "group_paralled/PartitionSmallIndex.h"
 #include "group_paralled/RangeLoader.h"
 
