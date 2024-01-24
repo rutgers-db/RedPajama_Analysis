@@ -4,8 +4,10 @@
 using namespace std;
 
 // g++ sample_dataset.cc -o sample.exe -I ../oneapi-tbb-2021.9.0/include -pthread -L ../oneapi-tbb-2021.9.0/lib/intel64/gcc4.8 -ltbb
+
+const int rand_percent = 1;
 bool probability10Percent() {
-    return (rand() % 100) < 5; // Returns true approximately 10% of the time
+    return (rand() % 100) < rand_percent; // Returns true approximately 10% of the time
 }
 
 // Function to load binary file into a 2D vector (documents)
@@ -54,20 +56,20 @@ int main(){
     // string  dataset_names[] = {"arxiv", "book","stackexchange", "github", "wikipedia"};
     vector<vector<unsigned int>> docs;
     string ds_path = "../data/ngram/sorted_ngrams/sample_sortedngram.bin";
-    loadIntBin(ds_path, docs);
+    randloadIntBin(ds_path, docs);
 
     // for(auto & name: dataset_names){
     //     string ds_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/" + name +"_sortedngram.bin";
     //     randloadIntBin(ds_path, docs);
     // }
 
-    string c4_dir[] = {"2020-05/", "2021-04/", "2022-05/"};
-    // load some c4 files
-    for(int j = 0 ; j< 3 ;j++)
-        for( int i = 0; i <40; i++){
-            string commoncrawl_subfile_path = "/research/projects/zp128/RedPajama_Analysis/LSH/slimpajama/common_crawl/" + c4_dir[j] + to_string(i)+ ".bin";
-            loadIntBin(commoncrawl_subfile_path, docs);
-        }
+    // string c4_dir[] = {"2020-05/", "2021-04/", "2022-05/"};
+    // // load some c4 files
+    // for(int j = 0 ; j< 3 ;j++)
+    //     for( int i = 0; i <40; i++){
+    //         string commoncrawl_subfile_path = "/research/projects/zp128/RedPajama_Analysis/LSH/slimpajama/common_crawl/" + c4_dir[j] + to_string(i)+ ".bin";
+    //         loadIntBin(commoncrawl_subfile_path, docs);
+    //     }
 
     vector<int> idmap_docs;
     for (int i = 0; i < docs.size(); i++)
@@ -96,7 +98,7 @@ int main(){
         } });
 
     ofstream ofs;
-    ofs.open("./sample_full.bin", ios::binary);
+    ofs.open("./sample_small.bin", ios::binary);
     for (int i = 0; i < idmap_docs.size(); i++) {
         const auto &vec = docs[idmap_docs[i]];
         unsigned int size = vec.size();

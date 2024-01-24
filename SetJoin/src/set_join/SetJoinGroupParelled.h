@@ -98,7 +98,7 @@ private:
      * @param previousDocId: ID for previous document
      */
     void processCurrentDataset(
-        const vector<vector<unsigned int>>& currentDataset,
+       vector<vector<unsigned int>> *& currentDataset,
         PartitionHasher*& currentHasher,
         // PartitionSmallIndex*& currentIndex,
         PartitionIndex *& currentIndex,
@@ -115,6 +115,8 @@ private:
      */
     void processPreviousDataset(
         const vector<vector<unsigned int>>& previousDataset,
+        const unsigned int prev_max_len,
+        const unsigned int prev_dataset_len,
         const vector<vector<unsigned int>>& currentDataset,
         PartitionHasher& previousHasher,
         // PartitionSmallIndex& previousIndex,

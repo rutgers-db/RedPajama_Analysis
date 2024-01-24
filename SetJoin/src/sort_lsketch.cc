@@ -19,9 +19,10 @@ int main(int argc, char *argv[]) {
     const string dataset_name = string(argv[1]);
     const string ngram_path = root_dir + "/data/ngram/sorted_ngrams/" + dataset_name +"_sortedngram.bin";
     // Convert them into L sketches
-    unsigned int M = 8;
-    unsigned int bit_mv = 3;
-
+    
+    const double thres = strtod(argv[2], nullptr);
+    unsigned int bit_mv = std::stoi(argv[2]);
+    unsigned int M = 1 << bit_mv;
     string idmap_file_path = root_dir + "/data/ngram/sorted_lsketch/" + dataset_name + "_idmap.bin";
     string sortedlsketch_file_path = root_dir + "/data/ngram/sorted_lsketch/" + dataset_name + "_M"+to_string(M) + ".bin";
 
@@ -32,6 +33,8 @@ int main(int argc, char *argv[]) {
     vector<int> idmap_lsketch;
     for (int i = 0; i < ngrams.size(); i++)
         idmap_lsketch.emplace_back(i);
+
+    auto timer_st = LogTime();
 
     pair<unsigned int, unsigned int> hf; // hash functions
     generateHashFunc(1, hf);
@@ -86,7 +89,9 @@ int main(int argc, char *argv[]) {
             else
                 return false;
         } });
+    
 
+    printf("At last the Getting Lsketch cost is: %f\n", RepTime(timer_st));
     // write the idmap and the sorted set
     cout << "Writing idmap and the sorted lsketches" << endl;
     writeVec2Bin(idmap_file_path, idmap_lsketch);

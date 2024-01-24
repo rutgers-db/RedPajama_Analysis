@@ -1,6 +1,7 @@
 #ifndef _PARTITIONHASHINDEX_H_
 #define _PARTITIONHASHINDEX_H_
 
+
 #include <vector>
 #include <set>
 #include <iostream>
@@ -12,6 +13,7 @@
 #include "PartitionHasher.h"
 #include "../../util/util.h"
 #define EMH_EXT
+
 #include "../../../emhash/hash_table7.hpp"
 
 using namespace std;
@@ -20,8 +22,8 @@ typedef emhash7::HashMap<unsigned int, pair<unsigned int, unsigned int>> hash_pa
 
 class PartitionIndex {
 private:
-    bool **quickRef2D; // 2D quick reference array
-    bool **negRef2D;   // 2D negative reference array
+    bool **quickRef2D = nullptr; // 2D quick reference array
+    bool **negRef2D = nullptr;   // 2D negative reference array
 
 public:
     double mem_cost[MAXTHREADNUM] = {0};
@@ -41,7 +43,7 @@ public:
     set < pair<int, unsigned int>> valuesArr[MAXTHREADNUM]; // <value, loc>
     vector < unsigned int > scoresArr[MAXTHREADNUM];
     unsigned int max_len;       // the maximum length in the current group
-
+    unsigned int partition_num;
     double det;
     double coe;
     
@@ -49,19 +51,22 @@ public:
     PartitionIndex(double delta, double _coe): det(delta), coe(_coe){}
 
     ~PartitionIndex(){
-        for (int i = 0; i < MAXTHREADNUM; ++i) {
-            delete[] quickRef2D[i];
-            delete[] negRef2D[i];
+        cout<<"Delete here"<<endl;
+        if(quickRef2D != nullptr && negRef2D != nullptr  ){
+            for (int i = 0; i < MAXTHREADNUM; ++i) {
+                delete[] quickRef2D[i];
+                delete[] negRef2D[i];
+            }
+            delete[] quickRef2D;
+            delete[] negRef2D;
         }
-        delete[] quickRef2D;
-        delete[] negRef2D;
     }
     
 public:
     // Method to create index based on PartitionHasher
     double createIndex(PartitionHasher &part_hasher, unsigned int partNum) {
         auto time_st = LogTime();
-
+        partition_num = partNum;
         // Allocate Memory for index
         parts_rids.resize(partNum);
         ods_rids.resize(partNum);
@@ -69,11 +74,11 @@ public:
         odkey_index.resize(partNum);
         // Allocate memory for those in the searching
         for (auto tid = 0; tid < MAXTHREADNUM; tid++) {
-            invPtrArr[tid].resize(partNum);
-            intPtrArr[tid].resize(partNum);
-            onePtrArr[tid].resize(partNum);
+            invPtrArr[tid].reserve(partNum);
+            intPtrArr[tid].reserve(partNum);
+            onePtrArr[tid].reserve(partNum);
             // valuesArr[tid].resize(partNum);
-            scoresArr[tid].resize(partNum);
+            scoresArr[tid].reserve(partNum);
         }
 
         // Initialize quick reference arrays
@@ -136,8 +141,9 @@ public:
             auto &cur_ods_rids = ods_rids[pid];
             cur_ods_rids.resize(one_deletion_amount);
             auto & cur_odindex = odkey_index[pid];
+            cur_odindex.max_load_factor(0.999);
             cur_odindex.reserve(one_deletion_amount);
-
+                    
             // Insert each onedeletion hash value into the emhash
             for (unsigned int rid = 0; rid < len; rid++) {
                 unsigned int const od_loc_st = odkeys_st[rid][pid];
@@ -177,7 +183,7 @@ public:
         double lowerbound_cost = 0;
 
         auto & odkeys_st = part_hasher.odkeys_st;
-        auto & onedelete_keys = part_hasher.onedelete_keys;
+        // auto & onedelete_keys = part_hasher.onedelete_keys; // tweak here
 
         auto const indexPartNum = p_keys.size();
         unsigned int const len = od_keys.size();
@@ -194,13 +200,16 @@ public:
         auto negRef = negRef2D[tid];
         auto quickRef = quickRef2D[tid];
 
+        onePtr.resize(indexPartNum);
+        intPtr.resize(indexPartNum);
+        invPtr.resize(indexPartNum);
+        scores.resize(indexPartNum);
         // Initialize onePtr and reserve space for each part
         for (unsigned int pid = 0; pid < indexPartNum; ++pid) {
             onePtr[pid].clear();
             // assert(odk_st[pid + 1] >= odk_st[pid]);             // todo: delete it
             onePtr[pid].reserve(odk_st[pid + 1] - odk_st[pid]); // seems: useless whynot reserve before
         }
-
         mem_cost[tid] += RepTime(mem_st);
 
         // Iterate each part find each part if there is identical part already exits in inverted list
@@ -263,8 +272,10 @@ public:
                         // auto const &hrp = parts_arr[ofs];
                         auto const tmp_rid = parts_rids[pid][ofs];
                         if (tmp_rid >= rid) break;
+                        // Tweak Here So that not need for onedelete_keys
                         int tmp_pos = odkeys_st[tmp_rid][pid];
-                        unsigned int rLen = onedelete_keys[tmp_rid].size();
+                        // unsigned int rLen = onedelete_keys[tmp_rid].size();
+                        unsigned int rLen = odkeys_st[tmp_rid][indexPartNum];
                         int Ha = floor((len - det * rLen) / (1 + det) + EPS);
                         int Hb = floor((rLen - det * len) / (1 + det) + EPS);
                         unsigned int H = Ha + Hb; // maximum allowable difference
@@ -294,13 +305,14 @@ public:
                 }
 
                 // the values set is too big we do not need so much
+                // But this part seems cause too much time, just not use it.
                 while(values.size() > (maxH - i)){
                     values.erase(values.begin());
                 }
 
                 auto minValue_pid = (values.begin())->second;
                 auto last_cand_len = odk_st[minValue_pid + 1] - odk_st[minValue_pid];
-                if((maxH - i) <= values.size() && odk_st[pid + 1] - odk_st[pid] - 2 <= last_cand_len){
+                if(values.size() >= (maxH - i) && odk_st[pid + 1] - odk_st[pid] + 1 <= last_cand_len){
                     // heap_cnt--;
                     continue;
                 }
@@ -353,7 +365,8 @@ public:
                         int tmp_pos = odkeys_st[tmp_rid][pid];
                         // Attention here is the ods_arr
                         // auto const &hrp = ods_arr[ofs];
-                        unsigned int rLen = onedelete_keys[tmp_rid].size();
+                        // unsigned int rLen = onedelete_keys[tmp_rid].size();
+                        unsigned int rLen = odkeys_st[tmp_rid][indexPartNum];
                         int Ha = floor((len - det * rLen) / (1 + det) + EPS);
                         int Hb = floor((rLen - det * len) / (1 + det) + EPS);
                         unsigned int H = Ha + Hb; // maximum allowable difference
@@ -384,7 +397,8 @@ public:
                             if (tmp_rid >= rid) break;
                             int tmp_pos = odkeys_st[tmp_rid][pid];
 
-                            unsigned int rLen = onedelete_keys[tmp_rid].size();
+                            // unsigned int rLen = onedelete_keys[tmp_rid].size();
+                            unsigned int rLen = odkeys_st[tmp_rid][indexPartNum];
                             int Ha = floor((len - det * rLen) / (1 + det) + EPS);
                             int Hb = floor((rLen - det * len) / (1 + det) + EPS);
                             unsigned int H = Ha + Hb; // maximum allowable difference

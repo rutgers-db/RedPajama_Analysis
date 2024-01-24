@@ -10,9 +10,9 @@ class RangeLoader {
 public:
     unsigned int docs_amount = 0;
     int range_num = 0;                 // Number of ranges (or groups) loaded so far
-    unsigned int cur_gp_size;
-    unsigned int range_low;
-    unsigned int range_high;
+    unsigned int cur_gp_size = 0;
+    unsigned int range_low = 0;
+    unsigned int range_high = 0;
     double load_cost = 0;
 
     string sortedsets_path;            // Path to the binary file

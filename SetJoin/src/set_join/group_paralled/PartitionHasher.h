@@ -32,6 +32,23 @@ public:
             prime_exp[i] = prime_exp[i - 1] * PRIME;
     } 
 
+    // Function to release the memory of parts_keys, onedelete_keys, and odkeys_st
+    void release_keys() {
+        // Clear and shrink parts_keys
+        vector<vector<unsigned int>>().swap(parts_keys);
+
+        // Clear and shrink onedelete_keys
+        vector<vector<unsigned int>>().swap(onedelete_keys);
+
+        for (unsigned int i = 0; i < MAXTHREADNUM; i++) {
+            vector<vector<unsigned int>>().swap(subquery[i]);
+        }
+
+        // Clear and shrink odkeys_st
+        // tweak Still needed for next previouProcessDataset
+        // vector<vector<unsigned int>>().swap(odkeys_st);
+    }
+    
     // Constructor
     // to do: the reason that I refer the dataset is that to save the memory space, but the orignal content of dataset
     // will be lost
@@ -66,7 +83,7 @@ public:
 
         // Initialize subquery and hash value vectors
         for (unsigned int i = 0; i < MAXTHREADNUM; i++) {
-            subquery[i].resize(partNum);
+            subquery[i].reserve(partNum);
         }
 
 #pragma omp parallel for
