@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     const double thres = strtod(argv[2], nullptr);
     unsigned int bit_mv = std::stoi(argv[2]);
     unsigned int M = 1 << bit_mv;
-    string idmap_file_path = root_dir + "/data/ngram/sorted_lsketch/" + dataset_name + "_idmap.bin";
+    string idmap_file_path = root_dir + "/data/ngram/sorted_lsketch/" + dataset_name + "_M"+to_string(M) + "_idmap.bin";
     string sortedlsketch_file_path = root_dir + "/data/ngram/sorted_lsketch/" + dataset_name + "_M"+to_string(M) + ".bin";
 
     // Input bottom_k and sort them
@@ -96,14 +96,14 @@ int main(int argc, char *argv[]) {
     cout << "Writing idmap and the sorted lsketches" << endl;
     writeVec2Bin(idmap_file_path, idmap_lsketch);
 
-    ofstream ofs;
-    ofs.open(sortedlsketch_file_path.c_str(), ios::binary);
-    for (int i = 0; i < idmap_lsketch.size(); i++) {
-        const auto &vec = lsketches[idmap_lsketch[i]];
-        unsigned int size = vec.size();
+    // ofstream ofs;
+    // ofs.open(sortedlsketch_file_path.c_str(), ios::binary);
+    // for (int i = 0; i < idmap_lsketch.size(); i++) {
+    //     const auto &vec = lsketches[idmap_lsketch[i]];
+    //     unsigned int size = vec.size();
 
-        ofs.write((char *)&size, sizeof(unsigned int));
-        ofs.write((char *)&vec[0], size * sizeof(unsigned int)); // Write the vector data
-    }
-    ofs.close();
+    //     ofs.write((char *)&size, sizeof(unsigned int));
+    //     ofs.write((char *)&vec[0], size * sizeof(unsigned int)); // Write the vector data
+    // }
+    // ofs.close();
 }

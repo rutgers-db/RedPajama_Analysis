@@ -78,9 +78,35 @@ void idmapTwice( vector<pair<unsigned int, unsigned int>> &pairsB, const string 
     sort(pairsB.begin(),pairsB.end());
 }
 
-// fileA -> LSH
+void rev_idmap( vector<pair<unsigned int, unsigned int>> &pairsB, const string &idmap_A_path) {
+    // Load
+    vector<int> idmap_A;
+    loadBin2vec(idmap_A_path, idmap_A);
+    vector<int> rev_idmap_A(idmap_A.size());
+    for (int i = 0; i < idmap_A.size(); i++) {
+        rev_idmap_A[idmap_A[i]] = i;
+    }
+    // Convert the pairs B from idmapB into original id then using reversed idmap_A to convert it into A's id
+
+    // Map id in pairsB
+    for (auto &pair : pairsB) {
+        pair.first = rev_idmap_A[pair.first];
+        pair.second = rev_idmap_A[pair.second];
+
+        if (pair.second < pair.first) {  
+            auto tmp =pair.first;
+            pair.first = pair.second;
+            pair.second = tmp;
+        }
+    }
+    // sort it
+    sort(pairsB.begin(),pairsB.end());
+}
+
+
+// fileA -> Lskech
 // fileB -> Setjoin
-void compareFiles(const string &fileA, const string &fileB, const string &idmap_A_path, const string &idmap_B_path ) {
+void compareFiles(const string &fileA, const string &fileB, const string &idmap_A_path ) {
     // Read the pairs from the binary files
     vector<pair<unsigned int, unsigned int>> pairsA;
     ifstream ifsA(fileA, ios::binary | std::ios::ate);
@@ -105,7 +131,8 @@ void compareFiles(const string &fileA, const string &fileB, const string &idmap_
     // readSimilarPair(fileA, pairsA);
     vector<pair<unsigned int, unsigned int>> pairsB;
     readSimilarPair(fileB, pairsB);
-    idmapTwice(pairsB, idmap_A_path, idmap_B_path);
+    rev_idmap(pairsB, idmap_A_path);
+    // idmapTwice(pairsB, idmap_A_path, idmap_B_path);
     
     set<unsigned int> uniqueValuesA;
     set<unsigned int> uniqueValuesB;
@@ -188,6 +215,7 @@ void compareFiles(const string &fileA, const string &fileB, const string &idmap_
 
 int main(int argc, char *argv[]) {
     dataset_name = string(argv[1]);
+    int M;
     for (int i = 1; i < argc; i++) {
         const string arg = argv[i];
         if (arg == "-t") {
@@ -199,14 +227,18 @@ int main(int argc, char *argv[]) {
             char* end;
             shrink_ratio = strtod(argv[i + 1], &end);
         }
+
+        if (arg == "-m") {
+            M = stoi(argv[i + 1]);
+        }
     }
 
-    const string fileA_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + "_" + to_string(shrink_ratio) + ".bin";
-    const string fileB_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
-    const string fileA_idmap_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/bottomk/sorted_bottomk/" + dataset_name + "_idmap" + ".bin";
-    const string fileB_idmap_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_sets/" + dataset_name + "_idmap" + ".bin";
+    const string fileA_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_lsketchsimp/" + dataset_name + "_sim_pairs_" + to_string(thres) + "_M" + to_string(M) + ".bin";
+    const string fileB_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_simp/" + dataset_name + "_sim_pairs_" + to_string(thres) + ".bin";
+    const string fileA_idmap_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_lsketch/" + dataset_name + "_M" + to_string(M) + "_idmap" + ".bin";
+    // const string fileB_idmap_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_ngrams/" + dataset_name + "_idmap" + ".bin";
 
     // Due to the two sorted similar pairs have different idmap, we cannot directly compare them linearly
     // Therefore, we need to convert the sim_pairs from fileB by the idmap from both
-    compareFiles(fileA_simp_path, fileB_simp_path, fileA_idmap_path, fileB_idmap_path);
+    compareFiles(fileA_simp_path, fileB_simp_path, fileA_idmap_path);
 }

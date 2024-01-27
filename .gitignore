@@ -12,3 +12,4 @@ LSH/similar_pairs/
 oneapi-tbb-2021.9.0
 sparsehash-sparsehash-2.0.4
 .vscode
+*.txt

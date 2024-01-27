@@ -27,3 +27,12 @@ This file records the time cost of Setjoin whose parallism is based on group lev
 | Dataset| Dataset Size (GB) | Used Memory| Docs Amount| Found Pairs | IO time | Index Time | Online Hashing Time| Allocation Time | Verification Time| Lowerbound Time|
 |----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | sample (M8 Lsketches Ngrams) | 29G |  |13574695 |12981838 |21.870466|308.962318|15.947846|294.390033|2.418080|131.235968|
+
+## Thres:0.8 sample lsketch
+| M | Original Dataset Size (GB) | Used Memory | Docs Amount | Found Pairs | IO time | Index Time | Online Hashing Time| Allocation Time | Verification Time| Total Time|
+|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|     
+| 2   | 225G | 108G |13574695 |10812292 |132.663326|304.635627|44.444383|422.816682|31.531660|803.428351|
+| 4   | 225G | 53G |13574695 |11103172 |65.860819|146.213986|21.225310|209.552794|17.759097|394.751187|
+| 8   | 225G | 28G |13574695 |12972319 |32.407084|86.931115|10.583852|107.130317|10.559188|215.204472|
+| 16    | 225G | 14G |13574695 |13593252 |15.755345|58.677258|5.691563|54.895282|6.498808|125.762911|
+| 32    | 225G | 7G |13574695 |17333438 |8.204803|46.405227|3.388673|31.917339|4.178932|85.890172|

@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --mem=500g
-#SBATCH --output=script/gpjoinParalled_script.txt 
-for dataset_name in book arxiv wikipedia github wikipedia 
+#SBATCH -w rlab1
+#SBATCH --mem=700g
+#SBATCH --output=log/gpjoinParalledManyDataset.txt 
+for dataset_name in  book # arxiv wikipedia github wikipedia sample #sample_full
 do
-for thres in 0.9 0.8
+for thres in 0.8
 do
     /usr/bin/time -v ./bin/groupParelledJoin.exe $dataset_name $thres
 done
 done
-/usr/bin/time -v ./bin/groupParelledJoin.exe sample 0.9
-# The script that sort the bottomks by their size
+# /usr/bin/time -v ./bin/groupParelledJoin.exe sample 0.9
