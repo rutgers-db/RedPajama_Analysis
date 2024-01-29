@@ -149,6 +149,7 @@ int main(int argc, char *argv[]){
     int K = 128;
     int band = 6;
     int range = 21;
+    int M;
     for (int i = 1; i < argc; i++) {
         const string arg = argv[i];
         if (arg == "-K") {
@@ -162,11 +163,14 @@ int main(int argc, char *argv[]){
         if (arg == "-range") {
             range = atoi(argv[i + 1]);
         }
+
     }
 
     const string fileA_simp_path = "./ngram_simps/" + dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
-    // const string fileB_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_simp/" + dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
-    const string fileB_simp_path = "./test_simp.bin";
+    const string fileB_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/data/ngram/sorted_simp/" + dataset_name+ "_sim_pairs_" + to_string(thres)+  ".bin";
+    cout<< fileA_simp_path<<endl;
+    // const string fileB_simp_path = "/research/projects/zp128/RedPajama_Analysis/SetJoin/sorted_testsimp.bin";
+    // const string fileB_simp_path = "./test_simp.bin";
     compareFiles(fileA_simp_path, fileB_simp_path);
 
 }

@@ -15,10 +15,6 @@ public:
         for(int i = 1 ;i<=_K; i++){
             generateHashFunc(i, hf);
         }
-
-        // for(int i = 1 ;i<=_K; i++){
-        //     cout<<hf[i-1].first<<" "<< hf[i-1].second<<endl;
-        // }
     }
 
     std::vector<unsigned int> getMinHashes(const std::vector<unsigned int>& doc) {
@@ -48,8 +44,7 @@ public:
             return;
         }
 
-        
-        unsigned int bufferSize = 1e6; // Define your buffer size
+        unsigned int bufferSize = 3e7; // Define your buffer size
         vector<vector<unsigned int>> buffer; // Buffer to hold a chunk of data
 
         int size;

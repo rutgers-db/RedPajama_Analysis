@@ -5,13 +5,11 @@
 #include "./src/IO.hpp"
 #include "./src/util.hpp"
 #include "./src/minhash32.hpp"
-// #include "./src/LSH64.hpp"
 #include "./src/External_LSH64.hpp"
 using namespace std;
 int main(int argc, char *argv[]) {
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    // const string dataset_name = "stackexchange";
     const string dataset_name = string(argv[1]);
     const string sortedsets_file_path = root_dir + "/data/ngram/sorted_ngrams/" + dataset_name + "_sortedngram.bin";
 
@@ -35,14 +33,13 @@ int main(int argc, char *argv[]) {
     }
 
     const string simP_file_path = "./ngram_simps/" + dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
-    // const string simP_file_path = "./test_simp.bin";
-   
-    
+
     // Get MinHashes
     auto timer_st = LogTime();
     vector<vector<unsigned int>> minhashes;
     MinHash32 minHasher(K);
     minHasher.getMinHashesByBuffer(sortedsets_file_path, minhashes);
+    double hash_t = RepTime(timer_st);
 //     vector<vector<unsigned int>> sorted_sets;
 //     loadIntBin(sortedsets_file_path, sorted_sets);
 
@@ -61,14 +58,12 @@ int main(int argc, char *argv[]) {
 //     vector<vector<unsigned int>>().swap(sorted_sets);
     printf("MinHash Opertation Finished\n");
 
-    // LSH
-    // LSH64 lsh(K, band, range);
     External_LSH64 lsh(K, band, range);
     cout << "Start External LSH" << endl;
     lsh.run(minhashes);
 
     writeSimilarPair(simP_file_path, lsh.result_pairs);
     printf("Parameters Setting:%s %d %d %d\n", dataset_name.c_str(), K, band, range);
-    printf("At last the total time cost is: %f\n", RepTime(timer_st));
+    printf("MinHash + LSH cost: %f At last the total time cost is: %f\n", hash_t+lsh.lsh_t, RepTime(timer_st));
     return 0;
 }

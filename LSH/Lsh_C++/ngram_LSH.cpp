@@ -8,10 +8,10 @@ using namespace std;
 int main(int argc, char *argv[]) {
     // global variables
     const string root_dir = "/research/projects/zp128/RedPajama_Analysis/SetJoin";
-    // const string dataset_name = "stackexchange";
     const string dataset_name = string(argv[1]);
     const string sortedsets_file_path = root_dir + "/data/ngram/sorted_ngrams/" + dataset_name + "_sortedngram.bin";
     // const string idmap_file_path = root_dir + "/sorted_sets/" + dataset_name + "_idmap.bin";
+
 
     int K = 128;
     int band = 6;
@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
     vector<vector<unsigned int>> sorted_sets;
     loadIntBin(sortedsets_file_path, sorted_sets);
 
+    double hash_cost;
     auto timer_st = LogTime();
     
     // Get MinHashes

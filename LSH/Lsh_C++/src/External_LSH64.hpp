@@ -34,6 +34,7 @@ private:
 public:
     // vector<map<size_t, vector<unsigned int>>> band_buckets;
     vector<pair<unsigned int, unsigned int>> result_pairs;
+    double lsh_t, procPairs_t;
 
 public:
     External_LSH64() {
@@ -48,14 +49,14 @@ public:
     void run(vector<vector<unsigned int>> &minhashes) {
         assert(Band * Range <= K); // Ensure that the total number of hash functions does not exceed K.
 
+        auto lsh_st = LogTime();
         // pairs: An array of vectors, each vector storing a pair of hash value and document ID for each band.
         vector<pair<size_t, unsigned int>> *pairs = new vector<pair<size_t, unsigned int>>[Band];
         for (int i = 0; i < Band; i++) {
             pairs[i].resize(minhashes.size());
         }
 
-        auto timer_st = LogTime();
-
+        // slice minhashes
 #pragma omp parallel for
         for (unsigned int docId = 0; docId < minhashes.size(); ++docId) {
             auto &minhash = minhashes[docId];
@@ -77,10 +78,9 @@ public:
 
         // Free MinHashes memory
         vector<vector<unsigned int>>().swap(minhashes);
-        cout << "Slice and Hash Done cost: " << RepTime(timer_st) << endl;
-
+        cout << "Slice and Hash Done cost: " << RepTime(lsh_st) << endl;
+        
         vector<hash_t> group_index(Band);
-        timer_st = LogTime();
         vector<pair<unsigned int, unsigned int>> *temp_pairs;
         temp_pairs = new vector<pair<unsigned int, unsigned int>>[Band];
 
@@ -148,9 +148,11 @@ public:
             // buffer.clear();
             // ofs.close();
         }
-        cout << "LSH Done Now remove duplicate pairs cost: " << RepTime(timer_st) << endl;
+        lsh_t = RepTime(lsh_st); cout << "LSH Done Now remove duplicate pairs cost: " << lsh_t << endl;
         group_index.clear();
-        timer_st = LogTime();
+
+        // process the pairs
+        auto procPairs_st = LogTime();
         delete[] pairs;
         for (int b = 0; b < Band; ++b) {
             result_pairs.insert(result_pairs.end(), temp_pairs[b].begin(), temp_pairs[b].end());
@@ -158,7 +160,7 @@ public:
         delete[] temp_pairs;
         // deduplicate the result_pairs
         deduplicate_vec(result_pairs);
-
-        cout << "Merge and Sort Cost:" << RepTime(timer_st) << endl;
+        procPairs_t = RepTime(procPairs_st);
+        cout << "Merge and Sort Cost:" << procPairs_t  << endl;
     }
 };
