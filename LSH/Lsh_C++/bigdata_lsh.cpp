@@ -34,28 +34,12 @@ int main(int argc, char *argv[]) {
 
     const string simP_file_path = "./ngram_simps/" + dataset_name + "_sim_pairs_" + "K" + to_string(K) + "B" + to_string(band) + "R" + to_string(range) + ".bin";
 
-    // Get MinHashes
     auto timer_st = LogTime();
+    // Get MinHashes
     vector<vector<unsigned int>> minhashes;
     MinHash32 minHasher(K);
     minHasher.getMinHashesByBuffer(sortedsets_file_path, minhashes);
-    double hash_t = RepTime(timer_st);
-//     vector<vector<unsigned int>> sorted_sets;
-//     loadIntBin(sortedsets_file_path, sorted_sets);
-
-//     auto timer_st = LogTime();
-    
-//     // Get MinHashes
-//     vector<vector<unsigned int>> minhashes(sorted_sets.size());
-//     MinHash32 minHasher(K);
-
-// #pragma omp parallel for
-//     for (unsigned int i = 0; i < minhashes.size(); i++) {
-//         minhashes[i] = minHasher.getMinHashes(sorted_sets[i]);
-//     }
-
-//     // Free sorted sets
-//     vector<vector<unsigned int>>().swap(sorted_sets);
+    // minHasher.getMinHashesOnce(sortedsets_file_path, minhashes);
     printf("MinHash Opertation Finished\n");
 
     External_LSH64 lsh(K, band, range);
@@ -64,6 +48,6 @@ int main(int argc, char *argv[]) {
 
     writeSimilarPair(simP_file_path, lsh.result_pairs);
     printf("Parameters Setting:%s %d %d %d\n", dataset_name.c_str(), K, band, range);
-    printf("MinHash + LSH cost: %f At last the total time cost is: %f\n", hash_t+lsh.lsh_t, RepTime(timer_st));
+    printf("Read Cost: %f MinHash + LSH cost: %f At last the total time cost is: %f\n", minHasher.read_t, minHasher.hash_t+lsh.lsh_t, RepTime(timer_st));
     return 0;
 }
